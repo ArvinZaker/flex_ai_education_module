@@ -29,19 +29,9 @@
         ><span class="brand-mark" aria-hidden="true">✳</span
         ><span>Learning<br /><b>With AI.</b></span></a
       >
-      <p class="eyebrow side-label">A MEDICAL LEARNING LAB</p>
+
       <nav aria-label="Module navigation" id="navigation"></nav>
       <div class="side-bottom">
-        <div class="progress-label">
-          <span>Your progress</span><b id="progress-text">0 / 6</b>
-        </div>
-        <progress
-          id="progress"
-          max="6"
-          value="0"
-          aria-label="Lessons completed"
-        ></progress>
-        <p>At your pace. Stay curious.</p>
         <button class="text-button" id="reset">Reset progress</button>
       </div>
     </aside>
@@ -50,11 +40,11 @@
         <span
           >MEDICAL EDUCATION <span class="slash">/</span> INTERACTIVE
           MODULE</span
-        ><span class="demo-tag"><i></i> Pre-generated examples</span>
+        ><span id="progress-text" aria-live="polite">0 / 6 completed</span>
       </header>
       <main id="main" tabindex="-1"></main>
       <footer>
-        <span>Stay responsible for the reasoning.</span
+        <span>Pre-generated practice</span
         ><button class="text-button" data-go="about">
           Sources & privacy ↗
         </button>

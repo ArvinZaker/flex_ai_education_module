@@ -102,9 +102,7 @@ function select(id, label, values, current) {
     .join("")}</select></div>`;
 }
 function finish(id, next) {
-  return `<div class="complete-row"><span>Finish the activity, then record your progress.</span><div class="actions"><button class="button secondary" data-complete="${id}">${
-    completed.includes(id) ? "✓ Lesson completed" : "Mark lesson complete"
-  }</button><button class="button" data-go="${next}">Continue <span aria-hidden="true">↗</span></button></div></div>`;
+  return `<div class="complete-row"><button class="button" data-complete="${id}" data-next="${next}">Continue ↗</button></div>`;
 }
 let toastTimer;
 function toast(text) {
@@ -119,55 +117,32 @@ function updateNav() {
     ["reflection", "Your takeaways"],
   ]
     .map(
-      (l, i) =>
+      (l) =>
         `<a class="nav-link ${route === l[0] ? "active" : ""}" href="#${
           l[0]
-        }" ${
-          route === l[0] ? 'aria-current="page"' : ""
-        }><span class="nav-number">${
-          i === 0 ? "↗" : String(i).padStart(2, "0")
-        }</span>${l[1]}${
-          completed.includes(l[0])
-            ? '<span class="nav-check" aria-label="completed">✓</span>'
-            : ""
-        }</a>`
+        }" ${route === l[0] ? 'aria-current="page"' : ""}>${l[1]}</a>`
     )
     .join("");
-  $("#progress-text").textContent = `${completed.length} / 6`;
-  $("#progress").value = completed.length;
+  $("#progress-text").textContent = `${completed.length} / 6 completed`;
 }
+
 function overview() {
-  return `<section class="hero"><div><span class="pill">FOR YEAR 1 & 2 MEDICAL STUDENTS</span><h1>Learn with AI.<br><em>Think for yourself.</em></h1><p class="lede">From effective prompting to clinical reasoning. Explore how to make an AI tutor ask better questions, challenge your thinking, and leave the learning in your hands.</p><div class="meta"><span>◷ &nbsp;40–50 min target</span><span>◉ &nbsp;Self-paced</span><span>6 activities</span></div><button class="button" data-go="baseline">Begin the module <span aria-hidden="true">↗</span></button></div><div class="hero-art" aria-label="Learning loop: explain, question, reason, verify"><div class="orbit"></div><div class="orbit second"></div><div class="art-center"><span>✳</span><small>YOUR THINKING<br>AT THE CENTRE</small></div><div class="art-chip chip1">↗ &nbsp;“Here is what I understand…”</div><div class="art-chip chip2">◇ &nbsp;“What am I missing?”</div><div class="art-chip chip3">↺ &nbsp;“Let me try that again.”</div><div class="art-caption">EXPLAIN · QUESTION · REASON · VERIFY</div></div></section><div class="principle"><span class="star" aria-hidden="true">✳</span><div><p>Your job is to do the thinking. Give AI a role in the process.</p><small>The educational goal of this module: remain responsible for explaining, questioning, reasoning, and verifying.</small></div></div><div class="section-head"><h2>Your learning path</h2><p>Six connected activities. One AI tutor playground.</p></div><div class="cards">${lessons
+  return `<section class="hero"><div><span class="pill">YEAR 1 & 2 MEDICAL STUDENTS</span><h1>Learning with AI</h1><p class="lede">Use kidney-week RAAS problems to practice prompts, predictions, and explanations.</p><div class="meta"><span>40–50 min target</span><span>Self-paced</span></div><button class="button" data-go="baseline">Start learning ↗</button></div></section><div class="section-head"><h2>Activities</h2></div><div class="cards">${lessons
     .map(
-      (l, i) =>
-        `<article class="lesson-card ${
-          l[0] === "case" ? "featured" : ""
-        }"><div class="card-top"><span>0${i + 1} &nbsp; / &nbsp; ${
-          l[2]
-        }</span><span class="card-icon" aria-hidden="true">${
-          l[3]
-        }</span></div><h3>${l[1]}</h3><p>${
-          l[4]
-        }</p><a class="card-link" href="#${l[0]}">${
-          completed.includes(l[0])
-            ? "Revisit activity"
-            : l[0] === "case"
-            ? "Enter the case"
-            : "Explore activity"
-        }<span aria-hidden="true">↗</span></a></article>`
+      (l) =>
+        `<a class="lesson-card ${l[0] === "case" ? "featured" : ""}" href="#${
+          l[0]
+        }"><span class="card-icon" aria-hidden="true">${l[3]}</span><div><h3>${
+          l[1]
+        }</h3><p>${l[4]}</p></div><span aria-hidden="true">↗</span></a>`
     )
     .join(
       ""
-    )}</div><p class="status-note">The playground uses authored, pre-generated examples. The case uses a freely available official USMLE sample. No live AI chat is connected. Timing is a design target and has not been tested with students.</p>`;
+    )}</div><p class="status-note">Pre-generated conversations. Fictional case. No live AI.</p>`;
 }
 function comparison() {
   const s = window.SCENARIOS[scenario];
-  return `<div class="chips" role="group" aria-label="Choose a pre-generated scenario">${window.SCENARIOS.map(
-    (x, i) =>
-      `<button class="chip" data-scenario="${i}" aria-pressed="${
-        i === scenario
-      }">${x.title}</button>`
-  ).join("")}</div><div class="section-head"><h2>${
+  return `<div class="section-head"><h2>${
     s.topic
   }</h2><p>Illustrative A/B comparison · scripted responses</p></div><div class="comparison">${[
     "A",
@@ -181,7 +156,7 @@ function comparison() {
           v === "A" ? "Broad request" : "Specific learning request"
         }</b></div><div class="compare-body"><div class="eyebrow">THE PROMPT</div><p class="prompt-text">“${esc(
           v === "A" ? s.a : s.b
-        )}”</p><div class="response"><div class="label">PRE-GENERATED TUTOR RESPONSE</div><p>${esc(
+        )}”</p><div class="response"><div class="label">TUTOR</div><p>${esc(
           s["response" + v]
         )}</p></div></div></article>`
     )
@@ -189,7 +164,7 @@ function comparison() {
       ""
     )}</div><div class="takeaway"><span aria-hidden="true">↗</span><p><b>What changed?</b> ${esc(
     s.takeaway
-  )} These examples illustrate requested behavior; they do not establish that a live model will comply or that learning improves.</p></div>`;
+  )}</p></div>`;
 }
 const treeState = {};
 function tree() {
@@ -197,61 +172,64 @@ function tree() {
   const state = treeState[s.id] || [];
   const selected = state[0];
   const next = state[1];
-  const endings = [
-    {
-      prompt: "Ask me to explain my current understanding first.",
-      reply:
-        "Explain the main idea in your own words. Which part can you explain confidently, and which part would you check against your course source? I will wait for your attempt.",
-      follow: "I can explain the main idea, but I am unsure about applying it.",
-      end: "Choose one fictional course question. Explain the first step you would take and why. What information would help you decide whether that step fits?",
-    },
-    {
-      prompt: "Help me identify what evidence is missing.",
-      reply:
-        "What conclusion are you considering? Name the evidence you already have and one piece of information that is missing. How might that missing information change your conclusion?",
-      follow: "I would like to compare alternatives before deciding.",
-      end: "State two alternatives and the finding that would help distinguish them. Explain what result would make you revise your current view. Check factual claims against the supplied course source.",
-    },
-    {
-      prompt: "Quiz me one question at a time and wait.",
-      reply:
-        "Without looking back at your notes, what is the central idea you are trying to learn? Give your best attempt before we compare it with the source.",
-      follow: "I tried recalling it. Now help me decide what to revisit.",
-      end: "Compare your attempt with the original note. Which point was accurate, which was missing, and which needs correction? Choose the gap you want to try recalling again.",
-    },
-  ];
-  return `<section class="panel" style="margin-top:25px"><div class="section-head"><div><div class="eyebrow">CHOOSE YOUR NEXT MOVE</div><h2>A conversation you can steer</h2></div><button class="text-button" id="tree-reset">Restart conversation</button></div><p class="hint">Every choice and reply is pre-generated. Choose a prompt to begin, then decide what the student asks next. There is no editable prompt or live AI.</p><div class="conversation"><div class="chat tutor-chat"><span class="eyebrow">TUTOR</span><p>Choose how you would like to approach this activity: ${esc(
-    s.topic.toLowerCase()
-  )}.</p></div>${
+  const endings = s.branches;
+  return `<section class="panel" style="margin-top:25px"><div class="section-head"><div><h2>${
+    state[2]
+      ? "Feedback"
+      : selected === undefined
+      ? "Choose a prompt"
+      : "Choose your response"
+  }</h2></div><button class="text-button" id="tree-reset">Restart conversation</button></div><div class="conversation"><div class="chat tutor-chat"><span class="eyebrow">TUTOR</span><p>${esc(
+    s.topic
+  )}</p></div>${
     selected === undefined
       ? `<div class="tree-options"><span class="label">Choose your opening prompt</span><button class="tree-choice" data-tree-start="A"><b>A · Broad request</b>${esc(
           s.a
         )}</button><button class="tree-choice" data-tree-start="B"><b>B · Specific learning request</b>${esc(
           s.b
         )}</button></div>`
-      : `<div class="chat student-chat"><span class="eyebrow">YOUR SELECTED PROMPT</span><p>${esc(
+      : `<div class="chat student-chat"><span class="eyebrow">YOU</span><p>${esc(
           selected === "A" ? s.a : s.b
-        )}</p></div><div class="chat tutor-chat"><span class="eyebrow">PRE-GENERATED TUTOR</span><p>${esc(
+        )}</p></div><div class="chat tutor-chat"><span class="eyebrow">TUTOR</span><p>${esc(
           s["response" + selected]
         )}</p></div>${
           next === undefined
             ? `<div class="tree-options"><span class="label">What would you ask next?</span>${endings
                 .map(
                   (x, i) =>
-                    `<button class="tree-choice" data-tree-next="${i}">${x.prompt} <span aria-hidden="true">↗</span></button>`
+                    `<button class="tree-choice" data-tree-next="${i}">${esc(
+                      x.prompt
+                    )} <span aria-hidden="true">↗</span></button>`
                 )
                 .join("")}</div>`
-            : `<div class="chat student-chat"><span class="eyebrow">YOUR NEXT PROMPT</span><p>${
+            : `<div class="chat student-chat"><span class="eyebrow">YOU</span><p>${
                 endings[next].prompt
-              }</p></div><div class="chat tutor-chat"><span class="eyebrow">PRE-GENERATED TUTOR</span><p>${
+              }</p></div><div class="chat tutor-chat"><span class="eyebrow">TUTOR</span><p>${
                 endings[next].reply
               }</p></div>${
                 state[2]
-                  ? `<div class="chat student-chat"><span class="eyebrow">YOUR SELECTED FOLLOW-UP</span><p>${endings[next].follow}</p></div><div class="chat tutor-chat"><span class="eyebrow">PRE-GENERATED TUTOR</span><p>${endings[next].end}</p></div><div class="takeaway"><p>Notice how your choices changed the requested activity. Try the other opening prompt or another follow-up to compare the scripts. A live model may behave differently.</p></div>`
-                  : `<div class="tree-options"><span class="label">Continue the conversation</span><button class="tree-choice" id="tree-follow">${endings[next].follow} <span aria-hidden="true">↗</span></button><button class="tree-choice" id="tree-alternative">Try another next prompt</button></div>`
+                  ? `<div class="chat student-chat"><span class="eyebrow">YOU</span><p>${esc(
+                      endings[next].answers[state[2] - 1].text
+                    )}</p></div><div class="chat tutor-chat"><span class="eyebrow">TUTOR</span><p>${esc(
+                      endings[next].answers[state[2] - 1].feedback
+                    )}</p></div><div class="takeaway"><p>Try another path to compare the replies.</p></div>`
+                  : `<div class="tree-options"><span class="label">${
+                      endings[next].follow
+                    }</span>${endings[next].answers
+                      .map(
+                        (answer, i) =>
+                          `<button class="tree-choice" data-tree-answer="${i}">${esc(
+                            answer.text
+                          )} ↗</button>`
+                      )
+                      .join(
+                        ""
+                      )}<button class="tree-choice" id="tree-alternative">Try another next prompt</button></div>`
               }`
         }`
-  }</div></section>`;
+  }</div><p class="source">${esc(s.sources)}${
+    s.url ? ` · ${link(s.url, "NIH")}` : ""
+  }</p></section>`;
 }
 function tutor(gaps = false) {
   return (
@@ -259,12 +237,10 @@ function tutor(gaps = false) {
       gaps
         ? "02 / COMMUNICATE YOUR GAPS · 5–7 MIN"
         : "01 / AI TUTOR PLAYGROUND · 5–7 MIN",
+      gaps ? "Find the RAAS gap" : "RAAS tutor playground",
       gaps
-        ? "Say what you know.<br>Locate the gap."
-        : "Choose a prompt.<br>See where it leads.",
-      gaps
-        ? "Choose how the student communicates current knowledge, uncertainty, and the help they want next. Follow a scripted conversation and compare another path."
-        : "Explore four pre-generated “what if I write X versus Y?” scenarios. Select an opening prompt, read the reply, and choose the next turn. All prompts and replies come from a fixed list."
+        ? "Choose a prompt that pinpoints the mechanism you find confusing."
+        : "Choose a kidney-week problem, then follow the prompts and predictions."
     ) +
     `<div class="chips" role="group" aria-label="Choose a conversation scenario">${window.SCENARIOS.map(
       (x, i) =>
@@ -274,10 +250,7 @@ function tutor(gaps = false) {
     ).join("")}</div>` +
     tree() +
     `<details><summary>Compare both opening prompts side by side</summary>${comparison()}</details>` +
-    source(
-      IES,
-      "Educational basis: IES practice guide, recommendations 5b and 7 (retrieval and explanatory questions)"
-    ) +
+    source(IES, "Source: IES, recommendations 5b and 7") +
     finish(gaps ? "gaps" : "tutor", gaps ? "recall" : "gaps")
   );
 }
@@ -321,8 +294,8 @@ function recall() {
   return (
     heading(
       "03 / ACTIVE RECALL · 7–8 MIN",
-      "Try first.<br>Get feedback second.",
-      "Use the short practice sequence to recognize, apply, and evaluate learning instructions. These are authored checks of this module’s goals, with a fixed progression in task complexity."
+      "Active recall",
+      "Choose an answer before opening the feedback."
     ) +
     `<div class="panel"><div class="section-head"><span class="step-label">QUESTION ${
       quizIndex + 1
@@ -355,10 +328,10 @@ function recall() {
               : ""
           }<button class="text-button" id="quiz-restart">Start again</button></div>`
         : ""
-    }</div><div class="panel soft"><h3>Transfer this to your course notes</h3><p>Close a short section of your notes. Explain its main idea from memory. Reopen the source and check what you omitted or misstated. Ask your tutor to wait for that attempt before giving an explanation.</p>${source(
+    }</div><details class="panel soft"><summary>Try this with your course notes</summary><p>Close a short section of your notes. Explain its main idea from memory. Reopen the source and check what you omitted or misstated. Ask your tutor to wait for that attempt before giving an explanation.</p>${source(
       IES,
-      "IES, recommendation 5b: quizzing with active retrieval; recommendation 7: explanatory questions"
-    )}</div>` +
+      "IES, recommendations 5b and 7"
+    )}</details>` +
     finish("recall", "case")
   );
 }
@@ -380,10 +353,10 @@ function clinical() {
   return (
     heading(
       "04 / CLINICAL REASONING LAB · 10–12 MIN",
-      "Follow the evidence.<br>Keep the answer hidden.",
-      "A staged, condensed adaptation of official USMLE Step 1 sample item 62 (February 2021 booklet). The question asks for the hematologic cause of heavy menstrual bleeding. The staging and prompts are authored learning activities; difficulty has not been calibrated."
+      "Clinical reasoning",
+      "Gather findings and revise your differential. Adapted from USMLE sample item 62."
     ) +
-    `<div class="case-layout"><section><div class="panel"><div class="case-stage">SIMULATED EXAM CASE / INITIAL PRESENTATION</div><h2>Heavy bleeding.<br>An incomplete picture.</h2><p>A 20-year-old woman seeks assessment for longstanding heavy menstrual bleeding.</p><p class="hint">Generate a differential before requesting the remaining information. Only findings contained in the source are available.</p><div class="case-tabs">${Object.entries(
+    `<div class="case-layout"><section><div class="panel"><div class="case-stage">SIMULATED EXAM CASE / INITIAL PRESENTATION</div><h2>The case</h2><p>A 20-year-old woman seeks assessment for longstanding heavy menstrual bleeding.</p><p class="hint">Write an initial differential, then request findings.</p><div class="case-tabs">${Object.entries(
       caseEvidence
     )
       .map(
@@ -429,7 +402,7 @@ function clinical() {
       "4. Missing evidence and remaining uncertainty",
       session.uncertainty,
       "What is still unproven? How would you distinguish your leading alternatives?"
-    )}<div class="actions"><button class="button" id="case-finish">Finish & open debrief ↗</button><button class="text-button" id="case-reveal">Reveal answer now</button></div><p class="hint">Finish asks you to complete all four entries and view the available findings. You may explicitly reveal the answer at any time. Entries are not automatically graded.</p><div id="case-debrief" ${
+    )}<div class="actions"><button class="button" id="case-finish">Finish & open debrief ↗</button><button class="text-button" id="case-reveal">Reveal answer now</button></div><p class="hint">View the findings and complete four entries to finish. Responses are self-reviewed.</p><div id="case-debrief" ${
       caseRevealed ? "" : "hidden"
     }>${debrief()}</div></section></div>` +
     finish("case", "voice")
@@ -448,8 +421,8 @@ function voice() {
   return (
     heading(
       "05 / VOICE LEARNING · 6–8 MIN",
-      "Explain it aloud.<br>Listen to your reasoning.",
-      "Practice explaining a course concept or giving an oral case summary. Use browser dictation where available, or type the same explanation. Feedback below is a self-review scaffold, not an AI assessment."
+      "Practice aloud",
+      "Explain a concept aloud or in text, then review your explanation."
     ) +
     `<div class="grid2"><div class="panel"><h2>Your oral practice station</h2>${select(
       "voice-task",
@@ -498,13 +471,13 @@ function notes() {
   return (
     heading(
       "06 / NOTES & CRITICAL EVALUATION · 7–8 MIN",
-      "Make a study resource.<br>Then check every claim.",
-      "Explore fixed transformations of a short, source-backed sample note. Next, identify and correct a deliberately incorrect tutor statement. No arbitrary notes are sent to a model."
+      "Notes & critical evaluation",
+      "Choose a study format, then find and correct the tutor’s error."
     ) +
     `<div class="grid2"><div class="panel"><div class="eyebrow">THE SOURCE NOTE</div><h2>Screening is not confirmation</h2><p>${sampleNote}</p>${source(
       CDC,
       "Source: CDC, screening tests, aPTT and PT sections"
-    )}<div class="notice">This note and its transformations are pre-generated from the linked source. Every resource is a study aid to check against the original.</div><p class="label">Transform the sample note</p><div class="resource-tabs" role="group" aria-label="Study resource">${[
+    )}<div class="notice">Check each study resource against the source.</div><p class="label">Transform the sample note</p><div class="resource-tabs" role="group" aria-label="Study resource">${[
       "Study guide",
       "Flashcards",
       "Concept map",
@@ -572,12 +545,10 @@ function assessment(post = false) {
       post
         ? "YOUR TAKEAWAYS / AFTER THE MODULE"
         : "BEFORE YOU BEGIN / A STARTING POINT",
+      post ? "Your takeaways" : "Before you begin",
       post
-        ? "What changed in<br>your approach?"
-        : "Start with<br>your own attempt.",
-      post
-        ? "Repeat the same kinds of tasks, then compare your own before-and-after responses. These exercises support reflection; there is no validated score or pass threshold."
-        : "Choose a course concept and a fictional case you know. Try these tasks without the module’s examples. Your text stays in this tab’s memory and is cleared by a page reload."
+        ? "Repeat the tasks and compare your earlier answers. This is ungraded reflection."
+        : "Use a course concept and fictional case. Responses clear on reload."
     ) +
     `<div class="panel">${domains
       .map(
@@ -591,16 +562,15 @@ function assessment(post = false) {
           )}${
             post
               ? `<details><summary>Your starting response</summary><p>${esc(
-                  session["pre-" + i] ||
-                    "No starting response is available in this tab. You may have skipped it or reloaded the page."
+                  session["pre-" + i] || "No earlier response in this tab."
                 )}</p></details>`
               : ""
           }</section>`
       )
       .join("")}<div class="actions">${
       post
-        ? '<button class="button" id="compare-assessments">Open reflection checklist ↗</button>'
-        : '<button class="button" data-go="tutor">Keep my attempts & continue ↗</button><button class="text-button" data-go="tutor">Skip the starting exercise</button>'
+        ? '<button class="button" id="compare-assessments">Review my approach ↗</button>'
+        : '<button class="button" data-go="tutor">Continue ↗</button><button class="text-button" data-go="tutor">Skip the starting exercise</button>'
     }</div><div id="assessment-feedback" hidden class="feedback"><h3>Review your evidence of learning</h3><div class="checklist">${[
       "I named a specific learning need.",
       "I asked for an attempt before feedback.",
@@ -636,7 +606,7 @@ function about() {
     )}, recommendations 5b and 7. General educational guidance; it does not establish effectiveness of this module or of these AI prompts.</li><li><b>Human agency and educational validation:</b> ${link(
       UNESCO,
       "UNESCO: Guidance for generative AI in education and research, publication overview"
-    )}. Supports the general design emphasis on human agency, privacy, and pedagogical validation. This module has not been independently validated.</li></ul><h3>How to read the A/B comparisons</h3><p>One Luna/low content task drafted four pairs, followed by editorial and source-scope review. They are pre-generated illustrative tutor responses. They are not actual runs of the displayed prompts, an experiment, or measured evidence of model behavior. Students select prompts and follow-ups from a fixed list to explore pre-generated conversation trees.</p><p>Lesson times come from the proposed module plan. They total 40–50 minutes before optional starting and closing exercises. No student timing or learning outcomes have been collected. The clinical question has no verified difficulty rating here.</p></div><div class="panel"><h2>Privacy and speech</h2><p>Use only course content, fictional cases, and sample notes. Do not enter names or identifiable patient information. The app stores only six lesson-completion flags in this browser’s local storage. All written responses and transcripts remain in memory in the current tab and disappear on reload. Reset clears progress and in-memory responses. No analytics, trackers, remote fonts, or AI requests are included.</p><p>Optional dictation requires an explicit checkbox and a start action. Depending on the browser, audio can be processed by the browser provider’s speech service. Read-aloud uses the browser’s installed speech engine, whose processing depends on the selected browser/voice. The text pathway provides the same activities. GitHub serves the static files and handles normal hosting traffic.</p>${source(
+    )}. Supports the general design emphasis on human agency, privacy, and pedagogical validation. This module has not been independently validated.</li></ul><h3>RAAS conversation sources</h3><p>RAAS means renin–angiotensin–aldosterone system.</p><p>The renal trees draw on Dr. Krishna Poinen’s Week 49 <i>Potassium Disorders</i> lecture, slides 14–16, 18–19 and 24. The relevant text and principal-cell diagrams were inspected. The source PDFs remain private and are not included in this site. Drug effects are also supported by the NIH potassium fact sheet, “Interactions with Medications.”</p><h3>How to read the A/B comparisons</h3><p>The initial generic examples were drafted with one Luna/low task. The current renal trees are authored from the inspected kidney-week source passages. They are pre-generated illustrative tutor responses. They are not actual runs of the displayed prompts, an experiment, or measured evidence of model behavior. Students select prompts and follow-ups from a fixed list to explore pre-generated conversation trees.</p><p>Lesson times come from the proposed module plan. They total 40–50 minutes before optional starting and closing exercises. No student timing or learning outcomes have been collected. The clinical question has no verified difficulty rating here.</p></div><div class="panel"><h2>Privacy and speech</h2><p>Use only course content, fictional cases, and sample notes. Do not enter names or identifiable patient information. The app stores only six lesson-completion flags in this browser’s local storage. All written responses and transcripts remain in memory in the current tab and disappear on reload. Reset clears progress and in-memory responses. No analytics, trackers, remote fonts, or AI requests are included.</p><p>Optional dictation requires an explicit checkbox and a start action. Depending on the browser, audio can be processed by the browser provider’s speech service. Read-aloud uses the browser’s installed speech engine, whose processing depends on the selected browser/voice. The text pathway provides the same activities. GitHub serves the static files and handles normal hosting traffic.</p>${source(
       "https://developer.mozilla.org/en-US/docs/Web/API/Web_Speech_API/Using_the_Web_Speech_API",
       "MDN, speech recognition and speech synthesis"
     )}<p class="hint">This is educational practice with a simulated exam case. It has not undergone faculty review and is not a patient-care tool.</p></div>`
@@ -676,6 +646,17 @@ function render() {
     about,
   };
   $("#main").innerHTML = views[route]();
+  const conversation = $(".conversation");
+  if (conversation) {
+    const turns = [...conversation.querySelectorAll(".chat")];
+    if (turns.length > 2) {
+      const history = document.createElement("details");
+      history.className = "conversation-history";
+      history.innerHTML = "<summary>Previous turns</summary>";
+      turns.slice(0, -2).forEach((turn) => history.appendChild(turn));
+      conversation.prepend(history);
+    }
+  }
   document.title = `${
     route === "overview"
       ? "Learning With AI"
@@ -783,8 +764,7 @@ document.addEventListener("click", async (e) => {
       );
     }
     updateNav();
-    b.textContent = "✓ Lesson completed";
-    toast("Lesson marked complete.");
+    if (b.dataset.next) location.hash = b.dataset.next;
     return;
   }
   if (b.dataset.scenario !== undefined) {
@@ -799,6 +779,12 @@ document.addEventListener("click", async (e) => {
     b.setAttribute("aria-expanded", "true");
     b.textContent = "✓ " + caseEvidence[id].title;
     $("#evidence-" + id).hidden = false;
+    return;
+  }
+  if (b.dataset.treeAnswer !== undefined) {
+    treeState[window.SCENARIOS[scenario].id][2] =
+      Number(b.dataset.treeAnswer) + 1;
+    render();
     return;
   }
   if (b.dataset.treeStart) {
@@ -822,10 +808,6 @@ document.addEventListener("click", async (e) => {
   switch (b.id) {
     case "tree-reset":
       delete treeState[window.SCENARIOS[scenario].id];
-      render();
-      break;
-    case "tree-follow":
-      treeState[window.SCENARIOS[scenario].id][2] = true;
       render();
       break;
     case "tree-alternative":

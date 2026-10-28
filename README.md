@@ -15,9 +15,9 @@ For local preview, run `python -m http.server 8000` in this directory, then visi
 
 ## What is implemented
 
-- Six linked lesson pages and browser-local completion tracking.
-- Four fixed A/B prompt-response comparisons, drafted by one Luna/low content task. These are illustrative authored examples, not recorded model calls or empirical A/B test results.
-- Four conversation trees with fixed opening prompts, three next-prompt choices and a continued follow-up turn. Students cannot edit playground prompts. Responses are fully pre-generated.
+- Six linked lesson pages and one plain completion count. No progress bars.
+- Four source-based RAAS A/B comparisons. These are authored examples, not recorded model calls or empirical A/B test results.
+- Four renal conversation trees with two opening prompts, three reasoning branches and two final predictions (48 paths). Only the current student/tutor exchange is expanded; earlier turns are available under Previous turns. Students cannot edit playground prompts. Responses are fully pre-generated.
 - Three sequential practice questions that move from recognition to application and evaluation, with attempts before feedback and revisiting missed items. Complexity labels describe task structure, not calibrated difficulty.
 - A staged clinical reasoning workspace adapted from a freely available official USMLE sample item. History, examination and investigations are revealed on request. Three support levels and explicit answer reveal are available. Free-text reasoning is not automatically graded.
 - Optional browser dictation and read-aloud, editable transcript, and a complete text alternative. This is not a live voice AI conversation.
@@ -67,12 +67,12 @@ Verified short quotation from the key: “62. E”. Item 62 labels E as von Will
 
 `index.html` loads `styles.css`, `scenarios.js`, and `app.js` using relative paths. `assets/favicon.svg` is a code-native decorative mark. `scenarios.js` contains the four fixed comparisons. `app.js` contains navigation, activities, source links, session-only responses, conversation trees, progress, and speech controls. This README is the project entrypoint and source-review record. Local task requirements are kept in the ignored `REQUIREMENTS.md`.
 
-## Local verification
+## Initial local verification
 
 Browser checks passed in headless Chromium on 2026-10-28:
 
 - All 10 views render without JavaScript errors.
-- All 24 conversation paths (4 scenarios × 2 opening prompts × 3 next-prompt options) reach the continued follow-up. The playground contains no editable prompt input.
+- The initial 24 generic paths passed checks before the renal revision. Current verification is recorded below. The playground contains no editable prompt input.
 - Quiz feedback stays hidden before an attempt; missed-item revisiting works.
 - Clinical findings reveal on request, support modes respond, incomplete reasoning cannot finish, and completed entries open the debrief.
 - All four note resources render; practice answers and the correction require attempts before comparison.
@@ -81,3 +81,25 @@ Browser checks passed in headless Chromium on 2026-10-28:
 - Requests during these checks were only to local static files. Microphone capture and audible playback were not tested. No independent accessibility audit, student trial, or live Pages deployment check is implied.
 
 Syntax checks: `node --check app.js` and `node --check scenarios.js`. Whitespace check: `git diff --check`.
+
+## RAAS content and compact UI revision
+
+The current playground uses kidney-week material at the user’s supplied location. It covers ACE inhibition and potassium excretion, ENaC and the principal-cell electrical gradient, competing effects of aldosterone and distal delivery/flow during volume depletion, and intracellular potassium shifts versus urinary removal. These are selected mechanistic challenges, not an empirically ranked list of the hardest course topics.
+
+Local reference: `/home/arvin/2TBstorage/University/UBC MEDD lecture pdf/Y2 Term 1 Week 49/049_-_4.2_potassium_disorders_-_dr._krishna_poinen.pdf`, Dr. Krishna Poinen, _Potassium Disorders_. Read the relevant potassium-handling sections and their conditions, including slides 13–19 and 24. Rendered and inspected slides 14 and 16 to resolve the transporter diagram and membrane orientation. The requested review-notes folder was also inspected; its available endocrine summary was insufficient for these detailed renal mechanisms and was not used to invent missing content. No course PDFs, figures, or private notes are uploaded.
+
+Verified short quotations and scope:
+
+- Slide 16: “Lumen more negative therefore favours K+ secretion into lumen.” Supports the ENaC–electrical-gradient explanation in the principal-cell tree.
+- Slide 14: “Luminal Delivery of Na”. In the surrounding four-factor list, supports considering delivery alongside aldosterone, flow, and acid-base state. Slide 24 describes the competing influences during volume depletion; the tree avoids claiming a universal net outcome.
+- Slide 19: “Shift K+ intracellularly”. The surrounding sequence distinguishes insulin-supported uptake from subsequent aldosterone-supported renal secretion and urinary excretion. This supports the shift/removal distinction, not treatment doses or clinical stopping criteria.
+
+External cross-check: [NIH ODS Potassium fact sheet](https://ods.od.nih.gov/factsheets/Potassium-HealthProfessional/), “Interactions with Medications,” ACE inhibitor/ARB paragraph. Verified quotation: “These medications reduce urinary potassium excretion, which can lead to hyperkalemia.” Supports the drug-excretion direction, with kidney impairment identified as an additional risk in the next paragraph. [National Kidney Foundation clinical bulletin](https://www.kidney.org/sites/default/files/2024-10/02-10-7260_clinical_bulletin_hyperkalemia.pdf), p. 2, “Importance of RAAS Blockade in CKD,” independently supports reduced potassium secretion with ACE inhibitors/ARBs. Only these physiology passages are used; the 2016 bulletin’s treatment recommendations are not adopted. NCBI chapter retrieval encountered a CAPTCHA; its search snippets were not used as evidence.
+
+The new renal scripts are authored from these sources in the main session. No further subagents were spawned. Broad prompts receive a direct mechanism explanation; targeted prompts elicit a prediction before explanation. Later choices expose specific correct reasoning and misconceptions with matching feedback. All replies remain pre-generated. The scripts have source checks, not independent faculty validation or observed learning results.
+
+UI changes remove the progress bar, repeated completion buttons, oversized landing artwork, duplicate scenario selectors, and repeated instructions. Continue records lesson completion and advances. Earlier conversation turns and optional comparisons remain available on demand. Source PDF SHA-256: `2d7ba1455a9394a71f4dd6545de95b38ad59b738ae25d376da6311ff33ad6b8c`. Existing case, notes, voice, and reflective activities remain accessible.
+
+### Verification after the RAAS revision
+
+Headless Chromium passed all 48 paths (4 topics × 2 opening prompts × 3 reasoning branches × 2 final answers). Checks confirmed one visible tutor reply, no progress-bar elements, one completion count, one Continue control per lesson, no editable playground prompts, and no JavaScript errors. Existing quiz, case concealment/finish gate, note resources, escaped in-tab responses, completion persistence and transcript clearing checks passed. Representative views had no horizontal overflow at 375, 768 and 1440 pixels. Desktop, mobile and conversation screenshots were inspected. One initial screenshot attempt timed out; the subsequent run rendered and completed successfully. Microphone capture and audible playback remain untested.
