@@ -1,105 +1,68 @@
-# Learning With AI: From Effective Prompting to Clinical Reasoning
+# Learning With AI
 
-A static, interactive module for first- and second-year medical students. Target lesson duration: 40–50 minutes, plus optional starting and closing reflection. No build step, account, API key, or live model connection.
+A static learning module for first-year medical students new to chatbots. Students choose prepared messages and see the conversation continue. Kidney physiology supplies the example content; the learning task is deciding what to ask, how to follow up, and how to verify a reply. All conversations are authored scripts. No live model, account, API key, or build step is required.
 
-## Publish on GitHub Pages
+## GitHub Pages
 
-1. Push these files to `main` in `ArvinZaker/flex_ai_education_module`.
-2. Open repository **Settings → Pages**.
-3. Under **Build and deployment**, choose **Deploy from a branch**, then **main** and **/(root)**. Save.
-4. Open the URL GitHub reports. For this repository, the expected project URL is `https://arvinzaker.github.io/flex_ai_education_module/`.
+Publish `main` → `/(root)` in repository Settings → Pages → Deploy from a branch. The expected URL is https://arvinzaker.github.io/flex_ai_education_module/ . Relative asset paths and hash navigation support the repository subpath. `.nojekyll` disables Jekyll processing. [GitHub's static-site instructions](https://docs.github.com/en/pages/getting-started-with-github-pages/creating-a-github-pages-site), “Static site generators,” state: “GitHub Pages publishes any static files that you push to your repository.”
 
-The site uses relative asset paths and hash navigation, so it works under the repository subpath. The root `.nojekyll` file disables Jekyll processing. There are no package dependencies to install. GitHub documents the entry-file and static hosting requirements in [Creating a GitHub Pages site](https://docs.github.com/en/pages/getting-started-with-github-pages/creating-a-github-pages-site), “Creating your site” and “Static site generators.” Verified technical quotation: “GitHub Pages publishes any static files that you push to your repository.” This supports the static deployment approach, not educational validity.
+Local preview: `python -m http.server 8000`, then visit http://localhost:8000 . No dependencies need installation.
 
-For local preview, run `python -m http.server 8000` in this directory, then visit `http://localhost:8000`. Opening `index.html` directly works for the lessons; browser speech features may require a secure context or localhost.
+## Learning path
 
-## What is implemented
+1. **Your first study chat.** Define prompt, reply and follow-up; choose a first message, request a clarification, and open a supporting source.
+2. **Ask for the help you need.** Compare a broad request with a message that gives existing knowledge and a specific gap.
+3. **Communicate your gaps.** Ask for a definition, a different format, one missing step, or a check of a misconception.
+4. **Active recall.** Ask a chatbot to quiz you and wait for an attempt before giving feedback.
+5. **Clinical reasoning.** Apply the interaction to a separate, sourced USMLE sample case while keeping its answer concealed.
+6. **Notes and critical evaluation.** Transform a source note and correct an intentionally incorrect statement against the source.
 
-- Six linked lesson pages and one plain completion count. No progress bars.
-- Four source-based RAAS A/B comparisons. These are authored examples, not recorded model calls or empirical A/B test results.
-- Four renal conversation trees with two opening prompts, three reasoning branches and two final predictions (48 paths). Only the current student/tutor exchange is expanded; earlier turns are available under Previous turns. Students cannot edit playground prompts. Responses are fully pre-generated.
-- Three sequential practice questions that move from recognition to application and evaluation, with attempts before feedback and revisiting missed items. Complexity labels describe task structure, not calibrated difficulty.
-- A staged clinical reasoning workspace adapted from a freely available official USMLE sample item. History, examination and investigations are revealed on request. Three support levels and explicit answer reveal are available. Free-text reasoning is not automatically graded.
-- Optional browser dictation and read-aloud, editable transcript, and a complete text alternative. This is not a live voice AI conversation.
-- Fixed study-guide, flashcard, concept-map and practice-question transformations of a source-backed sample note, with an intentionally incorrect claim to correct.
-- Comparable opening and closing exercises in the five requested skill domains. These are reflective activities without a validated score or pass threshold.
+The four study-conversation topics are starting a chat, fixing an unclear explanation, requesting a quiz, and challenging an overstated reply. Every branch is a message a student could send to a chatbot. Each topic has two opening choices, three follow-up choices, and two subsequent messages, giving 48 scripted paths. The final reply concludes the example; Previous turns preserves the earlier exchange. The final topic deliberately contains an incorrect absolute claim and labels the exercise accordingly.
 
-## Content and evidence review
+Opening and closing exercises cover the same five requested skill domains. They are ungraded reflection; no automated medical grading or validated learning score is included. The six-step route includes a new introduction in place of the removed voice activity. Its completion time has not been measured, so the previous 40–50 minute claim is no longer displayed.
 
-Reviewed against the passages below on 2026-10-28 using `review-scientific-manuscript` and `strict-agent` in the main session. No manuscript or student-results dataset exists; this was a review of module content, clinical accuracy, source alignment and inference limits. The requested `review-agent` skill was not present in the installed skill folders searched and could not be run. This review is not faculty review, endorsement, psychometric validation, or a measured learning-outcomes evaluation.
+## References and claim support
 
-### Clinical case
+Named, numbered references and relevant sections are displayed in the module. Education sources support interaction guidance. Medical sources support renal and case facts. The example conversations are authored illustrations, not recorded model runs or empirical A/B results. No claim of improved learning, model compliance, or faculty approval is made.
 
-[Official USMLE Step 1 sample questions](https://www.usmle.org/pdfs/step-1/samples_step1.pdf), booklet updated February 2021, item 62, printed p. 29 (PDF page 30), and answer key, printed p. 49 (PDF page 50). The full selected item, lab table, choices and matching key were inspected. No claim is made to have reviewed all unrelated booklet questions. The stem is condensed into a short adaptation; omitted findings are not treated as absent. No new clinical findings are invented. The original item is copyrighted by FSMB/NBME; it is linked, not bundled or reproduced in full. This module is not affiliated with USMLE.
+### Guidance on using chatbots for learning
 
-Verified short quotation from the key: “62. E”. Item 62 labels E as von Willebrand disease. This supports the exam answer only, not confirmation of a real patient's diagnosis or a claim that this question has a high difficulty rating.
+- **AACOM. Interacting with AI: Prompts & Process. May 27, 2026.** [Public guide](https://www.aacom.org/medical-education/ai-hub/ai-foundations/interacting-with-ai). Inspected “Introduction to Contextual Prompting,” the four-part practical framework and “Prompt Iteration.” Verified quotation: “What do I already know?” supports beginning with existing understanding. “Specify the output format or role” supports asking for a particular response. These are guidance for medical educators adapted into student examples; they do not validate this module or guarantee model behavior. The guide’s broader claims about chain-of-thought or patient safety are not adopted here.
+- **AACOM. Evaluating AI Output: Applying Critical Thinking. June 3, 2026.** [Public guide](https://www.aacom.org/medical-education/ai-hub/ai-foundations/evaluating-ai-output). Inspected the introduction, evaluation criteria and example critique. Verified quotation: “their outputs are not inherently accurate, complete or appropriate” supports independently checking a fluent response. The module does not implement the source's RACCCA scoring rubric.
+- **AACOM. Responsible Use of AI in Medical Education. April 20, 2026.** [Public guide](https://www.aacom.org/medical-education/ai-hub/ai-foundations/module-3). Inspected institutional policy, data stewardship and Smart Use Tips. Verified quotation: “Ask AI to provide sources and verify them independently” supports opening and checking references rather than accepting a citation as proof. The module uses fictional/course content and tells learners to follow their institution’s rules.
+- **Pashler H et al. Organizing Instruction and Study to Improve Student Learning. IES, 2007.** [Practice guide recommendations](https://ies.ed.gov/ncee/wwc/PracticeGuide/1), recommendations 5b and 7. Verified short quotations: “Use quizzes to re-expose students to key content” and “Ask deep explanatory questions.” Supports retrieval and explanatory exercises in general, not this specific chatbot workflow or its duration.
 
-### Clinical explanation and critical-appraisal exercise
+### Medical content
 
-[CDC, Diagnosing von Willebrand Disease](https://www.cdc.gov/von-willebrand/diagnosis/), May 15, 2024. Inspected the full short page, including screening and diagnostic test sections. Verified quotation: “Screening tests are often normal in VWD, and more specific tests are required.” Locator: Screening tests, introductory paragraph. This supports challenging the intentional error that a normal aPTT rules out disease. The aPTT subsection specifically describes normal results in mild disease. The diagnostic-tests list supports mentioning VWF antigen/activity and factor VIII activity. The CBC subsection supports low hemoglobin after heavy bleeding. These passages do not establish the module's effectiveness.
+- **NIH Office of Dietary Supplements. Potassium: Fact Sheet for Health Professionals. Updated June 2, 2022.** [Source](https://ods.od.nih.gov/factsheets/Potassium-HealthProfessional/), Interactions with Medications → ACE inhibitors and ARBs. Verified quotation: “These medications reduce urinary potassium excretion, which can lead to hyperkalemia.” Supports the drug-excretion direction. The next paragraph identifies impaired kidney function as an additional risk.
+- **Lewis JL III. Overview of Disorders of Potassium Concentration. Merck Manual Professional Edition. Updated December 2025.** [Source](https://www.merckmanuals.com/professional/nephrology/electrolyte-disorders/overview-of-disorders-of-potassium-concentration), Potassium shifts and Potassium metabolism. Verified quotation: “Insulin moves potassium into cells” supports redistribution. The metabolism section supports increased distal sodium delivery promoting potassium excretion. It does not alone support every claim about flow or the full volume-depletion interaction.
+- **Betts JG et al. Anatomy and Physiology 2e. OpenStax, 2022. Section 25.8.** [Source](https://openstax.org/books/anatomy-and-physiology-2e/pages/25-8-endocrine-regulation-of-kidney-function), Renin–Angiotensin–Aldosterone. Inspected relevant paragraphs with surrounding context. Verified short quotation: “promoting its excretion” refers to potassium in the aldosterone paragraph. Supports the angiotensin II–aldosterone–potassium connection. No source figures or extended passages are reproduced.
+- **Poinen K. Potassium Disorders. UBC MEDD Week 49 course lecture, undated.** User-supplied local file: `/home/arvin/2TBstorage/University/UBC MEDD lecture pdf/Y2 Term 1 Week 49/049_-_4.2_potassium_disorders_-_dr._krishna_poinen.pdf`. Relevant potassium-handling text and slides 14 and 16 rendered and inspected. Slides 14–16, 18–19 and 24 support the principal-cell transporter positions, electrical gradient, distal flow/delivery, and post-meal response. Verified short quotation, slide 16: “Lumen more negative therefore favours K+ secretion into lumen.” The course lecture supplies medical facts, not instructions for how to use AI. The review-notes folder was inspected but did not supply the detailed renal content used. Source SHA-256: `2d7ba1455a9394a71f4dd6545de95b38ad59b738ae25d376da6311ff33ad6b8c`. Source files remain private and unchanged.
+- **FSMB/NBME. USMLE Step 1 Sample Test Questions. February 2021.** [Source](https://www.usmle.org/pdfs/step-1/samples_step1.pdf), full selected item 62 and lab table, printed p. 29; answer key, printed p. 49. Verified key quotation: “62. E”. The selected option is von Willebrand disease. The source supports the exam answer, not a real clinical diagnosis or an unsupported “hard” rating. The module condenses the item and does not bundle the booklet.
+- **CDC. Diagnosing von Willebrand Disease. May 15, 2024.** [Source](https://www.cdc.gov/von-willebrand/diagnosis/), Screening tests and Diagnostic tests. Verified quotation: “Screening tests are often normal in VWD, and more specific tests are required.” Supports the debrief, source note, and correction of the intentionally incorrect screening claim.
 
-### Retrieval and explanatory questions
+References are attached to the claims they support. Where public sources cover only part of an explanation, the supplied course source is identified separately. NCBI/PMC full-text retrieval for an additional physiology review was blocked by CAPTCHA; Europe PMC/publisher alternatives returned access errors. Those snippets were not used as evidence.
 
-[IES What Works Clearinghouse, Organizing Instruction and Study to Improve Student Learning](https://ies.ed.gov/ncee/wwc/PracticeGuide/1), September 2007, recommendation 5b and recommendation 7 with their expanded descriptions. Verified quotations: “Use quizzes to re-expose students to key content.” and “Ask deep explanatory questions.” These support the general use of retrieval exercises and explanatory prompts. The overview describes applicability to content-heavy subjects and includes postsecondary grades. Applying these ideas to this particular AI module is a design translation, not direct trial evidence. The source does not validate our item count, 40–50 minute target, task ordering, hint scripts, assessments, or generated comparisons. Those implement the user's proposed module and are not scientific acceptance rules.
+## Three student-perspective review rounds
 
-### Human agency and AI education
+These are agent walkthroughs from the perspective of a first-year student, not feedback from enrolled students.
 
-[UNESCO, Guidance for generative AI in education and research, publication overview](https://www.unesco.org/en/articles/guidance-generative-ai-education-and-research), September 7, 2023, updated January 16, 2026, “Towards a human-centered approach.” Verified short quotation: “ethical validation and pedagogical design processes”. The surrounding paragraph discusses human agency, age-appropriate use and privacy. This supports the general design emphasis only. The publication overview, not the entire underlying report, was inspected and is the source cited in the module. It does not prove that our prompts improve reasoning.
+1. **Can I start without knowing chatbots?** The previous page jumped into a renal playground without explaining the interaction. Added prompt/reply/follow-up definitions, a single concrete study need, a guided first exchange, a plain-language follow-up, and an opening source-check task. Wording now addresses a first-year learner. Browser walkthrough covers both initial messages and both source-check choices.
+2. **Do my choices teach me how to use the chatbot?** The previous trees became kidney quizzes. Rewrote all four trees so choices are messages requesting clarification, targeted explanations, attempts, hints, quizzes or evidence. Each continuation answers that specific message. The final reply includes a short explanation of the learning behavior. Earlier turns remain accessible. The case and notes pages now show how to ask for those activities in a real study chat. Browser walkthrough covers all 48 paths and the retained quiz/case gates.
+3. **Can I verify and transfer what I learned?** Bare source labels and private lecture references were insufficient for an external learner. Added numbered, named references with public URLs, relevant sections and an explanation of their scope. Added a References & help navigation item, an explicit public-versus-course-source distinction, and a source-opening task. Removed all active speech controls/code and the obsolete duration claim. Check the correction source, opening/closing comparison, mobile layouts and progress persistence before delivery.
 
-### Browser speech
+## Privacy and implementation
 
-[MDN, SpeechRecognition](https://developer.mozilla.org/en-US/docs/Web/API/SpeechRecognition), introductory compatibility warning, server-processing note, `lang`, `start`, `stop`, `abort`, `result` and `error` entries; [Using the Web Speech API](https://developer.mozilla.org/en-US/docs/Web/API/Web_Speech_API/Using_the_Web_Speech_API), speech-recognition and speech-synthesis sections. Verified quotation: “Your audio is sent to a web service for recognition processing”. This supports the notice before optional dictation. Browser support is detected; text remains available. Speech defaults are browser implementation behavior, not scientific settings.
+Only completed lesson IDs are saved to local storage under `learning-with-ai-progress-v1`. Written exercises remain in this tab and clear on reload. Reset clears both. There are no live AI calls, analytics, microphone controls or audio features. GitHub handles normal static hosting traffic.
 
-### Consequential review decisions
+`index.html` loads `styles.css`, `scenarios.js` and `app.js`. The removed voice implementation is preserved only under `archive/2026-10-28_015844/`; source/copy SHA-256 equality was verified before removal, with `SHA256SUMS` retained. The archive is not referenced by the app. Local `REQUIREMENTS.md` tracks the requests and is ignored by Git.
 
-- Confirmed inference risk: illustrative A/B examples could be mistaken for measured results. They are labelled as authored fixed examples throughout, and no efficacy percentages, experiment claims or model-compliance promises are made.
-- Confirmed scope limit: a sample answer key establishes the exam answer, not a clinical diagnosis. The debrief distinguishes these and cites CDC for diagnostic-test limitations.
-- Confirmed provenance limit: no faculty review is available. The module identifies its source review and does not describe the content as faculty-approved.
-- Assessment limitation: the five-domain exercises reflect the user’s objectives. No custom automated scoring, grading threshold, medical accuracy classifier, or validated improvement claim is introduced.
-- Timing limitation: the supplied lower bounds sum to `5+5+7+10+6+7=40`; upper bounds sum to `7+7+8+12+8+8=50`. The time is a target, not an observed completion result. Optional opening/closing exercises add time.
-- Difficulty limitation: the free question is not assigned an unsupported “hard” rating. Clinical reasoning is emphasized through explanation and uncertainty rather than claiming measured item difficulty.
+Review used the installed `strict-agent` and `review-scientific-manuscript` guidance. The requested `review-agent` skill was not present in the installed skill folders. No independent faculty review, student usability study, or formal accessibility audit has been completed.
 
-## Privacy and data behavior
+### Final verification
 
-`app.js` stores only completed lesson IDs under `learning-with-ai-progress-v1`. All free-text responses and transcripts remain in the current tab's memory and are cleared on reload. Reset clears completion and in-memory responses. No analytics, remote fonts, cookies, app-server requests or live AI calls are included. Browser dictation is optional and may send audio to the browser provider's recognition service; read-aloud processing depends on the browser/selected voice. The module does not save an audio file. Use only fictional or course material. Hosting traffic follows the host's policies.
+All three walkthroughs passed in headless Chromium. Round 1 covered the starting route, opening responses, both guided-example prompt choices, follow-up and source-check choices. Round 2 covered all 48 conversation paths, accessible history, quiz feedback gates, case concealment/finish checks and case-to-notes navigation. Round 3 covered nine public references, the private-source disclosure, CDC correction link, before/after response retention, no progress bars, one completion counter, no speech route, and six representative views at 375, 768 and 1440 pixels without horizontal overflow. No JavaScript page errors occurred.
 
-## Maintained files
+Visual review identified an omitted visible follow-up and an unnecessarily long initial exchange. The selected follow-up now stays beside its reply and earlier turns collapse under Earlier exchange. A stale notification from a previous activity is cleared when the view changes. These fixes passed focused checks, and final desktop/mobile screenshots were inspected. Chromium frame/screenshot waits stalled during an intermediate regression attempt; the final interaction checks passed with GPU rendering disabled, and final screenshots were captured successfully. This does not replace a real student usability study.
 
-`index.html` loads `styles.css`, `scenarios.js`, and `app.js` using relative paths. `assets/favicon.svg` is a code-native decorative mark. `scenarios.js` contains the four fixed comparisons. `app.js` contains navigation, activities, source links, session-only responses, conversation trees, progress, and speech controls. This README is the project entrypoint and source-review record. Local task requirements are kept in the ignored `REQUIREMENTS.md`.
-
-## Initial local verification
-
-Browser checks passed in headless Chromium on 2026-10-28:
-
-- All 10 views render without JavaScript errors.
-- The initial 24 generic paths passed checks before the renal revision. Current verification is recorded below. The playground contains no editable prompt input.
-- Quiz feedback stays hidden before an attempt; missed-item revisiting works.
-- Clinical findings reveal on request, support modes respond, incomplete reasoning cannot finish, and completed entries open the debrief.
-- All four note resources render; practice answers and the correction require attempts before comparison.
-- Written responses remain across in-tab navigation, are escaped when redisplayed, and clear on reload. Completion flags persist; written content is not saved to local storage.
-- Representative pages have no horizontal overflow at 375, 768 and 1440 pixels. Desktop, mobile and conversation screenshots were visually inspected.
-- Requests during these checks were only to local static files. Microphone capture and audible playback were not tested. No independent accessibility audit, student trial, or live Pages deployment check is implied.
-
-Syntax checks: `node --check app.js` and `node --check scenarios.js`. Whitespace check: `git diff --check`.
-
-## RAAS content and compact UI revision
-
-The current playground uses kidney-week material at the user’s supplied location. It covers ACE inhibition and potassium excretion, ENaC and the principal-cell electrical gradient, competing effects of aldosterone and distal delivery/flow during volume depletion, and intracellular potassium shifts versus urinary removal. These are selected mechanistic challenges, not an empirically ranked list of the hardest course topics.
-
-Local reference: `/home/arvin/2TBstorage/University/UBC MEDD lecture pdf/Y2 Term 1 Week 49/049_-_4.2_potassium_disorders_-_dr._krishna_poinen.pdf`, Dr. Krishna Poinen, _Potassium Disorders_. Read the relevant potassium-handling sections and their conditions, including slides 13–19 and 24. Rendered and inspected slides 14 and 16 to resolve the transporter diagram and membrane orientation. The requested review-notes folder was also inspected; its available endocrine summary was insufficient for these detailed renal mechanisms and was not used to invent missing content. No course PDFs, figures, or private notes are uploaded.
-
-Verified short quotations and scope:
-
-- Slide 16: “Lumen more negative therefore favours K+ secretion into lumen.” Supports the ENaC–electrical-gradient explanation in the principal-cell tree.
-- Slide 14: “Luminal Delivery of Na”. In the surrounding four-factor list, supports considering delivery alongside aldosterone, flow, and acid-base state. Slide 24 describes the competing influences during volume depletion; the tree avoids claiming a universal net outcome.
-- Slide 19: “Shift K+ intracellularly”. The surrounding sequence distinguishes insulin-supported uptake from subsequent aldosterone-supported renal secretion and urinary excretion. This supports the shift/removal distinction, not treatment doses or clinical stopping criteria.
-
-External cross-check: [NIH ODS Potassium fact sheet](https://ods.od.nih.gov/factsheets/Potassium-HealthProfessional/), “Interactions with Medications,” ACE inhibitor/ARB paragraph. Verified quotation: “These medications reduce urinary potassium excretion, which can lead to hyperkalemia.” Supports the drug-excretion direction, with kidney impairment identified as an additional risk in the next paragraph. [National Kidney Foundation clinical bulletin](https://www.kidney.org/sites/default/files/2024-10/02-10-7260_clinical_bulletin_hyperkalemia.pdf), p. 2, “Importance of RAAS Blockade in CKD,” independently supports reduced potassium secretion with ACE inhibitors/ARBs. Only these physiology passages are used; the 2016 bulletin’s treatment recommendations are not adopted. NCBI chapter retrieval encountered a CAPTCHA; its search snippets were not used as evidence.
-
-The new renal scripts are authored from these sources in the main session. No further subagents were spawned. Broad prompts receive a direct mechanism explanation; targeted prompts elicit a prediction before explanation. Later choices expose specific correct reasoning and misconceptions with matching feedback. All replies remain pre-generated. The scripts have source checks, not independent faculty validation or observed learning results.
-
-UI changes remove the progress bar, repeated completion buttons, oversized landing artwork, duplicate scenario selectors, and repeated instructions. Continue records lesson completion and advances. Earlier conversation turns and optional comparisons remain available on demand. Source PDF SHA-256: `2d7ba1455a9394a71f4dd6545de95b38ad59b738ae25d376da6311ff33ad6b8c`. Existing case, notes, voice, and reflective activities remain accessible.
-
-### Verification after the RAAS revision
-
-Headless Chromium passed all 48 paths (4 topics × 2 opening prompts × 3 reasoning branches × 2 final answers). Checks confirmed one visible tutor reply, no progress-bar elements, one completion count, one Continue control per lesson, no editable playground prompts, and no JavaScript errors. Existing quiz, case concealment/finish gate, note resources, escaped in-tab responses, completion persistence and transcript clearing checks passed. Representative views had no horizontal overflow at 375, 768 and 1440 pixels. Desktop, mobile and conversation screenshots were inspected. One initial screenshot attempt timed out; the subsequent run rendered and completed successfully. Microphone capture and audible playback remain untested.
+Syntax checks: `node --check app.js`, `node --check scenarios.js`. Whitespace check: `git diff --check`. Archived voice-source hashes were rechecked with `sha256sum -c SHA256SUMS` (all three matched).

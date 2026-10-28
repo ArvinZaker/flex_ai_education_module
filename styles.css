@@ -882,31 +882,12 @@ ul {
 li {
   margin-bottom: 9px;
 }
-.voice-orb {
-  width: 100px;
-  height: 100px;
-  background: var(--green);
-  color: var(--lime);
-  border-radius: 50%;
-  display: grid;
-  place-items: center;
-  font-size: 38px;
-  margin: 20px auto;
-}
-.voice-controls {
-  text-align: center;
-}
-.voice-controls .actions {
-  justify-content: center;
-}
 .lesson-mini {
   font-size: 12px;
   color: var(--muted);
   max-width: 700px;
 }
-#speech-status {
-  min-height: 22px;
-}
+
 @media (min-width: 1500px) {
   main {
     padding-top: 55px;
@@ -1345,4 +1326,24 @@ main {
   .complete-row {
     align-items: flex-end;
   }
+}
+
+.reference-list {
+  padding-left: 25px;
+}
+.reference-list li {
+  padding: 14px 0;
+  border-bottom: 1px solid var(--line);
+}
+.reference-list p {
+  margin: 0 0 6px;
+  font-size: 12px;
+}
+.evidence-refs {
+  margin-top: 12px;
+}
+.evidence-refs .source {
+  margin: 4px 0;
+  font-size: 11px !important;
+  line-height: 1.6;
 }

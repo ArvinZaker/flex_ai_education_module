@@ -1,286 +1,297 @@
-/* Authored RAAS teaching conversations. Source locators are attached to each tree.
-   These scripts are illustrative, not recorded model runs or measured A/B results. */
+/* Authored, pre-generated study conversations. Medical references support facts;
+   education references support the learning approach. These are not recorded model runs. */
 window.SCENARIOS = [
   {
-    id: "ace",
-    title: "ACE inhibitors & K⁺",
-    topic: "Why can an ACE inhibitor raise potassium?",
-    a: "Why do ACE inhibitors cause hyperkalemia?",
-    b: "I know ACE inhibitors reduce angiotensin II. Quiz me on the missing link to potassium secretion, one step at a time. Wait before explaining.",
+    id: "start",
+    title: "Start a study chat",
+    topic:
+      "You remember ACE inhibition lowers angiotensin II. You cannot explain why blood potassium can rise.",
+    a: "Explain ACE inhibitors.",
+    b: "I am a first-year medical student. I know ACE inhibitors reduce angiotensin II, but I do not understand the potassium effect. Explain that connection, then check my understanding.",
     responseA:
-      "ACE inhibition reduces angiotensin II–mediated aldosterone stimulation. Less aldosterone can reduce distal potassium secretion, so potassium may accumulate in blood.",
+      "ACE inhibitors reduce formation of angiotensin II. This reduces angiotensin II–mediated aldosterone stimulation and can reduce renal potassium excretion.",
     responseB:
-      "Angiotensin II normally stimulates aldosterone release. After ACE inhibition, would that stimulus increase or decrease? Predict what happens to potassium secretion.",
+      "Let us focus on your missing connection: angiotensin II stimulates aldosterone, and aldosterone supports potassium secretion into urine. Reducing that signal can reduce excretion. Which word or step is still unclear?",
     takeaway:
-      "A gives the mechanism immediately. B asks you to predict the intermediate step.",
-    sources: "Poinen, Potassium Disorders, slides 14–16 and 24",
-    url: "https://ods.od.nih.gov/factsheets/Potassium-HealthProfessional/#h9",
+      "The specific message tells the chatbot your level, existing knowledge, and learning gap.",
+    references: [1, 5, 7],
     branches: [
       {
         prompt:
-          "Less aldosterone means less K⁺ secretion, so blood K⁺ can rise.",
+          "I do not understand “secretion.” Explain the direction in one sentence.",
         reply:
-          "Yes. You connected the hormone change to impaired renal excretion. What if kidney function is also impaired?",
-        follow: "Predict the combined effect.",
+          "In this kidney pathway, secretion moves potassium into tubular fluid so it can leave in urine. Less secretion can leave more potassium in the body.",
+        follow: "Choose your next message.",
         answers: [
           {
-            text: "Impaired excretion can compound the risk.",
+            text: "Ask me one question to check that I understood. Do not show the answer yet.",
             feedback:
-              "Yes. Kidney dysfunction and ACE inhibition can both impair potassium excretion. The medication history alone does not establish the cause of a real result.",
+              "If the kidney secretes less potassium into urine, would that tend to increase or decrease potassium remaining in the body? Give your prediction first.",
           },
           {
-            text: "Lower GFR guarantees a low potassium level.",
+            text: "Explain the same connection using an arrow chain.",
             feedback:
-              "No. Impaired kidney function can reduce potassium excretion. It does not guarantee low potassium; review other contributors and the actual result.",
+              "ACE inhibition → less angiotensin II–mediated aldosterone stimulation → less potassium secretion into urine → blood potassium can rise. This describes a possible effect, not an inevitable result in every person.",
           },
         ],
       },
       {
         prompt:
-          "If aldosterone falls, less K⁺ enters the blood, so blood K⁺ falls.",
+          "I know what aldosterone is. Skip its definition and explain the last kidney step.",
         reply:
-          "That reverses the direction of secretion. Here, secretion means K⁺ moves from the principal cell into tubular fluid for urinary excretion. Less secretion can leave more K⁺ in the body.",
-        follow: "Which arrow describes the renal effect?",
+          "Aldosterone promotes distal potassium secretion. Reducing its effect can reduce potassium excretion. That is the last link between the hormone pathway and a possible rise in blood potassium.",
+        follow: "Choose your next message.",
         answers: [
           {
-            text: "Less aldosterone → less urinary K⁺ secretion.",
+            text: "Let me explain it back. Then tell me which step I missed.",
             feedback:
-              "Correct direction. Reduced elimination can raise blood K⁺. Distinguish secretion into urine from release into blood.",
+              "Go ahead. Explain the path from ACE inhibition to potassium excretion in your own words. I will wait for your attempt before comparing it with the reference.",
           },
           {
-            text: "Less aldosterone → more urinary K⁺ secretion.",
+            text: "Give me a short explanation I can check against a reference.",
             feedback:
-              "That is the opposite of aldosterone’s usual distal action. Aldosterone promotes potassium secretion; reducing its effect can reduce excretion.",
+              "ACE inhibitors can reduce urinary potassium excretion and lead to hyperkalemia. Check NIH ODS, Potassium, under Interactions with Medications → ACE inhibitors and ARBs.",
           },
         ],
       },
       {
-        prompt: "Show the pathway, then test whether I can reverse it.",
+        prompt:
+          "Instead of another explanation, ask me one question about the mechanism.",
         reply:
-          "Angiotensin II → aldosterone → distal K⁺ secretion. ACE inhibition reduces the angiotensin II stimulus. Now reverse the pathway rather than just memorizing “ACE inhibitor = high K⁺.”",
-        follow: "Predict the direction of the downstream changes.",
+          "After ACE inhibition reduces the angiotensin II signal, what would you predict happens to aldosterone stimulation? Answer that step before moving to potassium.",
+        follow: "Choose your next message.",
         answers: [
           {
-            text: "Aldosterone stimulation falls; K⁺ secretion can fall.",
+            text: "I think it decreases. Give feedback on that step, then ask the next question.",
             feedback:
-              "Yes. This explains why potassium can rise. It is a mechanism, not a prediction that every person taking an ACE inhibitor becomes hyperkalemic.",
+              "Yes, the angiotensin II stimulus decreases. Now predict the direction of potassium secretion into urine. What effect could that have on blood potassium?",
           },
           {
-            text: "Aldosterone stimulation rises; K⁺ secretion rises.",
+            text: "I am stuck. Give a hint without giving the full answer.",
             feedback:
-              "The initial step is reversed: ACE inhibition reduces angiotensin II formation and its aldosterone stimulus. Recheck that step before predicting potassium.",
+              "Angiotensin II normally stimulates aldosterone. Think about what happens to a downstream signal when an upstream stimulus is reduced.",
           },
         ],
       },
     ],
   },
   {
-    id: "principal",
-    title: "ENaC & potassium",
-    topic: "How does sodium reabsorption help potassium secretion?",
-    a: "Explain what aldosterone does in the collecting duct.",
-    b: "I know aldosterone increases ENaC. I cannot connect sodium entry to K⁺ secretion. Explain the electrical gradient, then ask me to predict ENaC blockade.",
+    id: "gap",
+    title: "Fix an unclear explanation",
+    topic:
+      "The chatbot mentioned ENaC, the sodium channel in a collecting-duct principal cell. You do not see how it affects potassium.",
+    a: "Explain that again.",
+    b: "I know ENaC lets sodium enter the principal cell. I do not understand how that helps potassium leave into urine. Explain only the electrical connection.",
     responseA:
-      "Aldosterone increases ENaC activity, Na⁺/K⁺-ATPase activity, and luminal potassium-channel activity in principal cells, supporting sodium reabsorption and potassium secretion.",
+      "Aldosterone supports sodium reabsorption through ENaC and potassium secretion through luminal potassium channels. The basolateral sodium-potassium pump also supports this process.",
     responseB:
-      "Na⁺ enters the principal cell from the tubular lumen through ENaC. Removing positive charge makes the lumen relatively negative, favouring K⁺ secretion into it. Predict what ENaC blockade does to that driving force.",
+      "When positively charged sodium leaves the tubular lumen through ENaC, the lumen becomes relatively negative. That electrical difference favours potassium secretion into the lumen. Which part of that direction is unclear?",
     takeaway:
-      "B identifies the missing connection: the lumen’s electrical potential.",
-    sources: "Poinen, Potassium Disorders, slides 14–16",
+      "“Explain again” may repeat the same material. Naming the missing connection gives the next reply a clear target.",
+    references: [1, 7, 8],
     branches: [
       {
         prompt:
-          "Blocking ENaC reduces the lumen-negative driving force for K⁺ secretion.",
+          "What does “lumen” mean in this explanation? Use plain language.",
         reply:
-          "Yes. Less electrogenic sodium reabsorption weakens that driving force. This helps explain why an ENaC blocker can spare potassium.",
-        follow: "Now locate the transporters.",
+          "The lumen is the inside of the kidney tubule, where the fluid that will become urine is flowing. In this example, potassium secretion moves potassium into that fluid.",
+        follow: "Choose your next message.",
         answers: [
           {
-            text: "ENaC faces the lumen; Na⁺/K⁺-ATPase faces blood.",
+            text: "Now restate the ENaC explanation using “tubular fluid” instead of “lumen.”",
             feedback:
-              "Correct. ENaC admits luminal Na⁺. The basolateral pump moves Na⁺ out and K⁺ into the cell; luminal K⁺ channels allow secretion.",
+              "Sodium moves out of tubular fluid through ENaC into the principal cell. The fluid becomes relatively negative, which favours potassium moving into it through potassium channels.",
           },
           {
-            text: "ENaC faces blood; Na⁺/K⁺-ATPase faces the lumen.",
+            text: "I understand “lumen” now. Ask me to predict what blocking ENaC would do.",
             feedback:
-              "The membranes are reversed. ENaC is luminal; Na⁺/K⁺-ATPase is basolateral. Redraw the cell with urine on one side and blood on the other.",
+              "If ENaC is blocked, less positive sodium charge leaves the tubular fluid by that route. Would the electrical driving force favouring potassium secretion become stronger or weaker?",
           },
         ],
       },
       {
-        prompt: "The Na⁺/K⁺ pump directly pushes K⁺ into urine.",
+        prompt:
+          "I think the sodium-potassium pump pushes potassium directly into urine. Check that statement.",
         reply:
-          "The pump brings K⁺ into the cell across the blood-facing membrane. K⁺ then exits into tubular fluid through luminal channels. These are two different membrane crossings.",
-        follow: "Which is the correct route?",
+          "That statement puts the pump on the wrong side of the cell. The pump brings potassium into the principal cell across the blood-facing membrane. Potassium leaves into tubular fluid through a different, luminal channel.",
+        follow: "Choose your next message.",
         answers: [
           {
-            text: "Blood → pump → principal cell → K⁺ channel → lumen.",
+            text: "Give me a verbal diagram with blood, cell and tubular fluid labelled.",
             feedback:
-              "Yes. The pump loads the cell with K⁺; the luminal channel is the exit into urine.",
+              "Blood side → sodium-potassium pump brings potassium into the principal cell → luminal potassium channel lets potassium enter tubular fluid. ENaC is the separate sodium entry channel on the tubular-fluid side.",
           },
           {
-            text: "Blood → ENaC → lumen.",
+            text: "Do not repeat the diagram. Ask me to locate the two membrane crossings.",
             feedback:
-              "ENaC is a sodium channel on the luminal membrane. It is not the potassium exit pathway. Separate the ion, transporter, and membrane.",
+              "First, which membrane does potassium cross to enter the principal cell from the blood side? Then, which membrane does it cross to enter tubular fluid?",
           },
         ],
       },
       {
-        prompt: "Quiz me on which way K⁺ moves. Do not show the answer first.",
+        prompt:
+          "That is too much at once. Explain just why the tubular fluid becomes relatively negative.",
         reply:
-          "In a principal cell, does aldosterone usually promote K⁺ movement into tubular fluid or reabsorption from tubular fluid?",
-        follow: "Choose the direction.",
+          "ENaC allows positively charged sodium to move from tubular fluid into the cell. Removing that positive charge makes the tubular fluid relatively negative. We can stop at that step.",
+        follow: "Choose your next message.",
         answers: [
           {
-            text: "Into tubular fluid: secretion.",
+            text: "I understand that step. Now connect it to potassium secretion.",
             feedback:
-              "Yes. Aldosterone promotes potassium secretion by principal cells. The sodium reabsorption and potassium secretion steps are coupled through transport and electrical gradients.",
+              "The relatively negative tubular fluid favours movement of positively charged potassium into it through luminal potassium channels.",
           },
           {
-            text: "From tubular fluid back into blood: reabsorption.",
+            text: "Ask me to restate that one step before continuing.",
             feedback:
-              "For this principal-cell pathway, aldosterone promotes secretion into tubular fluid. Do not generalize other nephron transport processes to this specific cell.",
+              "Explain in your own words what happens to the tubular fluid’s electrical charge when sodium enters the principal cell through ENaC. I will wait before adding the next step.",
           },
         ],
       },
     ],
   },
   {
-    id: "volume",
-    title: "Volume depletion paradox",
-    topic: "Does high aldosterone guarantee high potassium excretion?",
-    a: "What happens to potassium during volume depletion?",
-    b: "Volume depletion raises aldosterone, but lowers distal sodium delivery and flow. Challenge my claim that aldosterone alone predicts urinary K⁺ loss.",
+    id: "recall",
+    title: "Turn a chat into a quiz",
+    topic:
+      "You have read how insulin shifts potassium into cells. You want to know whether you can explain it without rereading.",
+    a: "Summarize insulin and potassium for me.",
+    b: "Quiz me on potassium shifts versus removal. Ask one question, wait for my answer, then explain any error. Do not summarize first.",
     responseA:
-      "Volume depletion can increase aldosterone, which promotes potassium secretion. It can also reduce distal sodium delivery and flow, which limit secretion. The net effect depends on these competing influences.",
+      "Insulin promotes potassium movement from extracellular fluid into cells. That changes its distribution within the body. Urinary excretion is a separate process that removes potassium from the body.",
     responseB:
-      "Your claim leaves out delivery and flow. Aldosterone supports secretion, but principal cells still need distal Na⁺ delivery and tubular flow. Which effect are you ignoring if you predict urinary K⁺ from aldosterone alone?",
+      "After insulin moves potassium into cells, has that movement removed potassium from the body, or changed its location within the body? Give your answer before I explain.",
     takeaway:
-      "B tests a specific oversimplification instead of accepting one hormone as the whole explanation.",
-    sources: "Poinen, Potassium Disorders, slides 14–15, 18 and 24",
+      "The quiz request specifies the order: question, attempt, feedback. A summary request gives the explanation immediately.",
+    references: [1, 4, 6],
     branches: [
       {
-        prompt: "I ignored the fall in distal Na⁺ delivery and flow.",
+        prompt:
+          "It changed location within the body. Tell me whether my explanation is complete.",
         reply:
-          "Exactly. Those changes can oppose aldosterone’s secretory effect. The lecture describes balancing influences during volume depletion; it does not imply one fixed potassium outcome for every patient.",
-        follow: "What conclusion is justified?",
+          "That identifies redistribution correctly. To complete the comparison, state which process removes potassium from the body, rather than moving it between compartments.",
+        follow: "Choose your next message.",
         answers: [
           {
-            text: "Aldosterone alone is insufficient to predict net K⁺ excretion.",
+            text: "Ask me a new application question and wait.",
             feedback:
-              "Yes. State the competing mechanisms and the missing information before predicting a net result.",
+              "A blood potassium result falls. Can that result alone tell you whether potassium was excreted or moved into cells? Explain before I give feedback.",
           },
           {
-            text: "Volume depletion always causes potassium retention.",
+            text: "Show me the reference passage before we continue.",
             feedback:
-              "That is another absolute claim. The opposing influences do not establish universal retention or universal loss.",
+              "Open Merck Manual’s Overview of Disorders of Potassium Concentration, section Potassium shifts. It describes insulin moving potassium into cells. Compare that with the Potassium metabolism section on renal excretion.",
           },
         ],
       },
       {
-        prompt: "High aldosterone must always mean high urinary K⁺ loss.",
+        prompt:
+          "It left the body because the blood level fell. Explain where my reasoning went wrong.",
         reply:
-          "That treats a hormone level as the only determinant. Distal sodium delivery and flow also matter. If both decrease, a prediction based only on aldosterone is incomplete.",
-        follow: "Choose the better next question.",
+          "The mistake is treating blood concentration as the amount in the whole body. Insulin can move potassium from blood into cells without removing it from the body.",
+        follow: "Choose your next message.",
         answers: [
           {
-            text: "What are distal delivery, flow, and kidney function doing?",
+            text: "Give me another question on that same distinction. Hold back the answer.",
             feedback:
-              "Yes. These add determinants that the hormone-only prediction omitted. They help frame the uncertainty rather than inventing a net result.",
+              "Which event would remove potassium from the body: movement from blood into muscle cells, or excretion into urine? Explain your choice.",
           },
           {
-            text: "Can I ignore flow if aldosterone is high?",
+            text: "Give me one sentence to remember, then let me try again.",
             feedback:
-              "No. Flow remains a determinant of secretion. High aldosterone does not remove the need to consider it.",
+              "A change in blood potassium can reflect a change in distribution; it does not by itself prove potassium left the body. Now try explaining that distinction in your own words.",
           },
         ],
       },
       {
-        prompt: "Help me explain the flow effect without an analogy.",
+        prompt: "I am not sure. Give me a hint instead of the answer.",
         reply:
-          "Flow carries secreted K⁺ along the tubule. Higher flow can keep luminal K⁺ lower near the principal cell, supporting continued secretion. Lower flow can reduce that effect.",
-        follow: "Apply the mechanism.",
+          "Ask yourself whether the potassium crossed the body’s boundary. Moving from extracellular fluid into a cell changes its location inside the body.",
+        follow: "Choose your next message.",
         answers: [
           {
-            text: "High flow can support K⁺ secretion even at the same urine concentration.",
+            text: "Let me try: it stayed in the body. Check that, then ask about urinary excretion.",
             feedback:
-              "Yes. Concentration and the amount excreted are different quantities. The lecture’s flow diagram contrasts the amount carried at different flows.",
+              "Yes. The shift did not itself remove potassium. Now explain what is different when potassium is excreted in urine.",
           },
           {
-            text: "Urine K⁺ concentration alone tells me the amount excreted.",
+            text: "Explain the answer now, then ask me a different question later.",
             feedback:
-              "It does not. The amount carried also depends on urine flow. Do not treat concentration as an excretion rate.",
+              "It changed compartments. The potassium remained in the body; urinary excretion would remove it. When you are ready, ask for a new question without rereading this explanation.",
           },
         ],
       },
     ],
   },
   {
-    id: "shift",
-    title: "Shift vs removal",
-    topic: "Why can blood potassium fall without potassium leaving the body?",
-    a: "How does insulin lower potassium?",
-    b: "I confuse shifting K⁺ into cells with removing it. Use the post-meal response to test those two mechanisms separately before explaining.",
+    id: "verify",
+    title: "Challenge a confident reply",
+    topic:
+      "You ask about volume depletion. One scripted reply below deliberately overstates what aldosterone alone can tell you.",
+    containsError: true,
+    a: "If aldosterone is high, can I assume urinary potassium loss is high?",
+    b: "Aldosterone is high, but distal sodium delivery and flow may be low. Explain the competing effects and say what cannot be concluded from the hormone alone.",
     responseA:
-      "Insulin promotes cellular K⁺ uptake through Na⁺/K⁺-ATPase. This redistributes K⁺ from extracellular fluid into cells. Renal excretion is a separate route for removing potassium from the body.",
+      "Yes. High aldosterone always means high urinary potassium loss.",
     responseB:
-      "After a potassium-containing meal, insulin can move K⁺ into cells. At that moment, has potassium left the body, or changed compartments? Choose before we discuss the kidney’s role.",
+      "Aldosterone promotes potassium secretion, while reduced distal sodium delivery and flow can limit it. Aldosterone alone does not establish the net potassium outcome. Check the other determinants before predicting it.",
     takeaway:
-      "B asks you to separate extracellular concentration from total-body potassium.",
-    sources: "Poinen, Potassium Disorders, slide 19",
+      "The broad reply contains an intentional overstatement. A fluent answer still needs checking against evidence and its conditions.",
+    references: [2, 6, 8],
     branches: [
       {
         prompt:
-          "It has changed compartments; total-body K⁺ has not fallen from that shift.",
+          "You said “always.” What conditions did that conclusion leave out?",
         reply:
-          "Yes. The blood level can fall while the potassium remains inside cells. The lecture then describes aldosterone-supported renal secretion and urinary excretion.",
-        follow: "Which process removes potassium from the body?",
+          "The statement ignored distal sodium delivery and tubular flow. Both influence potassium secretion. The original “always” claim was too strong.",
+        follow: "Choose your next message.",
         answers: [
           {
-            text: "Urinary excretion.",
+            text: "Give a corrected statement and identify the supporting source.",
             feedback:
-              "Yes. Intracellular uptake changes distribution; urinary excretion changes the body’s potassium balance.",
+              "Aldosterone supports potassium secretion, but net excretion also depends on distal delivery and flow. Poinen’s Potassium Disorders, slides 14–15 and 24, covers the combined influences; Merck’s Potassium metabolism section describes the effect of distal sodium delivery.",
           },
           {
-            text: "Intracellular uptake by insulin.",
+            text: "You corrected yourself, so I do not need to check anything else.",
             feedback:
-              "Uptake into cells redistributes potassium within the body. It does not itself remove the potassium load.",
+              "A revised answer still needs checking. Open the reference and compare the specific statement with the relevant passage; a chatbot’s agreement is not independent evidence.",
           },
         ],
       },
       {
-        prompt: "If the blood K⁺ falls, the body must have lost that K⁺.",
+        prompt:
+          "Name a source and the exact section I should open to check the delivery claim.",
         reply:
-          "A blood sample measures extracellular concentration, not all potassium in the body. K⁺ can leave extracellular fluid by entering cells without leaving the body.",
-        follow: "What would correct the claim?",
+          "Open Merck Manual’s Overview of Disorders of Potassium Concentration, section Potassium metabolism. It states that increased sodium delivery to the distal nephron promotes potassium excretion. The supplied course lecture discusses its interaction with volume depletion.",
+        follow: "Choose your next message.",
         answers: [
           {
-            text: "A fall may reflect redistribution, removal, or both.",
+            text: "Does that passage prove every part of your claim about volume depletion?",
             feedback:
-              "Yes. Identify the mechanism before interpreting the blood-level change as potassium loss.",
+              "No. The Merck passage supports distal sodium delivery’s effect. The volume-depletion interaction is covered in the course lecture, particularly slide 24. A citation should not be stretched beyond the statement it supports.",
           },
           {
-            text: "Every fall proves increased urinary excretion.",
+            text: "A recognizable source name is enough; I will skip opening it.",
             feedback:
-              "No. The post-meal insulin response is an example of redistribution. A blood-level change alone does not establish urinary loss.",
+              "The name alone does not tell you whether the source supports this sentence. Open the section and check its actual wording and conditions before using the claim.",
           },
         ],
       },
       {
-        prompt: "Connect insulin’s role to aldosterone’s role.",
+        prompt:
+          "I want to check this against my course material. Tell me which parts of the answer I should compare.",
         reply:
-          "In the lecture’s post-meal sequence, insulin supports cellular uptake, while increased K⁺ also stimulates aldosterone and subsequent renal secretion. These are complementary responses to the potassium load.",
-        follow: "Match each hormone to this sequence.",
+          "Compare the hormone effect, distal sodium delivery, and tubular flow. Check whether the material supports a universal “always” conclusion or describes competing influences.",
+        follow: "Choose your next message.",
         answers: [
           {
-            text: "Insulin: cellular uptake. Aldosterone: distal renal secretion.",
+            text: "The source discusses competing influences. Rewrite the answer without the absolute claim.",
             feedback:
-              "Correct for the sequence shown. Distinguish a compartment shift from excretion; avoid interpreting either response as proof that a real potassium abnormality is resolved.",
+              "High aldosterone can favour potassium secretion, but reduced distal delivery and flow can oppose that effect. The hormone level alone is insufficient to predict the net result.",
           },
           {
-            text: "Insulin: urinary excretion. Aldosterone: only cellular uptake.",
+            text: "Skip the source comparison and give me a more confident answer.",
             feedback:
-              "Those roles are reversed for the lecture’s sequence. Insulin supports cellular uptake; aldosterone promotes distal renal potassium secretion.",
+              "More confident wording would not resolve the missing evidence. Keep the unresolved determinants explicit and check them against the reference before drawing a conclusion.",
           },
         ],
       },

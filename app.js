@@ -13,20 +13,148 @@ const CDC = "https://www.cdc.gov/von-willebrand/diagnosis/";
 const IES = "https://ies.ed.gov/ncee/wwc/PracticeGuide/1";
 const UNESCO =
   "https://www.unesco.org/en/articles/guidance-generative-ai-education-and-research";
+const PROMPTING =
+  "https://www.aacom.org/medical-education/ai-hub/ai-foundations/interacting-with-ai";
+const EVALUATION =
+  "https://www.aacom.org/medical-education/ai-hub/ai-foundations/evaluating-ai-output";
+const RESPONSIBLE =
+  "https://www.aacom.org/medical-education/ai-hub/ai-foundations/module-3";
+const NIH = "https://ods.od.nih.gov/factsheets/Potassium-HealthProfessional/";
+const MERCK =
+  "https://www.merckmanuals.com/professional/nephrology/electrolyte-disorders/overview-of-disorders-of-potassium-concentration";
+const OPENSTAX =
+  "https://openstax.org/books/anatomy-and-physiology-2e/pages/25-8-endocrine-regulation-of-kidney-function";
+const references = [
+  {
+    id: 1,
+    title: "AACOM (2026). Interacting with AI: Prompts & Process.",
+    short: "AACOM: Prompts & Process",
+    url: PROMPTING,
+    locator:
+      "Introduction to Contextual Prompting; A Practical Clinical Prompting Framework; Prompt Iteration",
+    supports:
+      "Supports stating your level, goal, context and desired response, and refining the next message. It does not prove that these scripted examples improve learning.",
+  },
+  {
+    id: 2,
+    title: "AACOM (2026). Evaluating AI Output: Applying Critical Thinking.",
+    short: "AACOM: Evaluating AI Output",
+    url: EVALUATION,
+    locator:
+      "The Importance of Evaluating AI Output; Example Prompt RACCCA Evaluation",
+    supports:
+      "Supports checking the accuracy, completeness and cited evidence of a fluent response. No scoring framework from this page is implemented here.",
+  },
+  {
+    id: 3,
+    title: "AACOM (2026). Responsible Use of AI in Medical Education.",
+    short: "AACOM: Responsible Use",
+    url: RESPONSIBLE,
+    locator:
+      "Ethical & Transparent Use; Data Stewardship and Security; Smart Use Tips",
+    supports:
+      "Supports following course/institution policies, protecting patient information, and independently verifying references.",
+  },
+  {
+    id: 4,
+    title:
+      "Pashler H et al. (2007). Organizing Instruction and Study to Improve Student Learning. Institute of Education Sciences.",
+    short: "IES: Study and retrieval practice",
+    url: IES,
+    locator: "Recommendations 5b and 7",
+    supports:
+      "Supports retrieval practice and explanatory questions in general. It does not validate an AI tutor or this module.",
+  },
+  {
+    id: 5,
+    title:
+      "NIH Office of Dietary Supplements (2022). Potassium: Fact Sheet for Health Professionals.",
+    short: "NIH ODS: Potassium",
+    url: NIH,
+    locator: "Interactions with Medications → ACE inhibitors and ARBs",
+    supports:
+      "States that these drugs can reduce urinary potassium excretion and lead to hyperkalemia; identifies impaired kidney function as an additional risk.",
+  },
+  {
+    id: 6,
+    title:
+      "Lewis JL III (updated December 2025). Overview of Disorders of Potassium Concentration. Merck Manual Professional Edition.",
+    short: "Merck Manual: Potassium concentration",
+    url: MERCK,
+    locator: "Potassium shifts; Potassium metabolism",
+    supports:
+      "Supports insulin-mediated uptake into cells, the distinction between concentration and body potassium, and the effect of distal sodium delivery on excretion.",
+  },
+  {
+    id: 7,
+    title:
+      "Betts JG et al. (2022). Anatomy and Physiology 2e. OpenStax. Section 25.8, Endocrine Regulation of Kidney Function.",
+    short: "OpenStax: Kidney hormone regulation",
+    url: OPENSTAX,
+    locator: "Renin–Angiotensin–Aldosterone",
+    supports:
+      "Supports angiotensin II/aldosterone signalling and aldosterone’s promotion of sodium reabsorption and potassium excretion. The detailed ENaC diagram is supported by the course lecture below.",
+  },
+  {
+    id: 8,
+    title:
+      "Poinen K (undated). Potassium Disorders. UBC MEDD, Year 2, Week 49. Course lecture.",
+    short: "Poinen: Potassium Disorders",
+    url: null,
+    locator: "Slides 14–16, 18–19 and 24",
+    supports:
+      "Supplied course source for ENaC/pump orientation, the lumen-negative gradient, flow/delivery, and the post-meal potassium response. This source is not publicly hosted; the PDF is not uploaded.",
+  },
+  {
+    id: 9,
+    title: "FSMB and NBME (February 2021). USMLE Step 1 Sample Test Questions.",
+    short: "USMLE: Sample item 62",
+    url: USMLE,
+    locator: "Item 62, printed p. 29; answer key, printed p. 49",
+    supports:
+      "Supplies the separate simulated examination case and answer. The learning prompts and staged presentation are authored for this module.",
+  },
+  {
+    id: 10,
+    title: "CDC (15 May 2024). Diagnosing von Willebrand Disease.",
+    short: "CDC: Diagnosing VWD",
+    url: CDC,
+    locator: "Screening tests; Diagnostic tests",
+    supports:
+      "Supports the case debrief and the deliberately incorrect statement/correction in the note exercise.",
+  },
+];
+function evidence(ids) {
+  return `<div class="evidence-refs">${ids
+    .map((id) => {
+      const r = references.find((r) => r.id === id);
+      return `<p class="source">[${r.id}] ${
+        r.url ? link(r.url, r.short) : `<a href="#about">${esc(r.short)}</a>`
+      } — ${esc(r.locator)}</p>`;
+    })
+    .join("")}</div>`;
+}
 const lessons = [
+  [
+    "getting-started",
+    "Your first study chat",
+    "",
+    "↗",
+    "Learn what to send, how to follow up, and what to check.",
+  ],
   [
     "tutor",
     "Personalize your tutor",
     "5–7 min",
     "✳",
-    "Set the level. Shape the explanation.",
+    "Tell the chatbot your level and the help you want.",
   ],
   [
     "gaps",
     "Communicate your gaps",
     "5–7 min",
     "↗",
-    "Make what you know and do not know visible.",
+    "Tell it exactly where the explanation stopped making sense.",
   ],
   [
     "recall",
@@ -41,13 +169,6 @@ const lessons = [
     "10–12 min",
     "⌘",
     "Gather evidence. Reconsider your conclusion.",
-  ],
-  [
-    "voice",
-    "Practice aloud",
-    "6–8 min",
-    "≋",
-    "Explain your thinking, then review your transcript.",
   ],
   [
     "notes",
@@ -78,9 +199,10 @@ let route = "",
   quizMissed = new Set(),
   quizAnswers = {},
   caseRevealed = false,
-  caseOpen = new Set(),
-  recognition = null,
-  recording = false;
+  caseOpen = new Set();
+let introChoice = null,
+  introFollow = false,
+  introVerified = null;
 const session = {};
 function link(url, text) {
   return `<a href="${url}" target="_blank" rel="noopener noreferrer">${text} ↗</a>`;
@@ -115,6 +237,7 @@ function updateNav() {
     ["overview", "Start here"],
     ...lessons.map((l) => [l[0], l[1]]),
     ["reflection", "Your takeaways"],
+    ["about", "References & help"],
   ]
     .map(
       (l) =>
@@ -123,22 +246,87 @@ function updateNav() {
         }" ${route === l[0] ? 'aria-current="page"' : ""}>${l[1]}</a>`
     )
     .join("");
-  $("#progress-text").textContent = `${completed.length} / 6 completed`;
+  $(
+    "#progress-text"
+  ).textContent = `${completed.length} / ${lessons.length} completed`;
 }
 
 function overview() {
-  return `<section class="hero"><div><span class="pill">YEAR 1 & 2 MEDICAL STUDENTS</span><h1>Learning with AI</h1><p class="lede">Use kidney-week RAAS problems to practice prompts, predictions, and explanations.</p><div class="meta"><span>40–50 min target</span><span>Self-paced</span></div><button class="button" data-go="baseline">Start learning ↗</button></div></section><div class="section-head"><h2>Activities</h2></div><div class="cards">${lessons
-    .map(
-      (l) =>
-        `<a class="lesson-card ${l[0] === "case" ? "featured" : ""}" href="#${
-          l[0]
-        }"><span class="card-icon" aria-hidden="true">${l[3]}</span><div><h3>${
-          l[1]
-        }</h3><p>${l[4]}</p></div><span aria-hidden="true">↗</span></a>`
-    )
-    .join(
-      ""
-    )}</div><p class="status-note">Pre-generated conversations. Fictional case. No live AI.</p>`;
+  return (
+    heading(
+      "A GUIDE FOR MEDICAL STUDENTS NEW TO AI",
+      "How to study with a chatbot",
+      "Learn what to ask, how to respond, and how to check an answer. No previous chatbot experience is needed."
+    ) +
+    `<section class="panel"><h2>Your starting situation</h2><p>Imagine you have finished a kidney lecture. An ACE inhibitor is a medicine that reduces a hormone signal called angiotensin II. You want help connecting that change to potassium in the blood. We will use that learning gap to practise a study conversation.</p><p>A <b>prompt</b> is the message you send. The chatbot’s <b>reply</b> is its answer. A <b>follow-up</b> is your next message when you need a clearer explanation, a question, or evidence.</p><div class="actions"><button class="button" data-go="baseline">Start with a short attempt ↗</button><button class="text-button" data-go="getting-started">Go straight to the guided example</button></div><p class="hint">You will choose from prepared messages. All replies here are scripted; no account or live AI connection is needed.</p>${evidence(
+      [1, 2]
+    )}</section>
+ <details><summary>See the learning path</summary><div class="cards">${lessons
+   .map(
+     (l) =>
+       `<a class="lesson-card" href="#${l[0]}"><span class="card-icon" aria-hidden="true">${l[3]}</span><div><h3>${l[1]}</h3><p>${l[4]}</p></div><span aria-hidden="true">↗</span></a>`
+   )
+   .join("")}</div></details>`
+  );
+}
+function introduction() {
+  return (
+    heading(
+      "01 / YOUR FIRST STUDY CHAT",
+      "Start with one learning need",
+      "Read the situation, choose a message, then follow the conversation."
+    ) +
+    `<section class="panel"><p><b>Before using a real chatbot:</b> check your course’s AI rules and permitted tools. Use fictional examples; do not enter patient information.</p>${evidence(
+      [3]
+    )}<p><b>Your goal:</b> understand why an ACE inhibitor can raise blood potassium. You do not need to know the answer to practise the conversation.</p>
+ ${
+   introChoice === null
+     ? `<div class="tree-options"><span class="label">What would you send?</span><button class="tree-choice" data-intro-choice="0">Explain ACE inhibitors.</button><button class="tree-choice" data-intro-choice="1">I am a first-year medical student. I know ACE inhibitors reduce angiotensin II, but I do not understand the potassium effect. Explain that connection using plain language.</button></div>`
+     : `${
+         introFollow
+           ? '<details class="conversation-history"><summary>Earlier exchange</summary>'
+           : ""
+       }<div class="chat student-chat"><span class="eyebrow">YOUR MESSAGE</span><p>${
+         introChoice === 0
+           ? "Explain ACE inhibitors."
+           : "I am a first-year medical student. I know ACE inhibitors reduce angiotensin II, but I do not understand the potassium effect. Explain that connection using plain language."
+       }</p></div>
+ <div class="chat tutor-chat"><span class="eyebrow">SCRIPTED CHATBOT REPLY</span><p>${
+   introChoice === 0
+     ? "ACE inhibitors reduce the conversion of angiotensin I to angiotensin II. Angiotensin II helps stimulate aldosterone, which promotes potassium secretion into urine."
+     : "Angiotensin II stimulates aldosterone. Aldosterone helps the kidney secrete potassium into urine. Reducing that signal can reduce potassium excretion, allowing potassium in blood to rise."
+ }</p>${evidence([5, 7])}</div>
+ <p class="hint">${
+   introChoice === 0
+     ? "This gives a general overview. Tell the chatbot which part you actually need help with."
+     : "This message names your level, what you know, and the missing connection. You can still ask a follow-up."
+ }</p>${introFollow ? "</details>" : ""}
+ ${
+   !introFollow
+     ? `<div class="tree-options"><span class="label">The word “secrete” is unclear. Send a follow-up.</span><button class="tree-choice" id="intro-follow">What does “secrete potassium” mean here? Explain the direction in one sentence.</button></div>`
+     : `<div class="chat student-chat"><span class="eyebrow">YOUR FOLLOW-UP</span><p>What does “secrete potassium” mean here? Explain the direction in one sentence.</p></div><div class="chat tutor-chat"><span class="eyebrow">SCRIPTED CHATBOT REPLY</span><p>In this kidney pathway, secretion means potassium moves into tubular fluid so it can leave in urine.</p>${evidence(
+         [8]
+       )}</div><p><b>Now check it.</b> Open the NIH source below, find “Interactions with Medications,” then the ACE inhibitor/ARB subsection. Compare its statement about urinary potassium excretion with the reply.</p>${evidence(
+         [5]
+       )}<div class="tree-options"><span class="label">Why should you open the source?</span><button class="tree-choice" data-intro-verify="1">A confident reply can still be wrong. I need to check that the source supports the claim.</button><button class="tree-choice" data-intro-verify="0">The chatbot supplied a link, so the claim is already verified.</button></div>${
+         introVerified === null
+           ? ""
+           : `<div class="feedback" role="status"><p>${
+               introVerified
+                 ? "Yes. A link is a starting point. Check that it opens, is relevant, and actually supports the statement."
+                 : "A citation can be incorrect or irrelevant. Open it and compare the relevant passage before relying on the reply."
+             }</p>${evidence([2, 3])}</div>`
+       }`
+ }
+ <button class="text-button" data-intro-choice="${
+   introChoice === 0 ? 1 : 0
+ }">Try the other first message</button>`
+ }
+ </section><details><summary>Take this approach to a real study chat</summary><ol><li>Choose one course topic and think about what you already understand.</li><li>Send your level, learning gap, and the kind of help you want.</li><li>Read the reply and ask a focused follow-up.</li><li>Check factual claims against the original course source or a reputable reference.</li><li>Try explaining the idea yourself, or ask for a question that waits for your answer.</li></ol>${evidence(
+   [1, 2, 4]
+ )}</details>` +
+    finish("getting-started", "tutor")
+  );
 }
 function comparison() {
   const s = window.SCENARIOS[scenario];
@@ -175,11 +363,15 @@ function tree() {
   const endings = s.branches;
   return `<section class="panel" style="margin-top:25px"><div class="section-head"><div><h2>${
     state[2]
-      ? "Feedback"
+      ? "Chatbot reply"
       : selected === undefined
       ? "Choose a prompt"
       : "Choose your response"
-  }</h2></div><button class="text-button" id="tree-reset">Restart conversation</button></div><div class="conversation"><div class="chat tutor-chat"><span class="eyebrow">TUTOR</span><p>${esc(
+  }</h2></div><button class="text-button" id="tree-reset">Restart conversation</button></div>${
+    s.containsError
+      ? '<p class="notice warning">This exercise includes a deliberately overstated reply for you to challenge.</p>'
+      : ""
+  }<div class="conversation"><div class="chat tutor-chat"><span class="eyebrow">TUTOR</span><p>${esc(
     s.topic
   )}</p></div>${
     selected === undefined
@@ -194,7 +386,7 @@ function tree() {
           s["response" + selected]
         )}</p></div>${
           next === undefined
-            ? `<div class="tree-options"><span class="label">What would you ask next?</span>${endings
+            ? `<div class="tree-options"><span class="label">What would you send next?</span>${endings
                 .map(
                   (x, i) =>
                     `<button class="tree-choice" data-tree-next="${i}">${esc(
@@ -212,7 +404,9 @@ function tree() {
                       endings[next].answers[state[2] - 1].text
                     )}</p></div><div class="chat tutor-chat"><span class="eyebrow">TUTOR</span><p>${esc(
                       endings[next].answers[state[2] - 1].feedback
-                    )}</p></div><div class="takeaway"><p>Try another path to compare the replies.</p></div>`
+                    )}</p></div><div class="takeaway"><p><b>What you practised:</b> ${esc(
+                      s.takeaway
+                    )}</p></div>`
                   : `<div class="tree-options"><span class="label">${
                       endings[next].follow
                     }</span>${endings[next].answers
@@ -227,20 +421,18 @@ function tree() {
                       )}<button class="tree-choice" id="tree-alternative">Try another next prompt</button></div>`
               }`
         }`
-  }</div><p class="source">${esc(s.sources)}${
-    s.url ? ` · ${link(s.url, "NIH")}` : ""
-  }</p></section>`;
+  }</div>${evidence(s.references)}</section>`;
 }
 function tutor(gaps = false) {
   return (
     heading(
       gaps
-        ? "02 / COMMUNICATE YOUR GAPS · 5–7 MIN"
-        : "01 / AI TUTOR PLAYGROUND · 5–7 MIN",
-      gaps ? "Find the RAAS gap" : "RAAS tutor playground",
+        ? "03 / FOLLOW UP WHEN YOU ARE STUCK"
+        : "02 / ASK FOR THE HELP YOU NEED",
+      gaps ? "Ask a useful follow-up" : "Ask for the help you need",
       gaps
-        ? "Choose a prompt that pinpoints the mechanism you find confusing."
-        : "Choose a kidney-week problem, then follow the prompts and predictions."
+        ? "You know how to start a chat. Now tell the chatbot which connection is still unclear, instead of asking for the whole explanation again."
+        : "Choose a message that states what you know and asks for a specific kind of help. Watch how that changes the prepared reply."
     ) +
     `<div class="chips" role="group" aria-label="Choose a conversation scenario">${window.SCENARIOS.map(
       (x, i) =>
@@ -250,7 +442,7 @@ function tutor(gaps = false) {
     ).join("")}</div>` +
     tree() +
     `<details><summary>Compare both opening prompts side by side</summary>${comparison()}</details>` +
-    source(IES, "Source: IES, recommendations 5b and 7") +
+    evidence([1, 4]) +
     finish(gaps ? "gaps" : "tutor", gaps ? "recall" : "gaps")
   );
 }
@@ -293,9 +485,9 @@ function recall() {
   const q = quiz[quizIndex];
   return (
     heading(
-      "03 / ACTIVE RECALL · 7–8 MIN",
+      "04 / ASK THE CHATBOT TO QUIZ YOU",
       "Active recall",
-      "Choose an answer before opening the feedback."
+      "After an explanation, ask the chatbot to test you. Specify one question at a time and feedback after your attempt. Practise choosing those instructions below."
     ) +
     `<div class="panel"><div class="section-head"><span class="step-label">QUESTION ${
       quizIndex + 1
@@ -332,6 +524,7 @@ function recall() {
       IES,
       "IES, recommendations 5b and 7"
     )}</details>` +
+    evidence([1, 4]) +
     finish("recall", "case")
   );
 }
@@ -352,11 +545,11 @@ const caseEvidence = {
 function clinical() {
   return (
     heading(
-      "04 / CLINICAL REASONING LAB · 10–12 MIN",
+      "05 / REASON THROUGH A CASE",
       "Clinical reasoning",
-      "Gather findings and revise your differential. Adapted from USMLE sample item 62."
+      "Next, use a chatbot as a reasoning coach: ask it to hold back the answer while you gather evidence. This separate USMLE sample case lets you practise that approach."
     ) +
-    `<div class="case-layout"><section><div class="panel"><div class="case-stage">SIMULATED EXAM CASE / INITIAL PRESENTATION</div><h2>The case</h2><p>A 20-year-old woman seeks assessment for longstanding heavy menstrual bleeding.</p><p class="hint">Write an initial differential, then request findings.</p><div class="case-tabs">${Object.entries(
+    `<div class="case-layout"><section><div class="panel"><div class="case-stage">SIMULATED EXAM CASE / INITIAL PRESENTATION</div><h2>The case</h2><p>A 20-year-old woman seeks assessment for longstanding heavy menstrual bleeding.</p><p class="hint">List possible explanations (your differential), then request findings. You may use the hints if this clinical content is new.</p><div class="case-tabs">${Object.entries(
       caseEvidence
     )
       .map(
@@ -405,7 +598,10 @@ function clinical() {
     )}<div class="actions"><button class="button" id="case-finish">Finish & open debrief ↗</button><button class="text-button" id="case-reveal">Reveal answer now</button></div><p class="hint">View the findings and complete four entries to finish. Responses are self-reviewed.</p><div id="case-debrief" ${
       caseRevealed ? "" : "hidden"
     }>${debrief()}</div></section></div>` +
-    finish("case", "voice")
+    `<details><summary>How would I ask this in a real study chat?</summary><p>“Use this fictional case for learning. Ask me for an initial differential, meaning possible explanations. Let me request findings. Ask why each finding matters. Do not reveal the diagnosis until I finish or ask.”</p>${evidence(
+      [1, 9]
+    )}</details>` +
+    finish("case", "notes")
   );
 }
 function debrief() {
@@ -417,62 +613,14 @@ function debrief() {
     "CDC, “Screening tests” and “Diagnostic tests”"
   )}<h3 style="margin-top:20px">Compare the reasoning process</h3><ul><li>Did you explain how bleeding beyond menstruation affects your differential?</li><li>Did you distinguish a normal screen from excluding every bleeding disorder?</li><li>Did you identify which specific evidence is still missing?</li><li>What result would change your leading explanation?</li></ul><p class="hint">This debrief was checked against the linked sources. It has not undergone independent faculty review. No generated results or treatment recommendations are added.</p></div>`;
 }
-function voice() {
-  return (
-    heading(
-      "05 / VOICE LEARNING · 6–8 MIN",
-      "Practice aloud",
-      "Explain a concept aloud or in text, then review your explanation."
-    ) +
-    `<div class="grid2"><div class="panel"><h2>Your oral practice station</h2>${select(
-      "voice-task",
-      "Practice mode",
-      [
-        "Explain a concept",
-        "Present your case reasoning",
-        "Oral examination rehearsal",
-      ],
-      session["voice-task"] || "Explain a concept"
-    )}<p id="voice-cue">${voiceCue(
-      session["voice-task"]
-    )}</p><div class="voice-orb" aria-hidden="true">≋</div><div class="voice-controls"><label class="option"><input type="checkbox" id="speech-consent">I understand that browser dictation may send audio to the browser provider’s speech service. I will use only fictional or course content.</label><div class="actions"><button class="button" id="voice-start">Start dictation</button><button class="button secondary" id="voice-stop" disabled>Stop</button></div><p class="hint" id="speech-status" role="status"></p></div><p class="source">${link(
-      "https://developer.mozilla.org/en-US/docs/Web/API/SpeechRecognition",
-      "MDN: speech recognition availability and server-based processing"
-    )}. This is dictation, not a live voice AI conversation. The module does not record or store an audio file.</p></div><div class="panel">${field(
-      "transcript",
-      "Transcript / text alternative",
-      session.transcript,
-      "Type here, or start dictation. Review and correct recognition errors before using the text."
-    )}<div class="actions"><button class="button secondary" id="voice-speak">Read transcript aloud</button><button class="text-button" id="voice-silence">Stop reading</button></div><div class="notice">Feedback is based on your own review against your course source. The module does not verify the transcript’s medical accuracy.</div><h3>Review your explanation</h3><div class="checklist">${[
-      "I explained the main idea in my own words.",
-      "I connected each conclusion to supporting information.",
-      "I stated what I am unsure about.",
-      "I checked my explanation against the original course source.",
-    ]
-      .map((x) => `<label><input type="checkbox">${x}</label>`)
-      .join("")}</div>${field(
-      "voice-next",
-      "What would you change on a second attempt?",
-      session["voice-next"]
-    )}</div></div>` +
-    finish("voice", "notes")
-  );
-}
-function voiceCue(mode) {
-  return mode === "Present your case reasoning"
-    ? "Summarize the case evidence, explain your leading alternatives, and state what remains uncertain."
-    : mode === "Oral examination rehearsal"
-    ? "Explain what evidence supports your conclusion, then answer: “What finding would change your mind?”"
-    : "Choose a concept from your own course. Explain the main idea without reading, then identify one part you need to check.";
-}
 const sampleNote =
   "Screening blood tests can be normal in von Willebrand disease. Specific diagnostic tests are needed. aPTT can be normal in mild disease. PT is normal in most affected people.";
 function notes() {
   return (
     heading(
-      "06 / NOTES & CRITICAL EVALUATION · 7–8 MIN",
+      "06 / CHECK AN AI ANSWER",
       "Notes & critical evaluation",
-      "Choose a study format, then find and correct the tutor’s error."
+      "Finally, ask for a study resource from a source note. Compare the resource with that source, then challenge an incorrect statement."
     ) +
     `<div class="grid2"><div class="panel"><div class="eyebrow">THE SOURCE NOTE</div><h2>Screening is not confirmation</h2><p>${sampleNote}</p>${source(
       CDC,
@@ -501,6 +649,9 @@ function notes() {
       CDC,
       "CDC, “Activated partial thromboplastin time (APTT) test” and “Diagnostic tests”"
     )}<p class="hint">This comparison is fixed. It does not automatically judge your written answer.</p></div></div></div>` +
+    `<details><summary>How would I ask this in a real study chat?</summary><p>“Using only the source note I provide, make a flashcard. Keep the answer separate so I can attempt it first. Tell me which sentence in the note supports the answer.”</p>${evidence(
+      [1, 2, 4]
+    )}</details>` +
     finish("notes", "reflection")
   );
 }
@@ -548,7 +699,7 @@ function assessment(post = false) {
       post ? "Your takeaways" : "Before you begin",
       post
         ? "Repeat the tasks and compare your earlier answers. This is ungraded reflection."
-        : "Use a course concept and fictional case. Responses clear on reload."
+        : "Before seeing the example, try these short tasks using any topic you know. “I am not sure yet” is a valid starting answer. Responses clear on reload."
     ) +
     `<div class="panel">${domains
       .map(
@@ -570,7 +721,7 @@ function assessment(post = false) {
       .join("")}<div class="actions">${
       post
         ? '<button class="button" id="compare-assessments">Review my approach ↗</button>'
-        : '<button class="button" data-go="tutor">Continue ↗</button><button class="text-button" data-go="tutor">Skip the starting exercise</button>'
+        : '<button class="button" data-go="getting-started">Continue to the guided example ↗</button><button class="text-button" data-go="getting-started">Skip these questions</button>'
     }</div><div id="assessment-feedback" hidden class="feedback"><h3>Review your evidence of learning</h3><div class="checklist">${[
       "I named a specific learning need.",
       "I asked for an attempt before feedback.",
@@ -590,26 +741,25 @@ function assessment(post = false) {
 function about() {
   return (
     heading(
-      "ABOUT THIS MODULE",
-      "Sources, scope<br>and your privacy.",
-      "A static educational module with pre-generated examples. No live model, API key, account, or application backend is required."
+      "REFERENCES & HELP",
+      "Read and check the sources",
+      "Education guidance supports how to approach the conversation. Physiology sources support the medical explanations. The example chats are authored teaching scripts."
     ) +
-    `<div class="panel"><h2>What the sources support</h2><ul><li><b>Clinical case and answer:</b> ${link(
-      USMLE + "#page=30",
-      "USMLE Step 1 sample booklet, February 2021, item 62 (printed p. 29)"
-    )}; answer key, printed p. 49. The module condenses the case and changes its presentation into stages. It does not reproduce the full item or claim USMLE endorsement.</li><li><b>Clinical debrief, note and correction:</b> ${link(
-      CDC,
-      "CDC: Diagnosing von Willebrand disease, May 15, 2024"
-    )}, screening tests and diagnostic tests. Supports normal-screen limitations and specific testing.</li><li><b>Retrieval and explanatory questions:</b> ${link(
-      IES,
-      "IES: Organizing Instruction and Study to Improve Student Learning"
-    )}, recommendations 5b and 7. General educational guidance; it does not establish effectiveness of this module or of these AI prompts.</li><li><b>Human agency and educational validation:</b> ${link(
-      UNESCO,
-      "UNESCO: Guidance for generative AI in education and research, publication overview"
-    )}. Supports the general design emphasis on human agency, privacy, and pedagogical validation. This module has not been independently validated.</li></ul><h3>RAAS conversation sources</h3><p>RAAS means renin–angiotensin–aldosterone system.</p><p>The renal trees draw on Dr. Krishna Poinen’s Week 49 <i>Potassium Disorders</i> lecture, slides 14–16, 18–19 and 24. The relevant text and principal-cell diagrams were inspected. The source PDFs remain private and are not included in this site. Drug effects are also supported by the NIH potassium fact sheet, “Interactions with Medications.”</p><h3>How to read the A/B comparisons</h3><p>The initial generic examples were drafted with one Luna/low task. The current renal trees are authored from the inspected kidney-week source passages. They are pre-generated illustrative tutor responses. They are not actual runs of the displayed prompts, an experiment, or measured evidence of model behavior. Students select prompts and follow-ups from a fixed list to explore pre-generated conversation trees.</p><p>Lesson times come from the proposed module plan. They total 40–50 minutes before optional starting and closing exercises. No student timing or learning outcomes have been collected. The clinical question has no verified difficulty rating here.</p></div><div class="panel"><h2>Privacy and speech</h2><p>Use only course content, fictional cases, and sample notes. Do not enter names or identifiable patient information. The app stores only six lesson-completion flags in this browser’s local storage. All written responses and transcripts remain in memory in the current tab and disappear on reload. Reset clears progress and in-memory responses. No analytics, trackers, remote fonts, or AI requests are included.</p><p>Optional dictation requires an explicit checkbox and a start action. Depending on the browser, audio can be processed by the browser provider’s speech service. Read-aloud uses the browser’s installed speech engine, whose processing depends on the selected browser/voice. The text pathway provides the same activities. GitHub serves the static files and handles normal hosting traffic.</p>${source(
-      "https://developer.mozilla.org/en-US/docs/Web/API/Web_Speech_API/Using_the_Web_Speech_API",
-      "MDN, speech recognition and speech synthesis"
-    )}<p class="hint">This is educational practice with a simulated exam case. It has not undergone faculty review and is not a patient-care tool.</p></div>`
+    `<section class="panel"><h2>External resources</h2><p>Start with AACOM’s prompting guide [1], then its guide to evaluating an answer [2]. These resources were written for medical educators; this module adapts selected guidance for students.</p><ol class="reference-list">${references
+      .filter((r) => r.url)
+      .map(
+        (r) =>
+          `<li id="reference-${r.id}" value="${r.id}"><p>${link(
+            r.url,
+            r.title
+          )}</p><p><b>Relevant section:</b> ${esc(r.locator)}.</p><p>${esc(
+            r.supports
+          )}</p></li>`
+      )
+      .join("")}</ol><h2>Supplied course source</h2><p>[8] ${
+      references.find((r) => r.id === 8).title
+    } Slides 14–16, 18–19 and 24. This source informed the renal detail but is not publicly hosted. It is not a substitute for the linked public references.</p></section>
+ <section class="panel"><h2>What these examples can show</h2><p>The fixed conversations demonstrate ways to ask, follow up, attempt an answer, and check evidence. They are not recorded model runs or a study of learning effectiveness. A live chatbot may respond differently. No faculty approval or validated assessment is claimed.</p><h2>Your information</h2><p>Use only fictional cases or course content. Only lesson-completion flags are saved in this browser. Written exercises stay in this tab and clear on reload. No live AI calls, analytics, microphone or audio controls are included. Use Reset to clear progress.</p><p>The pathway has a beginner introduction and five study activities. Completion time has not been measured.</p></section>`
   );
 }
 function saveSession() {
@@ -617,21 +767,16 @@ function saveSession() {
     .querySelectorAll("[data-session]")
     .forEach((el) => (session[el.id] = el.value));
   if ($("#hint-level")) session["hint-level"] = $("#hint-level").value;
-  if ($("#voice-task")) session["voice-task"] = $("#voice-task").value;
-}
-function stopSpeech() {
-  if (recognition) {
-    recognition.abort();
-    recognition = null;
-  }
-  recording = false;
-  if ("speechSynthesis" in window) window.speechSynthesis.cancel();
 }
 function render() {
   saveSession();
-  stopSpeech();
+  clearTimeout(toastTimer);
+  $("#toast").textContent = "";
+  const previousRoute = route;
   route = location.hash.slice(1) || "overview";
   if (!knownRoutes.includes(route)) route = "overview";
+  if (route !== previousRoute && route === "tutor") scenario = 0;
+  if (route !== previousRoute && route === "gaps") scenario = 1;
   updateNav();
   const views = {
     overview,
@@ -640,7 +785,7 @@ function render() {
     gaps: () => tutor(true),
     recall,
     case: clinical,
-    voice,
+    "getting-started": introduction,
     notes,
     reflection: () => assessment(true),
     about,
@@ -662,77 +807,14 @@ function render() {
       ? "Learning With AI"
       : lessons.find((l) => l[0] === route)?.[1] || "Learning With AI"
   } · Medical Education`;
-  if (route === "voice") voiceSupport();
   $("#main").focus({ preventScroll: true });
   window.scrollTo(0, 0);
-}
-function voiceSupport() {
-  const supported = window.SpeechRecognition || window.webkitSpeechRecognition;
-  $("#voice-start").disabled = !supported;
-  $("#speech-status").textContent = supported
-    ? "Ready. Review the speech-service notice before starting."
-    : "Dictation is unavailable in this browser. Type your explanation in the transcript box.";
-  if (!("speechSynthesis" in window)) {
-    $("#voice-speak").disabled = true;
-    $("#voice-silence").disabled = true;
-  }
-}
-function startDictation() {
-  if (!$("#speech-consent").checked) {
-    toast("Read and accept the speech-service notice, or use the text box.");
-    return;
-  }
-  const Speech = window.SpeechRecognition || window.webkitSpeechRecognition;
-  if (!Speech || recording) return;
-  recognition = new Speech();
-  recognition.lang = document.documentElement.lang;
-  recognition.onresult = (e) => {
-    const parts = [];
-    for (let i = e.resultIndex; i < e.results.length; i++) {
-      if (e.results[i].isFinal) parts.push(e.results[i][0].transcript);
-    }
-    const el = $("#transcript");
-    if (el) {
-      el.value = [el.value, ...parts].filter(Boolean).join(" ");
-      session.transcript = el.value;
-    }
-  };
-  recognition.onend = () => {
-    recording = false;
-    if ($("#speech-status")) {
-      $("#speech-status").textContent =
-        "Stopped. Review and correct the transcript.";
-      $("#voice-start").disabled = false;
-      $("#voice-stop").disabled = true;
-    }
-  };
-  recognition.onerror = (e) => {
-    if ($("#speech-status"))
-      $(
-        "#speech-status"
-      ).textContent = `Dictation could not continue (${e.error}). Use the text box.`;
-  };
-  try {
-    recognition.start();
-    recording = true;
-    $("#voice-start").disabled = true;
-    $("#voice-stop").disabled = false;
-    $("#speech-status").textContent = "Listening. Use Stop to finish.";
-  } catch {
-    recording = false;
-    $("#speech-status").textContent =
-      "Could not start dictation. Use the text box.";
-  }
 }
 document.addEventListener("input", (e) => {
   if (e.target.dataset.session) session[e.target.id] = e.target.value;
 });
 document.addEventListener("change", (e) => {
   if (e.target.id === "hint-level") session["hint-level"] = e.target.value;
-  if (e.target.id === "voice-task") {
-    session["voice-task"] = e.target.value;
-    $("#voice-cue").textContent = voiceCue(e.target.value);
-  }
 });
 document.addEventListener("submit", (e) => {
   if (e.target.id !== "quiz-form") return;
@@ -749,6 +831,18 @@ document.addEventListener("submit", (e) => {
 document.addEventListener("click", async (e) => {
   const b = e.target.closest("button");
   if (!b) return;
+  if (b.dataset.introChoice !== undefined) {
+    introChoice = Number(b.dataset.introChoice);
+    introFollow = false;
+    introVerified = null;
+    render();
+    return;
+  }
+  if (b.dataset.introVerify !== undefined) {
+    introVerified = Number(b.dataset.introVerify);
+    render();
+    return;
+  }
   if (b.dataset.go) {
     location.hash = b.dataset.go;
     return;
@@ -814,10 +908,16 @@ document.addEventListener("click", async (e) => {
       treeState[window.SCENARIOS[scenario].id].length = 1;
       render();
       break;
+    case "intro-follow":
+      introFollow = true;
+      render();
+      break;
     case "reset":
       if (confirm("Clear module progress and all responses in this tab?")) {
-        stopSpeech();
         completed = [];
+        introChoice = null;
+        introFollow = false;
+        introVerified = null;
         Object.keys(session).forEach((k) => delete session[k]);
         Object.keys(treeState).forEach((k) => delete treeState[k]);
         quizIndex = 0;
@@ -883,27 +983,6 @@ document.addEventListener("click", async (e) => {
       $("#case-debrief").hidden = false;
       $("#case-debrief").scrollIntoView({ block: "nearest" });
       break;
-    case "voice-start":
-      startDictation();
-      break;
-    case "voice-stop":
-      recognition?.stop();
-      break;
-    case "voice-speak":
-      if (!$("#transcript").value.trim()) {
-        toast("Add a transcript first.");
-        break;
-      }
-      if ("speechSynthesis" in window) {
-        window.speechSynthesis.cancel();
-        const utterance = new SpeechSynthesisUtterance($("#transcript").value);
-        utterance.lang = document.documentElement.lang;
-        window.speechSynthesis.speak(utterance);
-      }
-      break;
-    case "voice-silence":
-      if ("speechSynthesis" in window) window.speechSynthesis.cancel();
-      break;
     case "flip-card":
       $("#flash-answer").hidden = false;
       b.hidden = true;
@@ -931,5 +1010,4 @@ document.addEventListener("click", async (e) => {
   }
 });
 window.addEventListener("hashchange", render);
-window.addEventListener("pagehide", stopSpeech);
 render();
