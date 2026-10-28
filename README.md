@@ -66,3 +66,11 @@ All three walkthroughs passed in headless Chromium. Round 1 covered the starting
 Visual review identified an omitted visible follow-up and an unnecessarily long initial exchange. The selected follow-up now stays beside its reply and earlier turns collapse under Earlier exchange. A stale notification from a previous activity is cleared when the view changes. These fixes passed focused checks, and final desktop/mobile screenshots were inspected. Chromium frame/screenshot waits stalled during an intermediate regression attempt; the final interaction checks passed with GPU rendering disabled, and final screenshots were captured successfully. This does not replace a real student usability study.
 
 Syntax checks: `node --check app.js`, `node --check scenarios.js`. Whitespace check: `git diff --check`. Archived voice-source hashes were rechecked with `sha256sum -c SHA256SUMS` (all three matched).
+
+## Teaching text and feedback revision
+
+Each of the six activities now begins with a short explanation of what to type and how to use the response. The opening explains the message box and follow-up messages. Later explanations cover specifying a task, naming a gap, requesting one question at a time, setting case boundaries and checking generated notes. These passages use the already inspected AACOM/IES guidance above; no new efficacy claims are introduced. The prose was reviewed using strict-agent and write-scientific-manuscripts for direct wording, repetition, evidence and scope. This is learner-facing prose, so the manuscript skill's specialist register does not apply.
+
+Prompt choices have no A/B, broad/specific, or quality labels. Conversation replies are labelled Chatbot. Separate module coaching appears after an opening A choice or a flagged suboptimal verification choice, and remains absent after the other choices. Generic completion takeaways were removed. Citations remain adjacent as compact named links; full reference details and section locators remain on References & help.
+
+Browser verification passed all 48 paths, neutral choice labels, absence of premature coaching, coaching after each designated suboptimal choice, no coaching after useful choices, six teaching explanations, one current chatbot reply and mobile fit. Desktop and mobile screenshots were inspected. Syntax and whitespace checks passed.

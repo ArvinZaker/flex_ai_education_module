@@ -1,5 +1,4 @@
-/* Authored, pre-generated study conversations. Medical references support facts;
-   education references support the learning approach. These are not recorded model runs. */
+/* Pre-generated teaching conversations; supporting references are identified by number. */
 window.SCENARIOS = [
   {
     id: "start",
@@ -74,6 +73,8 @@ window.SCENARIOS = [
         ],
       },
     ],
+    openingAdvice:
+      "Add your existing knowledge and the exact connection you want explained. That gives the next reply a clearer target.",
   },
   {
     id: "gap",
@@ -148,6 +149,8 @@ window.SCENARIOS = [
         ],
       },
     ],
+    openingAdvice:
+      "Repeating “explain again” leaves the source of confusion unclear. Name the word or step that you do not understand.",
   },
   {
     id: "recall",
@@ -221,6 +224,8 @@ window.SCENARIOS = [
         ],
       },
     ],
+    openingAdvice:
+      "A summary supplies the answer immediately. To practise recall, ask for one question and a pause before feedback.",
   },
   {
     id: "verify",
@@ -254,6 +259,9 @@ window.SCENARIOS = [
             text: "You corrected yourself, so I do not need to check anything else.",
             feedback:
               "A revised answer still needs checking. Open the reference and compare the specific statement with the relevant passage; a chatbot’s agreement is not independent evidence.",
+            suboptimal: true,
+            advice:
+              "A correction is another chatbot response. Verify it against the source before relying on it.",
           },
         ],
       },
@@ -273,6 +281,9 @@ window.SCENARIOS = [
             text: "A recognizable source name is enough; I will skip opening it.",
             feedback:
               "The name alone does not tell you whether the source supports this sentence. Open the section and check its actual wording and conditions before using the claim.",
+            suboptimal: true,
+            advice:
+              "Open the source and compare the relevant passage. A recognizable name alone does not support the claim.",
           },
         ],
       },
@@ -292,9 +303,14 @@ window.SCENARIOS = [
             text: "Skip the source comparison and give me a more confident answer.",
             feedback:
               "More confident wording would not resolve the missing evidence. Keep the unresolved determinants explicit and check them against the reference before drawing a conclusion.",
+            suboptimal: true,
+            advice:
+              "Confidence does not fill the evidence gap. Ask for the supporting passage and check its conditions.",
           },
         ],
       },
     ],
+    openingAdvice:
+      "The reply overstates what one hormone can tell you. Ask which other factors matter and check the supporting passage.",
   },
 ];

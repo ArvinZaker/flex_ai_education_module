@@ -125,14 +125,22 @@ const references = [
   },
 ];
 function evidence(ids) {
-  return `<div class="evidence-refs">${ids
+  return `<p class="evidence-refs" aria-label="Supporting sources">${ids
     .map((id) => {
       const r = references.find((r) => r.id === id);
-      return `<p class="source">[${r.id}] ${
-        r.url ? link(r.url, r.short) : `<a href="#about">${esc(r.short)}</a>`
-      } — ${esc(r.locator)}</p>`;
+      return `<a href="${r.url || "#about"}" ${
+        r.url ? 'target="_blank" rel="noopener noreferrer"' : ""
+      } title="${esc(r.title + " " + r.locator)}">[${id}] ${esc(r.short)}</a>`;
     })
-    .join("")}</div>`;
+    .join(" · ")}</p>`;
+}
+function teaching(title, text, ids) {
+  return `<section class="lesson-explanation"><h2>${title}</h2><p>${text}</p>${evidence(
+    ids
+  )}</section>`;
+}
+function coaching(text) {
+  return `<aside class="choice-coaching" role="status"><p>${text}</p></aside>`;
 }
 const lessons = [
   [
@@ -144,7 +152,7 @@ const lessons = [
   ],
   [
     "tutor",
-    "Personalize your tutor",
+    "Ask for useful help",
     "5–7 min",
     "✳",
     "Tell the chatbot your level and the help you want.",
@@ -211,7 +219,9 @@ function source(url, text) {
   return `<p class="source">${link(url, text)}</p>`;
 }
 function heading(step, title, description) {
-  return `<div class="page-heading"><div class="step-label">${step}</div><h1>${title}</h1><p class="lede">${description}</p></div>`;
+  return `<div class="page-heading"><div class="step-label">${step}</div><h1>${title}</h1>${
+    description ? `<p class="lede">${description}</p>` : ""
+  }</div>`;
 }
 function field(id, label, value = "", placeholder = "") {
   return `<div class="field"><label for="${id}">${label}</label><textarea id="${id}" data-session="${id}" placeholder="${esc(
@@ -276,9 +286,12 @@ function introduction() {
       "Start with one learning need",
       "Read the situation, choose a message, then follow the conversation."
     ) +
-    `<section class="panel"><p><b>Before using a real chatbot:</b> check your course’s AI rules and permitted tools. Use fictional examples; do not enter patient information.</p>${evidence(
-      [3]
-    )}<p><b>Your goal:</b> understand why an ACE inhibitor can raise blood potassium. You do not need to know the answer to practise the conversation.</p>
+    teaching(
+      "How a study chat works",
+      "Open a chatbot permitted by your course. Type a message in its message box and send it. Read the reply, then use the same conversation to ask about a missing step or request a different explanation. Start with your level, what you know, and one learning goal. Use fictional examples and keep patient information out of the chat.",
+      [1, 3]
+    ) +
+    `<section class="panel"><p><b>Your goal:</b> understand why an ACE inhibitor can raise blood potassium. You do not need to know the answer to practise the conversation.</p>
  ${
    introChoice === null
      ? `<div class="tree-options"><span class="label">What would you send?</span><button class="tree-choice" data-intro-choice="0">Explain ACE inhibitors.</button><button class="tree-choice" data-intro-choice="1">I am a first-year medical student. I know ACE inhibitors reduce angiotensin II, but I do not understand the potassium effect. Explain that connection using plain language.</button></div>`
@@ -291,25 +304,27 @@ function introduction() {
            ? "Explain ACE inhibitors."
            : "I am a first-year medical student. I know ACE inhibitors reduce angiotensin II, but I do not understand the potassium effect. Explain that connection using plain language."
        }</p></div>
- <div class="chat tutor-chat"><span class="eyebrow">SCRIPTED CHATBOT REPLY</span><p>${
+ <div class="chat tutor-chat"><span class="eyebrow">CHATBOT</span><p>${
    introChoice === 0
      ? "ACE inhibitors reduce the conversion of angiotensin I to angiotensin II. Angiotensin II helps stimulate aldosterone, which promotes potassium secretion into urine."
      : "Angiotensin II stimulates aldosterone. Aldosterone helps the kidney secrete potassium into urine. Reducing that signal can reduce potassium excretion, allowing potassium in blood to rise."
  }</p>${evidence([5, 7])}</div>
- <p class="hint">${
-   introChoice === 0
-     ? "This gives a general overview. Tell the chatbot which part you actually need help with."
-     : "This message names your level, what you know, and the missing connection. You can still ask a follow-up."
- }</p>${introFollow ? "</details>" : ""}
+ ${
+   introChoice === 0 && !introFollow
+     ? coaching(
+         "This request leaves the chatbot to choose the scope. Add what you already understand and the connection you want explained."
+       )
+     : ""
+ }${introFollow ? "</details>" : ""}
  ${
    !introFollow
      ? `<div class="tree-options"><span class="label">The word “secrete” is unclear. Send a follow-up.</span><button class="tree-choice" id="intro-follow">What does “secrete potassium” mean here? Explain the direction in one sentence.</button></div>`
-     : `<div class="chat student-chat"><span class="eyebrow">YOUR FOLLOW-UP</span><p>What does “secrete potassium” mean here? Explain the direction in one sentence.</p></div><div class="chat tutor-chat"><span class="eyebrow">SCRIPTED CHATBOT REPLY</span><p>In this kidney pathway, secretion means potassium moves into tubular fluid so it can leave in urine.</p>${evidence(
+     : `<div class="chat student-chat"><span class="eyebrow">YOUR FOLLOW-UP</span><p>What does “secrete potassium” mean here? Explain the direction in one sentence.</p></div><div class="chat tutor-chat"><span class="eyebrow">CHATBOT</span><p>In this kidney pathway, secretion means potassium moves into tubular fluid so it can leave in urine.</p>${evidence(
          [8]
        )}</div><p><b>Now check it.</b> Open the NIH source below, find “Interactions with Medications,” then the ACE inhibitor/ARB subsection. Compare its statement about urinary potassium excretion with the reply.</p>${evidence(
          [5]
        )}<div class="tree-options"><span class="label">Why should you open the source?</span><button class="tree-choice" data-intro-verify="1">A confident reply can still be wrong. I need to check that the source supports the claim.</button><button class="tree-choice" data-intro-verify="0">The chatbot supplied a link, so the claim is already verified.</button></div>${
-         introVerified === null
+         introVerified !== 0
            ? ""
            : `<div class="feedback" role="status"><p>${
                introVerified
@@ -341,10 +356,10 @@ function comparison() {
         `<article class="compare-card ${
           v === "B" ? "b" : ""
         }"><div class="compare-header"><span class="letter">${v}</span><b>${
-          v === "A" ? "Broad request" : "Specific learning request"
+          v === "A" ? "First message" : "Other message"
         }</b></div><div class="compare-body"><div class="eyebrow">THE PROMPT</div><p class="prompt-text">“${esc(
           v === "A" ? s.a : s.b
-        )}”</p><div class="response"><div class="label">TUTOR</div><p>${esc(
+        )}”</p><div class="response"><div class="label">CHATBOT</div><p>${esc(
           s["response" + v]
         )}</p></div></div></article>`
     )
@@ -361,9 +376,18 @@ function tree() {
   const selected = state[0];
   const next = state[1];
   const endings = s.branches;
+  const showOpeningHelp = selected === "A" && next === undefined;
+  const showFinalHelp =
+    state[2] && endings[next].answers[state[2] - 1].suboptimal;
+  const advice = showOpeningHelp
+    ? s.openingAdvice
+    : showFinalHelp
+    ? endings[next].answers[state[2] - 1].advice
+    : "";
+
   return `<section class="panel" style="margin-top:25px"><div class="section-head"><div><h2>${
     state[2]
-      ? "Chatbot reply"
+      ? "Conversation"
       : selected === undefined
       ? "Choose a prompt"
       : "Choose your response"
@@ -371,18 +395,16 @@ function tree() {
     s.containsError
       ? '<p class="notice warning">This exercise includes a deliberately overstated reply for you to challenge.</p>'
       : ""
-  }<div class="conversation"><div class="chat tutor-chat"><span class="eyebrow">TUTOR</span><p>${esc(
-    s.topic
-  )}</p></div>${
+  }<div class="conversation"><p class="scenario-context">${esc(s.topic)}</p>${
     selected === undefined
-      ? `<div class="tree-options"><span class="label">Choose your opening prompt</span><button class="tree-choice" data-tree-start="A"><b>A · Broad request</b>${esc(
+      ? `<div class="tree-options"><span class="label">Choose what to send</span><button class="tree-choice" data-tree-start="A">${esc(
           s.a
-        )}</button><button class="tree-choice" data-tree-start="B"><b>B · Specific learning request</b>${esc(
+        )}</button><button class="tree-choice" data-tree-start="B">${esc(
           s.b
         )}</button></div>`
       : `<div class="chat student-chat"><span class="eyebrow">YOU</span><p>${esc(
           selected === "A" ? s.a : s.b
-        )}</p></div><div class="chat tutor-chat"><span class="eyebrow">TUTOR</span><p>${esc(
+        )}</p></div><div class="chat tutor-chat"><span class="eyebrow">CHATBOT</span><p>${esc(
           s["response" + selected]
         )}</p></div>${
           next === undefined
@@ -396,16 +418,14 @@ function tree() {
                 .join("")}</div>`
             : `<div class="chat student-chat"><span class="eyebrow">YOU</span><p>${
                 endings[next].prompt
-              }</p></div><div class="chat tutor-chat"><span class="eyebrow">TUTOR</span><p>${
+              }</p></div><div class="chat tutor-chat"><span class="eyebrow">CHATBOT</span><p>${
                 endings[next].reply
               }</p></div>${
                 state[2]
                   ? `<div class="chat student-chat"><span class="eyebrow">YOU</span><p>${esc(
                       endings[next].answers[state[2] - 1].text
-                    )}</p></div><div class="chat tutor-chat"><span class="eyebrow">TUTOR</span><p>${esc(
+                    )}</p></div><div class="chat tutor-chat"><span class="eyebrow">CHATBOT</span><p>${esc(
                       endings[next].answers[state[2] - 1].feedback
-                    )}</p></div><div class="takeaway"><p><b>What you practised:</b> ${esc(
-                      s.takeaway
                     )}</p></div>`
                   : `<div class="tree-options"><span class="label">${
                       endings[next].follow
@@ -421,7 +441,7 @@ function tree() {
                       )}<button class="tree-choice" id="tree-alternative">Try another next prompt</button></div>`
               }`
         }`
-  }</div>${evidence(s.references)}</section>`;
+  }</div>${advice ? coaching(advice) : ""}${evidence(s.references)}</section>`;
 }
 function tutor(gaps = false) {
   return (
@@ -430,9 +450,14 @@ function tutor(gaps = false) {
         ? "03 / FOLLOW UP WHEN YOU ARE STUCK"
         : "02 / ASK FOR THE HELP YOU NEED",
       gaps ? "Ask a useful follow-up" : "Ask for the help you need",
+      ""
+    ) +
+    teaching(
+      gaps ? "Tell it where you got lost" : "Give the chatbot a clear task",
       gaps
-        ? "You know how to start a chat. Now tell the chatbot which connection is still unclear, instead of asking for the whole explanation again."
-        : "Choose a message that states what you know and asks for a specific kind of help. Watch how that changes the prepared reply."
+        ? "Read the reply and identify the first step you cannot explain. Send that gap as your next message: “I understand sodium entry, but not how it affects potassium. Explain that link.” You can ask for a definition, a shorter explanation, or an example without restarting the whole topic."
+        : "Before sending a question, decide what you want to do: understand a mechanism, practise recall, or work through a case. State your training level and existing knowledge, then ask for that activity. If you provide course material, ask the chatbot to use it and flag anything it cannot support.",
+      [1]
     ) +
     `<div class="chips" role="group" aria-label="Choose a conversation scenario">${window.SCENARIOS.map(
       (x, i) =>
@@ -442,14 +467,13 @@ function tutor(gaps = false) {
     ).join("")}</div>` +
     tree() +
     `<details><summary>Compare both opening prompts side by side</summary>${comparison()}</details>` +
-    evidence([1, 4]) +
     finish(gaps ? "gaps" : "tutor", gaps ? "recall" : "gaps")
   );
 }
 const quiz = [
   {
     level: "1 · Recognize",
-    q: "You want a quiz partner. Which instruction most clearly asks the tutor to wait for your retrieval attempt?",
+    q: "You want a quiz partner. Which instruction asks the chatbot to wait for your answer?",
     options: [
       "Explain everything, then ask whether I understand.",
       "Ask one question, wait for my answer, then give feedback.",
@@ -489,6 +513,11 @@ function recall() {
       "Active recall",
       "After an explanation, ask the chatbot to test you. Specify one question at a time and feedback after your attempt. Practise choosing those instructions below."
     ) +
+    teaching(
+      "Ask for an attempt before the answer",
+      "In the same chat, send: “Ask me one question about this topic and wait for my answer. Then explain any error and ask another question on the point I missed.” Try answering from memory. Check the feedback against your course source before using it to revise.",
+      [1, 4]
+    ) +
     `<div class="panel"><div class="section-head"><span class="step-label">QUESTION ${
       quizIndex + 1
     } OF ${quiz.length}</span><span class="demo-tag">${
@@ -520,7 +549,7 @@ function recall() {
               : ""
           }<button class="text-button" id="quiz-restart">Start again</button></div>`
         : ""
-    }</div><details class="panel soft"><summary>Try this with your course notes</summary><p>Close a short section of your notes. Explain its main idea from memory. Reopen the source and check what you omitted or misstated. Ask your tutor to wait for that attempt before giving an explanation.</p>${source(
+    }</div><details class="panel soft"><summary>Try this with your course notes</summary><p>Close a short section of your notes. Explain its main idea from memory. Reopen the source and check what you omitted or misstated. Ask the chatbot to wait for that attempt before giving an explanation.</p>${source(
       IES,
       "IES, recommendations 5b and 7"
     )}</details>` +
@@ -548,6 +577,11 @@ function clinical() {
       "05 / REASON THROUGH A CASE",
       "Clinical reasoning",
       "Next, use a chatbot as a reasoning coach: ask it to hold back the answer while you gather evidence. This separate USMLE sample case lets you practise that approach."
+    ) +
+    teaching(
+      "Set the rules before starting a case",
+      "Tell the chatbot the case is fictional. Ask it to reveal findings only when requested and hold back the diagnosis. Explain your own possibilities first, ask for the finding that would distinguish them, then revise your view when new information appears. The example below lets you practise those steps.",
+      [1]
     ) +
     `<div class="case-layout"><section><div class="panel"><div class="case-stage">SIMULATED EXAM CASE / INITIAL PRESENTATION</div><h2>The case</h2><p>A 20-year-old woman seeks assessment for longstanding heavy menstrual bleeding.</p><p class="hint">List possible explanations (your differential), then request findings. You may use the hints if this clinical content is new.</p><div class="case-tabs">${Object.entries(
       caseEvidence
@@ -621,6 +655,11 @@ function notes() {
       "06 / CHECK AN AI ANSWER",
       "Notes & critical evaluation",
       "Finally, ask for a study resource from a source note. Compare the resource with that source, then challenge an incorrect statement."
+    ) +
+    teaching(
+      "Keep the original note beside the result",
+      "Provide a short note you are allowed to use. Ask for one study format, such as flashcards, and require each answer to match a passage in that note. Read both side by side. If the chatbot adds a claim or citation, open the source and check that it actually supports the claim.",
+      [1, 2, 3]
     ) +
     `<div class="grid2"><div class="panel"><div class="eyebrow">THE SOURCE NOTE</div><h2>Screening is not confirmation</h2><p>${sampleNote}</p>${source(
       CDC,
