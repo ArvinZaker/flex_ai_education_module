@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <meta name="theme-color" content="#173e35" />
+    <meta
+      name="description"
+      content="An interactive learning module for medical students: practice prompting, active recall, clinical reasoning, and verification with pre-generated AI examples."
+    />
+    <title>
+      Learning With AI: From Effective Prompting to Clinical Reasoning
+    </title>
+    <link rel="icon" href="assets/favicon.svg" type="image/svg+xml" />
+    <link rel="stylesheet" href="styles.css" />
+    <script src="scenarios.js" defer></script>
+    <script src="app.js" defer></script>
+  </head>
+  <body>
+    <noscript
+      ><p style="padding: 24px">
+        This interactive module requires JavaScript. Enable JavaScript to use
+        the pre-generated activities. No live AI connection is required.
+      </p></noscript
+    >
+    <a class="skip" href="#main">Skip to content</a>
+    <aside class="sidebar">
+      <a class="brand" href="#overview"
+        ><span class="brand-mark" aria-hidden="true">✳</span
+        ><span>Learning<br /><b>With AI.</b></span></a
+      >
+      <p class="eyebrow side-label">A MEDICAL LEARNING LAB</p>
+      <nav aria-label="Module navigation" id="navigation"></nav>
+      <div class="side-bottom">
+        <div class="progress-label">
+          <span>Your progress</span><b id="progress-text">0 / 6</b>
+        </div>
+        <progress
+          id="progress"
+          max="6"
+          value="0"
+          aria-label="Lessons completed"
+        ></progress>
+        <p>At your pace. Stay curious.</p>
+        <button class="text-button" id="reset">Reset progress</button>
+      </div>
+    </aside>
+    <div class="page">
+      <header class="topbar">
+        <span
+          >MEDICAL EDUCATION <span class="slash">/</span> INTERACTIVE
+          MODULE</span
+        ><span class="demo-tag"><i></i> Pre-generated examples</span>
+      </header>
+      <main id="main" tabindex="-1"></main>
+      <footer>
+        <span>Stay responsible for the reasoning.</span
+        ><button class="text-button" data-go="about">
+          Sources & privacy ↗
+        </button>
+      </footer>
+    </div>
+    <div id="toast" class="toast" role="status"></div>
+  </body>
+</html>
