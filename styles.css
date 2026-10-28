@@ -1393,3 +1393,96 @@ main {
 .chat p {
   margin-top: 6px;
 }
+
+/* A single reading column and an optional contents menu. */
+:root { --side: 0px; --paper: #fafbf8; --white: #fff; }
+.module-header {
+  max-width: 920px;
+  margin: auto;
+  padding: 26px 30px 20px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  border-bottom: 1px solid var(--line);
+}
+.module-header .brand { font-size: 23px; letter-spacing: -.8px; font-weight: 700; gap: 0; }
+.module-header .brand span { color: var(--orange); }
+.contents { position: relative; font-size: 14px; }
+.contents summary { margin: 0; cursor: pointer; padding: 8px 0 8px 18px; }
+.contents nav {
+  position: absolute; right: 0; top: 45px; width: 290px; z-index: 5;
+  padding: 10px; background: white; border: 1px solid var(--line);
+  border-radius: 8px; box-shadow: 0 8px 25px #173e3515;
+  display: grid; gap: 2px; margin: 0;
+}
+.contents .nav-link { font-size: 14px; padding: 10px 12px; }
+.page { margin-left: 0; }
+.topbar { max-width: 860px; margin: auto; height: 53px; padding: 0; border: 0; font-size: 12px; letter-spacing: 0; }
+main { max-width: 860px; padding: 20px 0 40px; }
+.page-heading { margin-bottom: 28px; }
+.page-heading h1 { font-family: Arial, Helvetica, sans-serif; font-size: 35px; line-height: 1.2; max-width: 720px; font-weight: 650; }
+.page-heading .lede { font-size: 17px; max-width: 640px; line-height: 1.6; }
+.step-label { text-transform: none; letter-spacing: .3px; font-size: 12px; color: var(--muted); }
+.lesson-explanation { max-width: 700px; margin: 0 0 30px; }
+.lesson-explanation h2 { font-size: 20px; margin: 0 0 12px; }
+.lesson-explanation p, .welcome p { font-size: 16px; line-height: 1.75; margin: 0 0 16px; }
+.lesson-explanation b { font-weight: 600; }
+.welcome { max-width: 690px; }
+.welcome .button { margin: 8px 0 24px; }
+.optional { margin-top: 15px; }
+.teaching-review { margin: -8px 0 20px; }
+.teaching-review > summary { font-size: 13px; color: var(--muted); }
+.teaching-review[open] .lesson-explanation { margin: 18px 0; }
+.panel { box-shadow: none; padding: 26px; margin-bottom: 20px; border-radius: 8px; }
+.panel h2 { font-size: 20px; }
+.panel p, .scenario-context { font-size: 15px; }
+.panel .section-head { margin-bottom: 14px; }
+.panel .section-head h2 { margin: 0; }
+.tree-choice { font-size: 15px; line-height: 1.6; padding: 15px 18px; border-radius: 6px; }
+.tree-options { gap: 10px; }
+.chat p { font-size: 15px; line-height: 1.75; }
+.eyebrow, .label { font-size: 11px; letter-spacing: .6px; }
+.button { font-size: 14px; border-radius: 6px; }
+.back-link { font-size: 14px; color: var(--muted); }
+.complete-row { justify-content: space-between; margin-top: 30px; }
+footer { max-width: 860px; margin: auto; padding: 24px 0; }
+footer .text-button, .text-button { font-size: 12px; }
+.evidence-refs { font-size: 11px !important; }
+.practice-heading { font-size: 22px; margin: 35px 0 18px; }
+.case-layout, .grid2 { display: grid; grid-template-columns: 1fr; gap: 0; }
+.case-layout .field { margin-top: 20px; }
+.exercise-note { color: var(--muted); font-size: 13px !important; }
+@media (max-width: 940px) {
+  .module-header { margin: 0 24px; padding: 20px 0 16px; }
+  main { margin: 0 24px; padding: 20px 0 32px; }
+  .topbar, footer { margin: 0 24px; padding-left: 0; padding-right: 0; }
+}
+@media (max-width: 570px) {
+  .module-header { margin: 0 20px; }
+  .module-header .brand { font-size: 21px; }
+  .topbar, footer { margin: 0 20px; }
+  .topbar { font-size: 10px; }
+  main { margin: 0 20px; padding-top: 16px; }
+  .page-heading h1 { font-size: 29px; }
+  .lesson-explanation p, .welcome p { font-size: 15px; line-height: 1.75; }
+  .panel { padding: 18px; }
+  .tree-choice { font-size: 14px; padding: 13px; }
+  .contents nav { width: min(290px, calc(100vw - 40px)); }
+  .page-heading .lede { font-size: 16px; }
+}
+h1, h2, h3 { font-family: Arial, Helvetica, sans-serif; }
+.topbar > span:first-child { font-size: 12px; letter-spacing: 0; }
+.complete-row { flex-direction: row; align-items: center; gap: 15px; }
+@media (max-width: 570px) {
+  .topbar > span:first-child { font-size: 10px; }
+  .complete-row { align-items: center; }
+}
+/* Keep the keyboard skip link out of the reading layout until focused. */
+.skip {
+  position: absolute; top: 0; left: 0; width: 1px; height: 1px;
+  padding: 0; overflow: hidden; clip-path: inset(50%); white-space: nowrap;
+}
+.skip:focus {
+  position: fixed; top: 12px; left: 16px; width: auto; height: auto;
+  padding: 12px; overflow: visible; clip-path: none;
+}

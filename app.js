@@ -135,9 +135,13 @@ function evidence(ids) {
     .join(" · ")}</p>`;
 }
 function teaching(title, text, ids) {
-  return `<section class="lesson-explanation"><h2>${title}</h2><p>${text}</p>${evidence(
-    ids
-  )}</section>`;
+  const practising = (route === "getting-started" && introChoice !== null) ||
+    (["tutor", "gaps", "recall", "notes"].includes(route) && treeState[window.SCENARIOS[scenario].id]?.length) ||
+    (route === "recall" && (quizChecked || quizIndex > 0));
+  const content = `<div class="lesson-explanation"><h2>${title}</h2>${text}${evidence(ids)}</div>`;
+  return practising
+    ? `<details class="teaching-review"><summary>Review the explanation</summary>${content}</details>`
+    : content;
 }
 function coaching(text) {
   return `<aside class="choice-coaching" role="status"><p>${text}</p></aside>`;
@@ -219,9 +223,9 @@ function source(url, text) {
   return `<p class="source">${link(url, text)}</p>`;
 }
 function heading(step, title, description) {
-  return `<div class="page-heading"><div class="step-label">${step}</div><h1>${title}</h1>${
-    description ? `<p class="lede">${description}</p>` : ""
-  }</div>`;
+  const index = lessons.findIndex((l) => l[0] === route);
+  const label = index >= 0 ? `Step ${index + 1} of ${lessons.length}` : "";
+  return `<div class="page-heading">${label ? `<p class="step-label">${label}</p>` : ""}<h1>${title}</h1>${description ? `<p class="lede">${description}</p>` : ""}</div>`;
 }
 function field(id, label, value = "", placeholder = "") {
   return `<div class="field"><label for="${id}">${label}</label><textarea id="${id}" data-session="${id}" placeholder="${esc(
@@ -234,7 +238,9 @@ function select(id, label, values, current) {
     .join("")}</select></div>`;
 }
 function finish(id, next) {
-  return `<div class="complete-row"><button class="button" data-complete="${id}" data-next="${next}">Continue ↗</button></div>`;
+  const index = lessons.findIndex((l) => l[0] === id);
+  const previous = index > 0 ? lessons[index - 1][0] : "overview";
+  return `<div class="complete-row"><a href="#${previous}" class="back-link">← Back</a><button class="button" data-complete="${id}" data-next="${next}">${next === "reflection" ? "Finish & reflect" : "Continue"} →</button></div>`;
 }
 let toastTimer;
 function toast(text) {
@@ -247,7 +253,6 @@ function updateNav() {
     ["overview", "Start here"],
     ...lessons.map((l) => [l[0], l[1]]),
     ["reflection", "Your takeaways"],
-    ["about", "References & help"],
   ]
     .map(
       (l) =>
@@ -262,39 +267,32 @@ function updateNav() {
 }
 
 function overview() {
-  return (
-    heading(
-      "A GUIDE FOR MEDICAL STUDENTS NEW TO AI",
-      "How to study with a chatbot",
-      "Learn what to ask, how to respond, and how to check an answer. No previous chatbot experience is needed."
-    ) +
-    `<section class="panel"><h2>Your starting situation</h2><p>Imagine you have finished a kidney lecture. An ACE inhibitor is a medicine that reduces a hormone signal called angiotensin II. You want help connecting that change to potassium in the blood. We will use that learning gap to practise a study conversation.</p><p>A <b>prompt</b> is the message you send. The chatbot’s <b>reply</b> is its answer. A <b>follow-up</b> is your next message when you need a clearer explanation, a question, or evidence.</p><div class="actions"><button class="button" data-go="baseline">Start with a short attempt ↗</button><button class="text-button" data-go="getting-started">Go straight to the guided example</button></div><p class="hint">You will choose from prepared messages. All replies here are scripted; no account or live AI connection is needed.</p>${evidence(
-      [1, 2]
-    )}</section>
- <details><summary>See the learning path</summary><div class="cards">${lessons
-   .map(
-     (l) =>
-       `<a class="lesson-card" href="#${l[0]}"><span class="card-icon" aria-hidden="true">${l[3]}</span><div><h3>${l[1]}</h3><p>${l[4]}</p></div><span aria-hidden="true">↗</span></a>`
-   )
-   .join("")}</div></details>`
-  );
+  const next = lessons.find((l) => !completed.includes(l[0]))?.[0] || "getting-started";
+  return heading("", "Learn to study with AI", "A practical introduction to asking, following up and checking what a chatbot tells you.") +
+    `<div class="welcome"><p>You have finished a lecture, but one part still does not make sense. You could ask a chatbot to explain it. What should you tell it? What should you do if the answer is unclear—or sounds convincing but is wrong?</p>
+    <p>Work through a study conversation, then practise asking for explanations, quizzes and clinical reasoning. You will choose prepared messages and see how the conversation changes. The replies are pre-written examples.</p>
+    <p>By the end, you should be able to describe your learning gap, steer the next reply, attempt an answer before seeing feedback, and check a claim against its source.</p>
+    <button class="button" data-go="${next}">${completed.length ? "Continue learning" : "Begin"} →</button>
+    <details class="optional"><summary>Try the opening exercise first</summary><p>Write your approach before seeing the examples. You can compare it with your answers at the end.</p><a href="#baseline">Open the starting exercise →</a></details></div>`;
 }
 function introduction() {
   return (
     heading(
       "01 / YOUR FIRST STUDY CHAT",
       "Start with one learning need",
-      "Read the situation, choose a message, then follow the conversation."
+      ""
     ) +
     teaching(
-      "How a study chat works",
-      "Open a chatbot permitted by your course. Type a message in its message box and send it. Read the reply, then use the same conversation to ask about a missing step or request a different explanation. Start with your level, what you know, and one learning goal. Use fictional examples and keep patient information out of the chat.",
+      "How to start",
+      `<p>A chatbot is an AI tool you talk to through messages. Your message is the <b>prompt</b>; its answer is the <b>reply</b>. In a real chatbot, type in the message box and press Send. Here, select a prepared message to try the same interaction.</p>
+      <p>Start by telling it <b>where you are in your learning</b> and <b>what you want help with</b>. “Explain ACE inhibitors” leaves the scope open. Adding “I know they reduce angiotensin II, but I cannot explain the potassium effect” identifies the connection you need. Asking for plain language sets the level of detail.</p>
+      <p>The conversation continues after the first reply. A <b>follow-up</b> is your next message: name an unclear word, ask about a missing step, or request a question to test yourself. You will try each of these moves. When using a real tool, follow your course rules and keep patient information out of the chat.</p>`,
       [1, 3]
     ) +
-    `<section class="panel"><p><b>Your goal:</b> understand why an ACE inhibitor can raise blood potassium. You do not need to know the answer to practise the conversation.</p>
+    `<section class="panel">${introChoice === null ? "<h2>Try your first message</h2><p>You know that ACE inhibitors reduce angiotensin II, a hormone signal. You want to understand why blood potassium can rise. Choose what you would send.</p>" : "<h2>Your conversation</h2>"}
  ${
    introChoice === null
-     ? `<div class="tree-options"><span class="label">What would you send?</span><button class="tree-choice" data-intro-choice="0">Explain ACE inhibitors.</button><button class="tree-choice" data-intro-choice="1">I am a first-year medical student. I know ACE inhibitors reduce angiotensin II, but I do not understand the potassium effect. Explain that connection using plain language.</button></div>`
+     ? `<div class="tree-options"><button class="tree-choice" data-intro-choice="0">Explain ACE inhibitors.</button><button class="tree-choice" data-intro-choice="1">I am a first-year medical student. I know ACE inhibitors reduce angiotensin II, but I do not understand the potassium effect. Explain that connection using plain language.</button></div>`
      : `${
          introFollow
            ? '<details class="conversation-history"><summary>Earlier exchange</summary>'
@@ -337,9 +335,7 @@ function introduction() {
    introChoice === 0 ? 1 : 0
  }">Try the other first message</button>`
  }
- </section><details><summary>Take this approach to a real study chat</summary><ol><li>Choose one course topic and think about what you already understand.</li><li>Send your level, learning gap, and the kind of help you want.</li><li>Read the reply and ask a focused follow-up.</li><li>Check factual claims against the original course source or a reputable reference.</li><li>Try explaining the idea yourself, or ask for a question that waits for your answer.</li></ol>${evidence(
-   [1, 2, 4]
- )}</details>` +
+ </section>` +
     finish("getting-started", "tutor")
   );
 }
@@ -347,7 +343,7 @@ function comparison() {
   const s = window.SCENARIOS[scenario];
   return `<div class="section-head"><h2>${
     s.topic
-  }</h2><p>Illustrative A/B comparison · scripted responses</p></div><div class="comparison">${[
+  }</h2><p>Two ways to start the same conversation</p></div><div class="comparison">${[
     "A",
     "B",
   ]
@@ -355,7 +351,7 @@ function comparison() {
       (v) =>
         `<article class="compare-card ${
           v === "B" ? "b" : ""
-        }"><div class="compare-header"><span class="letter">${v}</span><b>${
+        }"><div class="compare-header"><b>${
           v === "A" ? "First message" : "Other message"
         }</b></div><div class="compare-body"><div class="eyebrow">THE PROMPT</div><p class="prompt-text">“${esc(
           v === "A" ? s.a : s.b
@@ -386,18 +382,14 @@ function tree() {
     : "";
 
   return `<section class="panel" style="margin-top:25px"><div class="section-head"><div><h2>${
-    state[2]
-      ? "Conversation"
-      : selected === undefined
-      ? "Choose a prompt"
-      : "Choose your response"
+    state[2] ? "Your conversation" : "Try it"
   }</h2></div><button class="text-button" id="tree-reset">Restart conversation</button></div>${
     s.containsError
-      ? '<p class="notice warning">This exercise includes a deliberately overstated reply for you to challenge.</p>'
+      ? '<p class="exercise-note">The next reply contains an overstatement. Choose how to challenge it.</p>'
       : ""
   }<div class="conversation"><p class="scenario-context">${esc(s.topic)}</p>${
     selected === undefined
-      ? `<div class="tree-options"><span class="label">Choose what to send</span><button class="tree-choice" data-tree-start="A">${esc(
+      ? `<div class="tree-options"><span class="label">What would you send?</span><button class="tree-choice" data-tree-start="A">${esc(
           s.a
         )}</button><button class="tree-choice" data-tree-start="B">${esc(
           s.b
@@ -443,6 +435,13 @@ function tree() {
         }`
   }</div>${advice ? coaching(advice) : ""}${evidence(s.references)}</section>`;
 }
+function conversationPractice(content) {
+  if (session[route + "-practice"]) {
+    return `<button class="text-button" id="back-conversation">← Revisit the conversation</button>${content}`;
+  }
+  const done = treeState[window.SCENARIOS[scenario].id]?.[2];
+  return tree() + (done ? `<div class="complete-row"><button class="button" id="next-practice">${route === "recall" ? "Try the short check" : "Make a study resource"} →</button></div>` : "");
+}
 function tutor(gaps = false) {
   return (
     heading(
@@ -453,18 +452,16 @@ function tutor(gaps = false) {
       ""
     ) +
     teaching(
-      gaps ? "Tell it where you got lost" : "Give the chatbot a clear task",
+      gaps ? "Name the missing step" : "Choose the kind of help you need",
       gaps
-        ? "Read the reply and identify the first step you cannot explain. Send that gap as your next message: “I understand sodium entry, but not how it affects potassium. Explain that link.” You can ask for a definition, a shorter explanation, or an example without restarting the whole topic."
-        : "Before sending a question, decide what you want to do: understand a mechanism, practise recall, or work through a case. State your training level and existing knowledge, then ask for that activity. If you provide course material, ask the chatbot to use it and flag anything it cannot support.",
+        ? `<p>If a reply is unclear, identify the first step you cannot explain. “Explain again” may bring back the same explanation. A more useful follow-up names what made sense and where you got lost.</p>
+        <p>For example: <b>“I understand that sodium enters the kidney cell. I do not understand how that helps potassium enter urine. Explain only that link.”</b> This gives the next reply a precise target. You can also ask it to define a term, draw an arrow chain, or check your own explanation.</p>
+        <p>Read the next reply and decide whether it resolves that gap. If it does, try explaining the connection yourself. If it does not, ask about the remaining step. In the conversation below, choose the follow-up you would actually send.</p>`
+        : `<p>Tell the chatbot what you want to <b>do</b> with the topic. You can ask it to explain a mechanism, question you, or challenge a proposed explanation. These requests produce different kinds of study conversation.</p>
+        <p>Compare “Teach me potassium” with <b>“I know aldosterone helps the kidney excrete potassium. Ask me one question about what happens when that signal falls, and wait for my answer.”</b> The second message states existing knowledge, narrows the topic and sets the next action.</p>
+        <p>You can also specify the format: “Use an arrow chain,” “Define the terms first,” or “Give a hint before the answer.” Keep the goal specific enough to judge whether the reply helped. Try a first message below, then continue the conversation. You can restart to compare the other opening.</p>`,
       [1]
     ) +
-    `<div class="chips" role="group" aria-label="Choose a conversation scenario">${window.SCENARIOS.map(
-      (x, i) =>
-        `<button class="chip" data-scenario="${i}" aria-pressed="${
-          i === scenario
-        }">${x.title}</button>`
-    ).join("")}</div>` +
     tree() +
     `<details><summary>Compare both opening prompts side by side</summary>${comparison()}</details>` +
     finish(gaps ? "gaps" : "tutor", gaps ? "recall" : "gaps")
@@ -480,7 +477,7 @@ const quiz = [
       "Give me the correct answers to memorize.",
     ],
     correct: 1,
-    why: "The second instruction explicitly places an attempt before feedback. This checks whether you can specify the interaction you want; it does not measure medical knowledge.",
+    why: "The second instruction asks for one question and places your attempt before feedback. Asking “Do you understand?” does not require you to retrieve or explain anything.",
   },
   {
     level: "2 · Apply",
@@ -510,15 +507,17 @@ function recall() {
   return (
     heading(
       "04 / ASK THE CHATBOT TO QUIZ YOU",
-      "Active recall",
-      "After an explanation, ask the chatbot to test you. Specify one question at a time and feedback after your attempt. Practise choosing those instructions below."
+      "Ask for a question, then attempt it",
+      ""
     ) +
     teaching(
-      "Ask for an attempt before the answer",
-      "In the same chat, send: “Ask me one question about this topic and wait for my answer. Then explain any error and ask another question on the point I missed.” Try answering from memory. Check the feedback against your course source before using it to revise.",
+      "Turn an explanation into practice",
+      `<p>Reading an answer and producing one from memory are different tasks. <b>Active recall</b> means trying to retrieve the answer yourself. To practise it in a chat, ask for a question and explicitly tell the chatbot to wait.</p>
+      <p>Send: <b>“Ask me one question about potassium handling. Wait for my answer before explaining. If I make an error, explain that step and ask a new question about it.”</b> Then make an attempt—even if incomplete. Ask for a hint if needed, and check unfamiliar feedback against your course source.</p>
+      <p>Once you can explain the mechanism, ask for a new situation that requires you to apply it. Below, first try a quiz conversation, then check which instructions keep the learner actively involved.</p>`,
       [1, 4]
     ) +
-    `<div class="panel"><div class="section-head"><span class="step-label">QUESTION ${
+    conversationPractice(`<h2 class="practice-heading">Check your approach</h2><div class="panel"><div class="section-head"><span class="step-label">Question ${
       quizIndex + 1
     } OF ${quiz.length}</span><span class="demo-tag">${
       q.level
@@ -554,7 +553,7 @@ function recall() {
       "IES, recommendations 5b and 7"
     )}</details>` +
     evidence([1, 4]) +
-    finish("recall", "case")
+    finish("recall", "case"))
   );
 }
 const caseEvidence = {
@@ -575,15 +574,27 @@ function clinical() {
   return (
     heading(
       "05 / REASON THROUGH A CASE",
-      "Clinical reasoning",
-      "Next, use a chatbot as a reasoning coach: ask it to hold back the answer while you gather evidence. This separate USMLE sample case lets you practise that approach."
+      "Reason through a case",
+      ""
     ) +
     teaching(
-      "Set the rules before starting a case",
-      "Tell the chatbot the case is fictional. Ask it to reveal findings only when requested and hold back the diagnosis. Explain your own possibilities first, ask for the finding that would distinguish them, then revise your view when new information appears. The example below lets you practise those steps.",
+      "Make the case a reasoning exercise",
+      `<p>Asking “What is the diagnosis?” gives away the decision you need to practise. Instead, ask the chatbot to present a fictional case in stages and hold back its answer while you reason through it.</p>
+      <p>Send: <b>“Use this fictional case for learning. Let me propose possible diagnoses and explain why. Give findings only when I request them. Ask how each finding changes my thinking. Do not reveal the diagnosis until I finish or ask.”</b> When using a supplied case, also ask it to say when a requested fact is unavailable.</p>
+      <p>A <b>differential diagnosis</b> is your list of possible explanations. Start with that list, request information that could distinguish the possibilities, then revise your list using the findings. In this USMLE example, use the buttons to request evidence and the four fields to record those steps. Choose a hint if the clinical content is new.</p>`,
       [1]
     ) +
-    `<div class="case-layout"><section><div class="panel"><div class="case-stage">SIMULATED EXAM CASE / INITIAL PRESENTATION</div><h2>The case</h2><p>A 20-year-old woman seeks assessment for longstanding heavy menstrual bleeding.</p><p class="hint">List possible explanations (your differential), then request findings. You may use the hints if this clinical content is new.</p><div class="case-tabs">${Object.entries(
+    `<div class="case-layout"><section><div class="panel"><div class="case-stage">Initial presentation</div><h2>The case</h2><p>A 20-year-old woman seeks assessment for longstanding heavy menstrual bleeding.</p>${field(
+      "initial",
+      "1. Initial differential and reasons",
+      session.initial,
+      "Which explanations are possible? What supports each?"
+    )}${field(
+      "request",
+      "2. What information would you request, and why?",
+      session.request,
+      "Name the finding and explain how it could change your differential."
+    )}<div class="case-tabs">${Object.entries(
       caseEvidence
     )
       .map(
@@ -601,25 +612,15 @@ function clinical() {
             caseOpen.has(id) ? "" : "hidden"
           }><h3>${x.title}</h3><div>${x.html}</div></section>`
       )
-      .join("")}</div><p class="source">Case facts: ${link(
+      .join("")}</div><p class="source">Case source: ${link(
       USMLE + "#page=30",
       "USMLE sample booklet, item 62, printed p. 29"
-    )}. Condensed summary; the full source contains additional details and may reveal the answer.</p><p class="hint">Other requests: “not supplied in the source,” never a generated negative finding.</p></div><div class="panel soft">${select(
+    )}. The booklet includes the answer.</p></div><div class="panel soft">${select(
       "hint-level",
       "Choose your support",
       ["No hints", "Socratic questions", "Guided hints"],
       session["hint-level"] || "No hints"
-    )}<button class="button secondary" id="case-hint">Show selected support</button><div id="hint-output" role="status"></div></div></section><section class="panel"><div class="case-stage">YOUR REASONING JOURNAL / THIS SESSION ONLY</div>${field(
-      "initial",
-      "1. Initial differential and reasons",
-      session.initial,
-      "Which explanations are possible? What supports each?"
-    )}${field(
-      "request",
-      "2. What information would you request, and why?",
-      session.request,
-      "Name the finding and explain how it could change your differential."
-    )}${field(
+    )}<button class="button secondary" id="case-hint">Show selected support</button><div id="hint-output" role="status"></div></div></section><section class="panel"><div class="case-stage">Reassess after the findings</div>${field(
       "updated",
       "3. Revise after the new findings",
       session.updated,
@@ -632,20 +633,17 @@ function clinical() {
     )}<div class="actions"><button class="button" id="case-finish">Finish & open debrief ↗</button><button class="text-button" id="case-reveal">Reveal answer now</button></div><p class="hint">View the findings and complete four entries to finish. Responses are self-reviewed.</p><div id="case-debrief" ${
       caseRevealed ? "" : "hidden"
     }>${debrief()}</div></section></div>` +
-    `<details><summary>How would I ask this in a real study chat?</summary><p>“Use this fictional case for learning. Ask me for an initial differential, meaning possible explanations. Let me request findings. Ask why each finding matters. Do not reveal the diagnosis until I finish or ask.”</p>${evidence(
-      [1, 9]
-    )}</details>` +
     finish("case", "notes")
   );
 }
 function debrief() {
-  return `<div class="feedback"><div class="eyebrow">SOURCE-BASED DEBRIEF</div><h3>Source answer: von Willebrand disease</h3><p>The official key gives E for item 62. This is the examination answer, not a confirmed clinical diagnosis.</p>${source(
+  return `<div class="feedback"><div class="eyebrow">SOURCE-BASED DEBRIEF</div><h3>Source answer: von Willebrand disease</h3><p>The official answer key identifies von Willebrand disease (option E) for item 62.</p>${source(
     USMLE + "#page=50",
     "USMLE answer key, printed p. 49, item 62"
   )}<h3 style="margin-top:20px">Why the screening results do not settle it</h3><p>CDC explains that screening results can be normal, including aPTT in mild disease. Low hemoglobin can accompany heavy bleeding. Confirmation uses specific testing, including VWF antigen, VWF activity, and factor VIII activity.</p>${source(
     CDC,
     "CDC, “Screening tests” and “Diagnostic tests”"
-  )}<h3 style="margin-top:20px">Compare the reasoning process</h3><ul><li>Did you explain how bleeding beyond menstruation affects your differential?</li><li>Did you distinguish a normal screen from excluding every bleeding disorder?</li><li>Did you identify which specific evidence is still missing?</li><li>What result would change your leading explanation?</li></ul><p class="hint">This debrief was checked against the linked sources. It has not undergone independent faculty review. No generated results or treatment recommendations are added.</p></div>`;
+  )}<h3 style="margin-top:20px">Compare the reasoning process</h3><ul><li>Did you explain how bleeding beyond menstruation affects your differential?</li><li>Did you distinguish a normal screen from excluding every bleeding disorder?</li><li>Did you identify which specific evidence is still missing?</li><li>What result would change your leading explanation?</li></ul></div>`;
 }
 const sampleNote =
   "Screening blood tests can be normal in von Willebrand disease. Specific diagnostic tests are needed. aPTT can be normal in mild disease. PT is normal in most affected people.";
@@ -653,18 +651,20 @@ function notes() {
   return (
     heading(
       "06 / CHECK AN AI ANSWER",
-      "Notes & critical evaluation",
-      "Finally, ask for a study resource from a source note. Compare the resource with that source, then challenge an incorrect statement."
+      "Check before you learn from it",
+      ""
     ) +
     teaching(
-      "Keep the original note beside the result",
-      "Provide a short note you are allowed to use. Ask for one study format, such as flashcards, and require each answer to match a passage in that note. Read both side by side. If the chatbot adds a claim or citation, open the source and check that it actually supports the claim.",
+      "Check a claim before studying from it",
+      `<p>A clear, confident reply can still contain an error. Asking “Are you sure?” gives you another AI reply; it does not independently verify the first one. Ask for the source, open it, and find the passage that supports the exact claim.</p>
+      <p>When making study materials, give the chatbot a note you are allowed to use and ask it to stay within that source. For example: <b>“Using only this note, make a flashcard. Keep the answer hidden until I attempt it. Identify the sentence supporting the answer.”</b> Compare the result with the original before learning from it.</p>
+      <p>First, practise challenging an overstated potassium claim. Then transform the sample note and correct a second error using the linked CDC reference. Check the wording carefully: “can be normal” and “rules out disease” make different claims.</p>`,
       [1, 2, 3]
     ) +
-    `<div class="grid2"><div class="panel"><div class="eyebrow">THE SOURCE NOTE</div><h2>Screening is not confirmation</h2><p>${sampleNote}</p>${source(
+    conversationPractice(`<h2 class="practice-heading">Make and check a study resource</h2><div class="grid2"><div class="panel"><div class="eyebrow">THE SOURCE NOTE</div><h2>Screening is not confirmation</h2><p>${sampleNote}</p>${source(
       CDC,
       "Source: CDC, screening tests, aPTT and PT sections"
-    )}<div class="notice">Check each study resource against the source.</div><p class="label">Transform the sample note</p><div class="resource-tabs" role="group" aria-label="Study resource">${[
+    )}<p class="label">Transform the sample note</p><div class="resource-tabs" role="group" aria-label="Study resource">${[
       "Study guide",
       "Flashcards",
       "Concept map",
@@ -687,11 +687,8 @@ function notes() {
     )}<button class="button" id="check-error">Compare with the source ↗</button><div id="error-feedback" hidden class="feedback" role="status"><h3>Compare your correction</h3><p>A normal aPTT does not exclude mild von Willebrand disease. Specific testing is needed to establish the diagnosis. Check whether your wording preserves that distinction and identifies the source.</p>${source(
       CDC,
       "CDC, “Activated partial thromboplastin time (APTT) test” and “Diagnostic tests”"
-    )}<p class="hint">This comparison is fixed. It does not automatically judge your written answer.</p></div></div></div>` +
-    `<details><summary>How would I ask this in a real study chat?</summary><p>“Using only the source note I provide, make a flashcard. Keep the answer separate so I can attempt it first. Tell me which sentence in the note supports the answer.”</p>${evidence(
-      [1, 2, 4]
-    )}</details>` +
-    finish("notes", "reflection")
+    )}</div></div></div>` +
+    finish("notes", "reflection"))
   );
 }
 function resource(index) {
@@ -709,11 +706,11 @@ function resource(index) {
 const domains = [
   [
     "Prompting",
-    "Which elements would you choose in a tutor request? Explain why training level, existing understanding, uncertainty, and a specific learning goal may matter.",
+    "Write a message asking for help with a topic you know. Include your level, what you understand and the specific gap.",
   ],
   [
     "Active learning",
-    "Describe when the tutor should ask a question, wait for an attempt, give feedback, and revisit errors.",
+    "Write a message asking the chatbot to quiz you, wait for an attempt, give feedback and revisit an error.",
   ],
   [
     "Clinical reasoning",
@@ -771,35 +768,20 @@ function assessment(post = false) {
       .map((x) => `<label><input type="checkbox">${x}</label>`)
       .join(
         ""
-      )}</div><p>These are the module’s learning goals, not a validated assessment instrument. Progress records activity completion only.</p></div></div>` +
+      )}</div><p>Use your written answers to decide which step you still need to practise.</p></div></div>` +
     (post
-      ? `<div class="principle"><span class="star" aria-hidden="true">✳</span><div><p>Explain. Question. Reason. Verify.</p><small>Take a prompt you selected here into your next study session, using fictional or course content.</small></div></div>`
+      ? `<div class="principle"><span class="star" aria-hidden="true">✳</span><div><p>Use this in your next study session</p><small>Choose one topic, state your gap, ask for an attempt before feedback, and check the answer against your source.</small></div></div>`
       : "")
   );
 }
 function about() {
-  return (
-    heading(
-      "REFERENCES & HELP",
-      "Read and check the sources",
-      "Education guidance supports how to approach the conversation. Physiology sources support the medical explanations. The example chats are authored teaching scripts."
-    ) +
-    `<section class="panel"><h2>External resources</h2><p>Start with AACOM’s prompting guide [1], then its guide to evaluating an answer [2]. These resources were written for medical educators; this module adapts selected guidance for students.</p><ol class="reference-list">${references
-      .filter((r) => r.url)
-      .map(
-        (r) =>
-          `<li id="reference-${r.id}" value="${r.id}"><p>${link(
-            r.url,
-            r.title
-          )}</p><p><b>Relevant section:</b> ${esc(r.locator)}.</p><p>${esc(
-            r.supports
-          )}</p></li>`
-      )
-      .join("")}</ol><h2>Supplied course source</h2><p>[8] ${
-      references.find((r) => r.id === 8).title
-    } Slides 14–16, 18–19 and 24. This source informed the renal detail but is not publicly hosted. It is not a substitute for the linked public references.</p></section>
- <section class="panel"><h2>What these examples can show</h2><p>The fixed conversations demonstrate ways to ask, follow up, attempt an answer, and check evidence. They are not recorded model runs or a study of learning effectiveness. A live chatbot may respond differently. No faculty approval or validated assessment is claimed.</p><h2>Your information</h2><p>Use only fictional cases or course content. Only lesson-completion flags are saved in this browser. Written exercises stay in this tab and clear on reload. No live AI calls, analytics, microphone or audio controls are included. Use Reset to clear progress.</p><p>The pathway has a beginner introduction and five study activities. Completion time has not been measured.</p></section>`
-  );
+  return heading("", "Sources & about", "Open a reference to check the explanation against the original.") +
+    `<section class="panel"><h2>Learning with AI</h2><p>For further guidance, start with AACOM’s prompting guide [1] and its guide to evaluating a reply [2].</p>
+    <ol class="reference-list">${references.filter((r) => r.url).map((r) => `<li id="reference-${r.id}" value="${r.id}"><p>${link(r.url, r.title)}</p><p>${esc(r.locator)}.</p></li>`).join("")}</ol>
+    <p>[8] ${references.find((r) => r.id === 8).title} Slides 14–16, 18–19 and 24. This supplied course lecture informed the renal mechanisms and is not publicly hosted.</p></section>
+    <section class="panel"><h2>About the examples</h2><p>The conversations are pre-written teaching examples; a live model may respond differently. Medical content is linked to course and public sources. The module has not had independent faculty review or student testing.</p>
+    <p>Only completion flags are saved in your browser. Written exercises clear on reload. No messages are sent to an AI service. Use fictional cases and course material when trying these approaches elsewhere.</p>
+    <details><summary>Design evidence</summary><p>The revision draws on ten papers about medical education and online course design. The source passages, their scope and the resulting changes are documented in the <a href="https://github.com/ArvinZaker/flex_ai_education_module/blob/main/README.md#simpler-navigation-and-fuller-teaching" target="_blank" rel="noopener noreferrer">design notes</a>.</p></details></section>`;
 }
 function saveSession() {
   document
@@ -814,8 +796,10 @@ function render() {
   const previousRoute = route;
   route = location.hash.slice(1) || "overview";
   if (!knownRoutes.includes(route)) route = "overview";
-  if (route !== previousRoute && route === "tutor") scenario = 0;
-  if (route !== previousRoute && route === "gaps") scenario = 1;
+  if (route === "tutor") scenario = 0;
+  if (route === "gaps") scenario = 1;
+  if (route === "recall") scenario = 2;
+  if (route === "notes") scenario = 3;
   updateNav();
   const views = {
     overview,
@@ -846,8 +830,18 @@ function render() {
       ? "Learning With AI"
       : lessons.find((l) => l[0] === route)?.[1] || "Learning With AI"
   } · Medical Education`;
-  $("#main").focus({ preventScroll: true });
-  window.scrollTo(0, 0);
+  if (route === previousRoute) {
+    const reply = [...document.querySelectorAll(".tutor-chat")]
+      .filter((el) => !el.closest("details:not([open])")).at(-1);
+    const focusTarget = reply || $("#main");
+    focusTarget.setAttribute("tabindex", "-1");
+    focusTarget.focus({ preventScroll: true });
+  }
+  if (route !== previousRoute) {
+    $(".contents").open = false;
+    $("#main").focus({ preventScroll: true });
+    window.scrollTo(0, 0);
+  }
 }
 document.addEventListener("input", (e) => {
   if (e.target.dataset.session) session[e.target.id] = e.target.value;
@@ -868,6 +862,12 @@ document.addEventListener("submit", (e) => {
   render();
 });
 document.addEventListener("click", async (e) => {
+  if (e.target.closest('a[href="#main"]')) {
+    e.preventDefault();
+    $("#main").focus();
+    return;
+  }
+  if (e.target.closest("#navigation a")) $(".contents").open = false;
   const b = e.target.closest("button");
   if (!b) return;
   if (b.dataset.introChoice !== undefined) {
@@ -939,6 +939,17 @@ document.addEventListener("click", async (e) => {
     return;
   }
   switch (b.id) {
+    case "next-practice":
+      session[route + "-practice"] = true;
+      render();
+      window.scrollTo(0, 0);
+      $("#main").focus({ preventScroll: true });
+      break;
+    case "back-conversation":
+      session[route + "-practice"] = false;
+      render();
+      window.scrollTo(0, 0);
+      break;
     case "tree-reset":
       delete treeState[window.SCENARIOS[scenario].id];
       render();
