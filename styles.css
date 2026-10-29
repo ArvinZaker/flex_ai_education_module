@@ -1486,3 +1486,10 @@ h1, h2, h3 { font-family: Arial, Helvetica, sans-serif; }
   position: fixed; top: 12px; left: 16px; width: auto; height: auto;
   padding: 12px; overflow: visible; clip-path: none;
 }
+.prompt-principles { padding-left: 23px; margin: 18px 0; }
+.prompt-principles li { padding-left: 4px; margin-bottom: 14px; font-size: 16px; line-height: 1.75; }
+.next-action { border-top: 1px solid var(--line); padding-top: 16px; margin-top: 18px; }
+.next-action h3 { font-size: 15px; margin: 0 0 6px; }
+.next-action p { margin: 0; }
+.quiz-next-action { margin-bottom: 0; }
+@media (max-width: 570px) { .prompt-principles li { font-size: 15px; } }

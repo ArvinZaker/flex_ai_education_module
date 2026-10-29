@@ -123,6 +123,14 @@ const references = [
     supports:
       "Supports the case debrief and the deliberately incorrect statement/correction in the note exercise.",
   },
+  {
+    id: 11,
+    title: "Google AI for Developers (2026). Prompt design strategies.",
+    short: "Google: Prompt design",
+    url: "https://ai.google.dev/gemini-api/docs/prompting-strategies",
+    locator: "Clear and specific instructions; Constraints; Response format; Prompt iteration strategies",
+    supports: "Supports specifying the task, response format and constraints, then refining the prompt. Developer guidance for Gemini, not a guarantee across models or a medical accuracy standard.",
+  },
 ];
 function evidence(ids) {
   return `<p class="evidence-refs" aria-label="Supporting sources">${ids
@@ -322,12 +330,12 @@ function introduction() {
        )}</div><p><b>Now check it.</b> Open the NIH source below, find “Interactions with Medications,” then the ACE inhibitor/ARB subsection. Compare its statement about urinary potassium excretion with the reply.</p>${evidence(
          [5]
        )}<div class="tree-options"><span class="label">Why should you open the source?</span><button class="tree-choice" data-intro-verify="1">A confident reply can still be wrong. I need to check that the source supports the claim.</button><button class="tree-choice" data-intro-verify="0">The chatbot supplied a link, so the claim is already verified.</button></div>${
-         introVerified !== 0
+         introVerified === null
            ? ""
            : `<div class="feedback" role="status"><p>${
                introVerified
-                 ? "Yes. A link is a starting point. Check that it opens, is relevant, and actually supports the statement."
-                 : "A citation can be incorrect or irrelevant. Open it and compare the relevant passage before relying on the reply."
+                 ? "You identified the right check: the passage must support the claim. Open NIH’s ACE inhibitor/ARB section and compare its wording about urinary potassium excretion. Then choose Continue to learn how to specify the response you want."
+                 : "A citation can be incorrect or irrelevant. Open NIH’s ACE inhibitor/ARB section and compare the passage with the reply. Then select the other answer here, or choose Continue after checking the source."
              }</p>${evidence([2, 3])}</div>`
        }`
  }
@@ -375,6 +383,7 @@ function tree() {
   const showOpeningHelp = selected === "A" && next === undefined;
   const showFinalHelp =
     state[2] && endings[next].answers[state[2] - 1].suboptimal;
+  const ending = state[2] ? endings[next].answers[state[2] - 1] : null;
   const advice = showOpeningHelp
     ? s.openingAdvice
     : showFinalHelp
@@ -433,7 +442,7 @@ function tree() {
                       )}<button class="tree-choice" id="tree-alternative">Try another next prompt</button></div>`
               }`
         }`
-  }</div>${advice ? coaching(advice) : ""}${evidence(s.references)}</section>`;
+  }</div>${advice ? coaching(advice) : ""}${ending ? `<div class="next-action" role="status"><h3>What to do next</h3><p>${esc(ending.nextAction)} ${route === "recall" ? "Then choose Try the short check below." : route === "notes" ? "Then choose Make a study resource below." : "Then choose Continue below, or restart to compare a different message."}</p></div>` : ""}${evidence(s.references)}</section>`;
 }
 function conversationPractice(content) {
   if (session[route + "-practice"]) {
@@ -454,13 +463,20 @@ function tutor(gaps = false) {
     teaching(
       gaps ? "Name the missing step" : "Choose the kind of help you need",
       gaps
-        ? `<p>If a reply is unclear, identify the first step you cannot explain. “Explain again” may bring back the same explanation. A more useful follow-up names what made sense and where you got lost.</p>
-        <p>For example: <b>“I understand that sodium enters the kidney cell. I do not understand how that helps potassium enter urine. Explain only that link.”</b> This gives the next reply a precise target. You can also ask it to define a term, draw an arrow chain, or check your own explanation.</p>
-        <p>Read the next reply and decide whether it resolves that gap. If it does, try explaining the connection yourself. If it does not, ask about the remaining step. In the conversation below, choose the follow-up you would actually send.</p>`
-        : `<p>Tell the chatbot what you want to <b>do</b> with the topic. You can ask it to explain a mechanism, question you, or challenge a proposed explanation. These requests produce different kinds of study conversation.</p>
-        <p>Compare “Teach me potassium” with <b>“I know aldosterone helps the kidney excrete potassium. Ask me one question about what happens when that signal falls, and wait for my answer.”</b> The second message states existing knowledge, narrows the topic and sets the next action.</p>
-        <p>You can also specify the format: “Use an arrow chain,” “Define the terms first,” or “Give a hint before the answer.” Keep the goal specific enough to judge whether the reply helped. Try a first message below, then continue the conversation. You can restart to compare the other opening.</p>`,
-      [1]
+        ? `<p>Read the reply against your goal. Decide what is missing: background you needed, a mechanism step, an example, or the requested format. Then tell the chatbot what to keep and what to change.</p>
+        <p>For a missing link, send: <b>“I understand that sodium enters the kidney cell. I do not understand how that helps potassium enter urine. Keep the explanation focused on that electrical connection.”</b> For too much detail: <b>“Keep the mechanism, but define the terms first and leave out treatment.”</b></p>
+        <p>If you want a different structure, show it: <b>“Rewrite this as blood side → cell → tubular fluid, and label the transporter at each crossing.”</b> If you want a question instead of an explanation: <b>“Stop explaining. Ask me to predict the next step and wait.”</b> You can make these requests in the same conversation.</p>
+        <p>When the reply meets your request, explain the idea yourself or apply it to a new situation. If it still misses the point, name the remaining mismatch. A clearer format makes an answer easier to use; check its medical content separately.</p>`
+        : `<p>A model responds to the instructions and information you give it. Decide what a useful reply should contain before you send the message. “Be my tutor” leaves the actual teaching task open. Specify the behaviour you want.</p>
+        <ol class="prompt-principles">
+          <li><b>Name the task.</b> Ask for an explanation, a comparison or a quiz. “Explain why blood potassium can rise after ACE inhibition” gives the reply a topic and purpose.</li>
+          <li><b>Give the relevant context.</b> State your level, what you understand and the missing connection. This tells the model where to begin and which background to skip.</li>
+          <li><b>Describe the output.</b> Ask for plain language, an arrow chain or a comparison table. If you want a particular structure, show it: “Change → kidney effect → blood effect.”</li>
+          <li><b>Set the interaction and source boundaries.</b> Say “Ask one question and wait,” or “Use the excerpt below and flag anything it does not support.” Supply the excerpt when you want it used.</li>
+        </ol>
+        <p>For example: <b>“I am a first-year medical student. I know ACE inhibitors reduce angiotensin II, but not why potassium can rise. Explain that link in plain language using Change → kidney effect → blood effect. Then ask one question and wait for my answer.”</b> Each sentence sets a different part of the response.</p>
+        <p>After the reply, check whether it did the requested job. If it is too broad, narrow the task. If a step is missing, name that step. If the format is wrong, show the format again. These instructions steer the response; factual claims still need checking against a source. Try this with the prepared messages below.</p>`,
+      gaps ? [1, 11] : [1, 2, 11]
     ) +
     tree() +
     `<details><summary>Compare both opening prompts side by side</summary>${comparison()}</details>` +
@@ -504,6 +520,7 @@ const quiz = [
 ];
 function recall() {
   const q = quiz[quizIndex];
+  const allAnswered = quiz.every((_, i) => Object.hasOwn(quizAnswers, i));
   return (
     heading(
       "04 / ASK THE CHATBOT TO QUIZ YOU",
@@ -536,12 +553,12 @@ function recall() {
       quizChecked
         ? `<div class="feedback" role="status"><h3>${
             quizAnswers[quizIndex] === q.correct
-              ? "Matches the requested behavior"
+              ? "That instruction fits the task"
               : "Revisit this instruction"
-          }</h3><p>${q.why}</p></div><div class="actions">${
-            quizIndex < quiz.length - 1
+          }</h3><p>${q.why}</p><p class="quiz-next-action">${!allAnswered ? "Choose Next question to try the next situation." : quizMissed.size ? "Choose Revisit a missed item to practise the instruction you missed, then Continue to the case." : "You have completed the three questions. Choose Continue to use these instructions in a clinical case."}</p></div><div class="actions">${
+            !allAnswered && quizIndex < quiz.length - 1
               ? '<button class="button" id="quiz-next">Next question ↗</button>'
-              : '<span class="hint">You have attempted the practice sequence.</span>'
+              : ""
           }${
             quizMissed.size
               ? '<button class="button secondary" id="quiz-revisit">Revisit a missed item</button>'
@@ -643,7 +660,7 @@ function debrief() {
   )}<h3 style="margin-top:20px">Why the screening results do not settle it</h3><p>CDC explains that screening results can be normal, including aPTT in mild disease. Low hemoglobin can accompany heavy bleeding. Confirmation uses specific testing, including VWF antigen, VWF activity, and factor VIII activity.</p>${source(
     CDC,
     "CDC, “Screening tests” and “Diagnostic tests”"
-  )}<h3 style="margin-top:20px">Compare the reasoning process</h3><ul><li>Did you explain how bleeding beyond menstruation affects your differential?</li><li>Did you distinguish a normal screen from excluding every bleeding disorder?</li><li>Did you identify which specific evidence is still missing?</li><li>What result would change your leading explanation?</li></ul></div>`;
+  )}<h3 style="margin-top:20px">Compare the reasoning process</h3><ul><li>Did you explain how bleeding beyond menstruation affects your differential?</li><li>Did you distinguish a normal screen from excluding every bleeding disorder?</li><li>Did you identify which specific evidence is still missing?</li><li>What result would change your leading explanation?</li></ul><p>Revise any reasoning entry that missed an important finding or overstated the screening tests. Then choose Continue to practise checking a generated study resource.</p></div>`;
 }
 const sampleNote =
   "Screening blood tests can be normal in von Willebrand disease. Specific diagnostic tests are needed. aPTT can be normal in mild disease. PT is normal in most affected people.";
@@ -687,7 +704,7 @@ function notes() {
     )}<button class="button" id="check-error">Compare with the source ↗</button><div id="error-feedback" hidden class="feedback" role="status"><h3>Compare your correction</h3><p>A normal aPTT does not exclude mild von Willebrand disease. Specific testing is needed to establish the diagnosis. Check whether your wording preserves that distinction and identifies the source.</p>${source(
       CDC,
       "CDC, “Activated partial thromboplastin time (APTT) test” and “Diagnostic tests”"
-    )}</div></div></div>` +
+    )}<p>Compare your correction with that passage and revise it if needed. Then choose Finish & reflect to apply the same checks to your own study approach.</p></div></div></div>` +
     finish("notes", "reflection"))
   );
 }
