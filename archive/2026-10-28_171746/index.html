@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <meta name="theme-color" content="#173e35" />
+    <meta
+      name="description"
+      content="An interactive learning module for medical students: practice prompting, active recall, clinical reasoning, and verification with pre-generated AI examples."
+    />
+    <title>
+      Learning With AI: From Effective Prompting to Clinical Reasoning
+    </title>
+    <link rel="icon" href="assets/favicon.svg" type="image/svg+xml" />
+    <link rel="stylesheet" href="styles.css" />
+    <script src="scenarios.js" defer></script>
+    <script src="app.js" defer></script>
+  </head>
+  <body>
+    <noscript
+      ><p style="padding: 24px">
+        This interactive module requires JavaScript. Enable JavaScript to use
+        the pre-generated activities. No live AI connection is required.
+      </p></noscript
+    >
+    <a class="skip" href="#main">Skip to content</a>
+    <header class="module-header">
+      <a class="brand" href="#overview">Learning with AI<span aria-hidden="true">.</span></a>
+      <details class="contents">
+        <summary>Contents</summary>
+        <nav aria-label="Module navigation" id="navigation"></nav>
+      </details>
+    </header>
+    <div class="page">
+      <div class="topbar"><span>A study guide for medical students</span><span id="progress-text" aria-live="polite">0 / 6 completed</span></div>
+      <main id="main" tabindex="-1"></main>
+      <footer>
+        <button class="text-button" id="reset">Reset progress</button><button class="text-button" data-go="about">
+          Sources & about
+        </button>
+      </footer>
+    </div>
+    <div id="toast" class="toast" role="status"></div>
+  </body>
+</html>

@@ -1,29 +1,29 @@
 # Learning With AI
 
-A static learning module for first-year medical students new to chatbots. Students choose prepared messages and see the conversation continue. Kidney physiology supplies the example content; the learning task is deciding what to ask, how to follow up, and how to verify a reply. All conversations are authored scripts. No live model, account, API key, or build step is required.
-
-## GitHub Pages
-
-Publish `main` → `/(root)` in repository Settings → Pages → Deploy from a branch. The expected URL is https://arvinzaker.github.io/flex_ai_education_module/ . Relative asset paths and hash navigation support the repository subpath. `.nojekyll` disables Jekyll processing. [GitHub's static-site instructions](https://docs.github.com/en/pages/getting-started-with-github-pages/creating-a-github-pages-site), “Static site generators,” state: “GitHub Pages publishes any static files that you push to your repository.”
-
-Local preview: `python -m http.server 8000`, then visit http://localhost:8000 . No dependencies need installation.
+A rebuilt static module for first-year medical students learning to use chatbots. All conversations are prepared scripts. Students choose messages, see the reply and receive explicit Correct or Incorrect feedback with a reason. Incorrect answers lead to Try again; correct answers lead to Continue. There is no live model or editable prompt.
 
 ## Learning path
 
-1. **Your first study chat.** Define prompt, reply and follow-up; choose a first message, request a clarification, and open a supporting source.
-2. **Ask for the help you need.** Compare a broad request with a message that gives existing knowledge and a specific gap.
-3. **Communicate your gaps.** Ask for a definition, a different format, one missing step, or a check of a misconception.
-4. **Active recall.** Ask a chatbot to quiz you and wait for an attempt before giving feedback.
-5. **Clinical reasoning.** Apply the interaction to a separate, sourced USMLE sample case while keeping its answer concealed.
-6. **Notes and critical evaluation.** Transform a source note and correct an intentionally incorrect statement against the source.
+1. **Ask.** Define a prompt and reply. State a learning gap, request an output format and specify supplied-source boundaries.
+2. **Steer.** Use a follow-up to resolve a term or missing mechanism. Request one question at a time and attempt it before feedback.
+3. **Verify.** Separate following instructions from factual support. Check an overstated claim, transform a source note and correct an unsupported addition.
+4. **Apply.** Set case rules, request evidence, revise a differential and state uncertainty. The source answer stays concealed until Finish case or explicit reveal.
 
-The four study-conversation topics are starting a chat, fixing an unclear explanation, requesting a quiz, and challenging an overstated reply. Every branch is a message a student could send to a chatbot. Each topic has two opening choices, three follow-up choices, and two subsequent messages, giving 48 scripted paths. The final reply concludes the example; Previous turns preserves the earlier exchange. Each conversation now appears in its relevant step. Quiz and note activities follow their conversations through a single continuation action. The final topic deliberately contains an incorrect absolute claim and labels the exercise accordingly.
+Each screen contains one decision, with a goal stated before its choices. Renal mechanisms supply concrete learning examples. The separate official USMLE case has three optional hint modes. Notes can be viewed as a flashcard, study guide, concept map or practice question. Starting and closing exercises compare first attempts across five skill domains in the current tab. These are practice decisions, not a validated assessment. Completion time has not been measured.
 
-Opening and closing exercises cover the same five requested skill domains. They are ungraded reflection; no automated medical grading or validated learning score is included. The six-step route includes a new introduction in place of the removed voice activity. Its completion time has not been measured, so the previous 40–50 minute claim is no longer displayed.
+## GitHub Pages
+
+Publish main → /(root) in Settings → Pages. Live site: https://arvinzaker.github.io/flex_ai_education_module/ . Relative assets and hash navigation support the repository subpath. No build or dependency installation is needed. Preview with `python -m http.server 8000`.
+
+## Implementation and privacy
+
+`index.html` loads `styles.css`, `scenarios.js` and `app.js`. Only completed step IDs persist under `learning-with-ai-v2`. Exercise answers remain in memory and clear on reload. Reset clears this module's completion flags and current answers. There are no live AI calls, analytics, microphone controls or uploaded course documents. GitHub handles normal static hosting requests.
+
+The retired implementation is preserved under `archive/2026-10-28_171746/` with SHA256SUMS. The earlier voice archive remains untouched. Neither archive is loaded by the application. Local REQUIREMENTS.md tracks cumulative requests and is ignored by Git.
 
 ## References and claim support
 
-Named, numbered references and relevant sections are displayed in the module. Education sources support interaction guidance. Medical sources support renal and case facts. The example conversations are authored illustrations, not recorded model runs or empirical A/B results. No claim of improved learning, model compliance, or faculty approval is made.
+Named references and relevant sections are displayed in the module. Education sources support interaction guidance. Medical sources support renal and case facts. The example conversations are authored illustrations, not recorded model runs or empirical A/B results. No claim of improved learning, model compliance, or faculty approval is made.
 
 ### Guidance on using chatbots for learning
 
@@ -43,41 +43,8 @@ Named, numbered references and relevant sections are displayed in the module. Ed
 
 References are attached to the claims they support. Where public sources cover only part of an explanation, the supplied course source is identified separately. NCBI/PMC full-text retrieval for an additional physiology review was blocked by CAPTCHA; Europe PMC/publisher alternatives returned access errors. Those snippets were not used as evidence.
 
-## Three student-perspective review rounds
 
-These are agent walkthroughs from the perspective of a first-year student, not feedback from enrolled students.
-
-1. **Can I start without knowing chatbots?** The previous page jumped into a renal playground without explaining the interaction. Added prompt/reply/follow-up definitions, a single concrete study need, a guided first exchange, a plain-language follow-up, and an opening source-check task. Wording now addresses a first-year learner. Browser walkthrough covers both initial messages and both source-check choices.
-2. **Do my choices teach me how to use the chatbot?** The previous trees became kidney quizzes. Rewrote all four trees so choices are messages requesting clarification, targeted explanations, attempts, hints, quizzes or evidence. Each continuation answers that specific message. The final reply includes a short explanation of the learning behavior. Earlier turns remain accessible. The case and notes pages now show how to ask for those activities in a real study chat. Browser walkthrough covers all 48 paths and the retained quiz/case gates.
-3. **Can I verify and transfer what I learned?** Bare source labels and private lecture references were insufficient for an external learner. Added numbered, named references with public URLs, relevant sections and an explanation of their scope. Added a References & help navigation item, an explicit public-versus-course-source distinction, and a source-opening task. Removed all active speech controls/code and the obsolete duration claim. Check the correction source, opening/closing comparison, mobile layouts and progress persistence before delivery.
-
-## Privacy and implementation
-
-Only completed lesson IDs are saved to local storage under `learning-with-ai-progress-v1`. Written exercises remain in this tab and clear on reload. Reset clears both. There are no live AI calls, analytics, microphone controls or audio features. GitHub handles normal static hosting traffic.
-
-`index.html` loads `styles.css`, `scenarios.js` and `app.js`. The removed voice implementation is preserved only under `archive/2026-10-28_015844/`; source/copy SHA-256 equality was verified before removal, with `SHA256SUMS` retained. The archive is not referenced by the app. Local `REQUIREMENTS.md` tracks the requests and is ignored by Git.
-
-Review used the installed `strict-agent` and `review-scientific-manuscript` guidance. The requested `review-agent` skill was not present in the installed skill folders. No independent faculty review, student usability study, or formal accessibility audit has been completed.
-
-### Final verification
-
-All three walkthroughs passed in headless Chromium. Round 1 covered the starting route, opening responses, both guided-example prompt choices, follow-up and source-check choices. Round 2 covered all 48 conversation paths, accessible history, quiz feedback gates, case concealment/finish checks and case-to-notes navigation. Round 3 covered nine public references, the private-source disclosure, CDC correction link, before/after response retention, no progress bars, one completion counter, no speech route, and six representative views at 375, 768 and 1440 pixels without horizontal overflow. No JavaScript page errors occurred.
-
-Visual review identified an omitted visible follow-up and an unnecessarily long initial exchange. The selected follow-up now stays beside its reply and earlier turns collapse under Earlier exchange. A stale notification from a previous activity is cleared when the view changes. These fixes passed focused checks, and final desktop/mobile screenshots were inspected. Chromium frame/screenshot waits stalled during an intermediate regression attempt; the final interaction checks passed with GPU rendering disabled, and final screenshots were captured successfully. This does not replace a real student usability study.
-
-Syntax checks: `node --check app.js`, `node --check scenarios.js`. Whitespace check: `git diff --check`. Archived voice-source hashes were rechecked with `sha256sum -c SHA256SUMS` (all three matched).
-
-## Teaching text and feedback revision
-
-Each of the six activities now begins with a short explanation of what to type and how to use the response. The opening explains the message box and follow-up messages. Later explanations cover specifying a task, naming a gap, requesting one question at a time, setting case boundaries and checking generated notes. These passages use the already inspected AACOM/IES guidance above; no new efficacy claims are introduced. The prose was reviewed using strict-agent and write-scientific-manuscripts for direct wording, repetition, evidence and scope. This is learner-facing prose, so the manuscript skill's specialist register does not apply.
-
-Prompt choices have no A/B, broad/specific, or quality labels. Conversation replies are labelled Chatbot. Separate module coaching appears after an opening A choice or a flagged suboptimal verification choice, and remains absent after the other choices. Generic completion takeaways were removed. Citations remain adjacent as compact named links; full reference details and section locators remain on References & help.
-
-Browser verification passed all 48 paths, neutral choice labels, absence of premature coaching, coaching after each designated suboptimal choice, no coaching after useful choices, six teaching explanations, one current chatbot reply and mobile fit. Desktop and mobile screenshots were inspected. Syntax and whitespace checks passed.
-
-## Simpler navigation and fuller teaching
-
-The October 28 revision responds to the request for fewer sections and a more complete explanation of how to study with a chatbot. The teaching sequence stays intact. The interface presents one current step with Back and Continue; the complete contents are available on demand. Teaching text explains the action, its purpose and a concrete message before practice. Repeated notices move to the reference page. These presentation choices implement the user's requested simplification; no paper establishes an optimal number of menu items or words for this module.
+## Educational design evidence
 
 The following full papers, their tables, figures and captions were read before this revision. The implementation screenshots in Prabu Kumar et al., Multimedia Appendix 1, were also inspected. Other supplements concern instruments, search details or development templates that are not implemented here. The quotations below support the stated general design decisions, not exact interface settings or evidence that this module improves learning.
 
@@ -94,16 +61,17 @@ The following full papers, their tables, figures and captions were read before t
 
 The practical synthesis is to explain the study workflow before testing it, retain worked messages and useful feedback, and simplify the surrounding interface. The renal source material continues to support physiology only. AACOM and IES support the learner-facing AI/study guidance. No learning efficacy or faculty-review claim is introduced.
 
-### Verification of this revision
-
-Three main-session walkthroughs checked the beginner path, the complete interaction sequence, and source access/transfer. All 48 conversation paths passed, including neutral choice labels, coaching only after designated weak choices and accessible conversation history. The quiz withheld feedback until an attempt and allowed revisiting errors. The case kept its answer hidden until completion or explicit reveal; the four reasoning fields now follow the order of initial explanation, requested evidence and reassessment. All four study-resource formats and the written correction gate passed. Opening responses remained available in the closing reflection during the same session.
-
-Chromium checks passed eight representative views at 375, 768 and 1440 pixels without horizontal overflow, with no progress bars, no editable conversation prompts and no JavaScript errors. Requests stayed on the local static site. Only completion flags persisted after reload. Desktop/mobile screenshots were inspected. That inspection identified a visible skip-link artifact in the older test browser; the skip link now uses a clipped accessible pattern and remains available on keyboard focus. Its activation focuses the current lesson without changing the hash route. Repeated transfer instructions and the duplicated initial scenario text were removed. This is developer verification, not a student study.
-
-## Prompt principles and next actions
-
-The successful verification choice was silently omitted by `introVerified !== 0`; the rendering condition must distinguish an unanswered item from either selected answer. The revision also gives every conversation ending a concrete next action, separate from corrective coaching, and states how to proceed after each quiz result.
 
 Additional verified source: [Google AI for Developers, Prompt design strategies](https://ai.google.dev/gemini-api/docs/prompting-strategies), “Clear and specific instructions”: “provide it with clear and specific instructions”; “Response format”: “specify the format of the response.” These passages support teaching explicit tasks, constraints and output structure. “Prompt iteration strategies”: “Prompt design can sometimes require a few iterations” supports reviewing and revising instructions after seeing the result. This is developer guidance for Gemini, used alongside the existing AACOM medical-education guidance; it does not establish universal compliance, clinical accuracy or a validated prompting formula. Its temperature settings, agent templates and recommendations about hidden reasoning are not adopted. The annotated renal prompt and follow-up examples are authored teaching illustrations, as requested.
 
-Verification: the successful source-check choice now shows feedback and names Continue. All 24 conversation endings (48 complete paths through the two openings) display their specific next action and the matching continuation control. Every quiz result gives a next step; completing a previously missed item correctly now points to the case instead of asking for already-completed questions. Case and note debriefs identify the review/revision action before continuing. The prompting and follow-up steps explain task, context, output, interaction boundaries, supplied sources and targeted revision. Chromium checks passed all paths, feedback conditions, gates, ten public references, eight views at three widths and no page errors. Desktop/mobile renders of the expanded principles and successful-choice feedback were inspected.
+## Rebuild verification
+
+Three main-session walkthroughs used the perspective of a first-year student. These are developer checks, not observations from enrolled students.
+
+1. **Can I understand the task and tell whether my answer worked?** Checked the prompt/reply definitions, instructions and all 30 lesson-choice outcomes plus 20 starting/closing outcomes. Each answer immediately shows Correct or Incorrect, its own explanation and a gated next action. Feedback receives keyboard focus. Visual inspection confirmed the selected message, feedback and next control remain visible together.
+2. **Does the sequence hold together?** Completed the starting exercise, all 15 steps in Ask → Steer → Verify → Apply and the closing comparison. Checked all three hint modes, staged source findings, concealment until Finish case or explicit reveal, all four note formats, both resource-question outcomes and the flashcard reveal. The comparison retains first attempts before retries. Only completed step IDs persist after reload.
+3. **Can I navigate and verify the content?** Checked 21 representative views at 375, 768 and 1440 pixels without horizontal overflow, ten public source references, the private lecture attribution, keyboard skip navigation and unknown-route recovery. No JavaScript errors or off-site service requests occurred. No editable prompts, speech controls or progress bars are present. Desktop, correct-answer and mobile incorrect-answer screenshots were inspected.
+
+The source review separates requested format from factual accuracy, retains possible effects as possible, and distinguishes the official examination answer from clinical confirmation. The case values match the source-based table in the archived implementation. CDC supports the screening limitations and missing diagnostic tests; renal physiology is supported by the specific NIH/OpenStax/course sources above. The prepared conversations illustrate choices and do not establish real-model behavior or learning efficacy. The previously requested review-agent skill was unavailable; source review used the available review-scientific-manuscript guidance directly in the main session.
+
+Syntax checks (`node --check app.js`, `node --check scenarios.js`), whitespace checks (`git diff --check`) and all five archived-file SHA-256 checks passed.
