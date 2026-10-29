@@ -1,7 +1,8 @@
 'use strict';
 const { parts, sources, assessment } = window.MODULE;
+const recordings = window.LUNA;
 const main = document.querySelector('#main');
-const storageKey = 'learning-with-ai-v2';
+const storageKey = 'learning-with-ai-v3';
 let completed;
 try { completed = new Set(JSON.parse(localStorage.getItem(storageKey) || '[]').filter(id => parts.some(p => p.units.some(u => u.id === id)))); }
 catch { completed = new Set(); }
@@ -23,7 +24,7 @@ function resume() {
   return 'finish';
 }
 function overview() {
-  return `<p class="eyebrow">An introduction for medical students</p><h1>Learn with AI.<br>Keep doing the thinking.</h1><p class="lead">Learn how to ask for an explanation, improve a reply, test yourself and check the evidence. Then use those skills in a clinical case.</p><p>Choose a message and see a prepared chatbot reply. Each decision explains what worked or what to change. You do not need an AI account.</p><ol class="path">${parts.map((p,i) => `<li><b>${['Ask','Steer','Verify','Apply'][i]}</b><span>${esc(p.purpose)}</span></li>`).join('')}</ol><div class="actions">${button(completed.size ? 'Resume learning' : 'Begin learning', 'go', resume())}${button('Try the starting exercise', 'go', 'before/0', true)}</div><p class="quiet">The starting and closing exercises let you compare your choices across five skills.</p>`;
+  return `<p class="eyebrow">An introduction for medical students</p><h1>Learn with AI.<br>Keep doing the thinking.</h1><p class="lead">Learn how to ask for an explanation, improve a reply, test yourself and check the evidence. Build a small study tool, then use those skills in a clinical case.</p><p>Choose a message and compare real, recorded AI replies. Each decision explains what worked or what to change. You do not need an AI account.</p><ol class="path">${parts.map((p,i) => `<li><b>${esc(p.label)}</b><span>${esc(p.purpose)}</span></li>`).join('')}</ol><div class="actions">${button(completed.size ? 'Resume learning' : 'Begin learning', 'go', resume())}${button('Try the starting exercise', 'go', 'before/0', true)}</div><p class="quiet">The starting and closing exercises let you compare your choices across five skills.</p>`;
 }
 function hint(unit) {
   const hints = {
@@ -40,15 +41,26 @@ function resource() {
   if (state.format === 'Flashcard') body = `<p><b>Question</b><br>How can ACE inhibitors and ARBs affect urinary potassium excretion?</p>${state.flipped ? '<p><b>Answer</b><br>They can reduce urinary potassium excretion and lead to hyperkalemia.</p><p class="quiet">Check the answer against the first sentence of the supplied note. It preserves “can”.</p>' : button('Show answer', 'flip', '', true)}`;
   if (state.format === 'Study guide') body = '<ul><li>ACE inhibitors and ARBs can reduce urinary potassium excretion.</li><li>This can lead to hyperkalemia.</li><li>Impaired kidney function is an additional risk factor.</li></ul><p class="quiet">Each point comes from the supplied note. No treatment advice has been added.</p>';
   if (state.format === 'Concept map') body = '<p class="chain">ACE inhibitors / ARBs<br>↓ can reduce<br>Urinary potassium excretion<br>↓ can lead to<br>Hyperkalemia</p><p>Additional risk factor in the note: impaired kidney function.</p>';
-  if (state.format === 'Practice question') body = `<p>Which conclusion does the note support?</p>${state.resourceAnswer === null ? `<div class="choices">${button('These medicines can reduce potassium excretion.', 'resource-answer', 'yes', true)}${button('Every patient will develop hyperkalemia.', 'resource-answer', 'no', true)}</div>` : `<div class="result ${state.resourceAnswer ? 'correct' : 'incorrect'}" tabindex="-1"><h3>${state.resourceAnswer ? 'Correct' : 'Incorrect'}</h3><p>${state.resourceAnswer ? 'The answer preserves the possible effect described in the note.' : '“Every patient” is not supported. The note describes a possible effect.'}</p>${state.resourceAnswer ? '<p>Compare the answer with the note, then continue.</p>' : button('Try again', 'resource-retry', '', true)}</div>`}`;
+  if (state.format === 'Practice question') body = `<p>Which conclusion does the note support?</p>${state.resourceAnswer === null ? `<div class="choices">${button('These medicines can reduce potassium excretion.', 'resource-answer', 'yes', true)}${button('Every patient will develop hyperkalemia.', 'resource-answer', 'no', true)}${button('The note establishes a complete treatment protocol.', 'resource-answer', 'protocol', true)}</div>` : `<div class="result ${state.resourceAnswer === 'yes' ? 'correct' : 'incorrect'}" tabindex="-1"><h3>${state.resourceAnswer === 'yes' ? 'Correct' : 'Incorrect'}</h3><p>${state.resourceAnswer === 'yes' ? 'The answer preserves the possible effect described in the note.' : state.resourceAnswer === 'protocol' ? 'The note gives a possible effect and risk factor. It does not supply a treatment protocol.' : '“Every patient” is not supported. The note describes a possible effect.'}</p>${state.resourceAnswer === 'yes' ? '<p>Compare the answer with the note, then continue.</p>' : button('Try again', 'resource-retry', '', true)}</div>`}`;
   return `<section class="resource"><h3>The same note, different formats</h3><label for="resource-format">View a study format</label><select id="resource-format">${['Flashcard','Study guide','Concept map','Practice question'].map(f => `<option ${state.format === f ? 'selected' : ''}>${f}</option>`).join('')}</select>${body}</section>`;
 }
 let current = null;
+function recordedReply(key) {
+  const record = recordings[key];
+  const code = record.reply.startsWith('<!doctype html>');
+  const content = `<pre class="verbatim${code ? ' code' : ''}" data-record="${key}">${esc(record.reply)}</pre>`;
+  const sourceCheck = key === 'luna_quiz_answers_isolated' ? `<p class="source-check"><b>Check this detail.</b> The DKA answer groups insulin deficiency and acidosis together. Merck’s <a href="${sources.merck.url}" target="_blank" rel="noopener noreferrer">Potassium shifts</a> section attributes the potassium rise in DKA mainly to insulin deficiency and distinguishes acid types. The bicarbonate answer also needs qualification: Merck’s <a href="${sources.hyperkalemia.url}" target="_blank" rel="noopener noreferrer">Hyperkalemia treatment</a> section describes limited evidence and possible potassium excretion as well as redistribution. Check those statements before studying from this reply.</p>` : '';
+  return `<section class="reply"><h3>Recorded chatbot reply · unedited</h3>${code ? `<p>The model returned a working webpage file. Continue to try it.</p><details><summary>Read the complete HTML reply</summary>${content}</details>` : content}${sourceCheck}<details class="provenance"><summary>Exact request and recording details</summary><p>${esc(record.model)} · ${esc(record.reasoning)} reasoning · fresh conversation</p><pre class="verbatim">${esc(record.prompt)}</pre><p>Stored response SHA-256: <code class="hash">${record.replySha256}</code></p></details></section>`;
+}
 function exercise(unit, selected, assessmentMode) {
   const chosen = selected === undefined ? null : unit.choices[selected];
   const previous = assessmentMode === 'after' && state.first.before[unit.id] !== undefined ? `<p class="comparison">Your starting choice: “${esc(unit.choices[state.first.before[unit.id]].text)}”</p>` : '';
   if (!chosen) return `<section class="decision"><p class="goal"><b>Your goal</b><br>${esc(unit.goal)}</p><h2>${esc(unit.question)}</h2><div class="choices">${unit.choices.map((c,i) => button(esc(c.text), 'choose', i, true)).join('')}</div></section>`;
-  return `<section class="decision answered"><p class="chosen"><b>You chose</b><br>${esc(chosen.text)}</p><div class="result ${chosen.correct ? 'correct' : 'incorrect'}" id="feedback" tabindex="-1" role="status"><h2>${chosen.correct ? 'Correct' : 'Incorrect'}</h2><p>${esc(chosen.why)}</p>${previous}</div>${chosen.reply ? `<div class="reply"><h3>Prepared chatbot reply</h3><p>${esc(chosen.reply)}</p></div>` : ''}${unit.resources && chosen.correct ? resource() : ''}<div class="actions">${chosen.correct ? button(unit.id === 'case-uncertainty' ? 'Finish case' : 'Continue', 'continue') : button('Try again', 'retry')}</div></section>`;
+  const reply = chosen.record ? recordedReply(chosen.record) : chosen.reply ? `<div class="reply"><h3>Source-based case continuation</h3><p>${esc(chosen.reply)}</p></div>` : '';
+  return `<section class="decision answered"><p class="chosen"><b>You chose</b><br>${esc(chosen.text)}</p><div class="result ${chosen.correct ? 'correct' : 'incorrect'}" id="feedback" tabindex="-1" role="status"><h2>${chosen.correct ? 'Correct' : 'Incorrect'}</h2><p>${esc(chosen.why)}</p>${previous}</div>${reply}${unit.resources && chosen.correct ? resource() : ''}<div class="actions">${chosen.correct ? button(unit.id === 'case-uncertainty' ? 'Finish case' : 'Continue', 'continue') : button('Try again', 'retry')}${chosen.correct && chosen.record ? button('Try another message', 'compare', '', true) : ''}</div></section>`;
+}
+function interactiveExample() {
+  return `<section class="interactive-example"><h2>Try the generated quiz</h2><iframe title="Recorded potassium study quiz" src="examples/potassium-quiz.html" sandbox="allow-scripts" loading="eager"></iframe><p class="quiet">The quiz is the recorded HTML reply. Test its answers, feedback and Retry before choosing below.</p></section>`;
 }
 function lesson(partIndex, unitIndex) {
   const part = parts[partIndex];
@@ -56,7 +68,7 @@ function lesson(partIndex, unitIndex) {
   current = { unit, partIndex, unitIndex };
   const answered = state.answers[unit.id] !== undefined;
   const teaching = `<div class="teaching">${unit.teach}</div>${unit.context ? `<p class="context">${esc(unit.context)}</p>` : ''}${unit.sourceText ? `<blockquote><b>Supplied source note</b><p>${esc(unit.sourceText)}</p></blockquote>` : ''}`;
-  return `<p class="eyebrow">Part ${partIndex + 1} of 4 · Step ${unitIndex + 1} of ${part.units.length}</p><h1>${esc(unit.title)}</h1>${answered ? `<details><summary>Review the explanation and task</summary>${teaching}</details>` : teaching}${exercise(unit, state.answers[unit.id])}${unit.case ? hint(unit) : ''}${references(unit.sources)}<div class="back">${button('Back', 'go', unitIndex ? `${part.id}/${unitIndex - 1}` : partIndex ? `${parts[partIndex-1].id}/${parts[partIndex-1].units.length-1}` : 'overview', true)}</div>`;
+  return `<p class="eyebrow">Part ${partIndex + 1} of ${parts.length} · Step ${unitIndex + 1} of ${part.units.length}</p><h1>${esc(unit.title)}</h1>${answered ? `<details><summary>Review the explanation and task</summary>${teaching}</details>` : teaching}${!answered && unit.seed ? `<details class="earlier-reply"><summary>Read the supplied earlier exchange</summary><p><b>Student</b><br>${esc(unit.seed.prompt)}</p><pre class="verbatim">${esc(unit.seed.reply)}</pre></details>` : ''}${unit.interactive && !answered ? interactiveExample() : ''}${exercise(unit, state.answers[unit.id])}${unit.case ? hint(unit) : ''}${references(unit.sources)}<div class="back">${button('Back', 'go', unitIndex ? `${part.id}/${unitIndex - 1}` : partIndex ? `${parts[partIndex-1].id}/${parts[partIndex-1].units.length-1}` : 'overview', true)}</div>`;
 }
 function check(mode, index) {
   const unit = assessment[index];
@@ -74,7 +86,7 @@ function finish() {
   return `<p class="eyebrow">Take it into your own study session</p><h1>You choose the task.<br>You check the result.</h1><p>Begin with your learning gap. Specify the output and whether the model should explain, ask or wait. Revise the part that missed your goal. Check factual claims against the source before using them.</p><h2>A request you can adapt</h2><blockquote>I am a first-year medical student. I understand [starting point], but I cannot explain [specific gap]. Use the supplied excerpt to [task] in [format]. If you quiz me, ask one question and wait for my attempt. Identify anything the excerpt does not support.</blockquote><h2>Your first choices</h2><p class="quiet">This compares the first attempt at each exercise in this tab, before retries. It is practice feedback, not a validated learning score.</p><table><thead><tr><th>Skill</th><th>Starting</th><th>Closing</th></tr></thead><tbody>${rows}</tbody></table><div class="actions">${button('Try the closing exercise', 'go', 'after/0')}${button('Review the module', 'go', 'overview', true)}</div>${references(['prompting','design','evaluation'])}`;
 }
 function about() {
-  return `<h1>Sources & about</h1><p>These are pre-generated teaching conversations, not live AI outputs or measured model comparisons. A real model may respond differently. The medical facts are source-based; the module has not had faculty review.</p><p>The course PDF supplies kidney physiology only. AACOM, IES and the cited technical guidance support how to approach a study conversation. The clinical exercise condenses an official USMLE sample item.</p><p>Only completed step IDs are saved in your browser. Exercise choices stay in this tab and clear on reload. There are no AI requests, accounts, analytics or microphone features. Use fictional cases and permitted course excerpts in study tools; keep identifiable patient information out.</p>${Object.keys(sources).map(key => { const s = sources[key]; return `<section class="reference"><h2>${esc(s.title)}</h2><p>${esc(s.section)}</p>${s.url ? `<a href="${s.url}" target="_blank" rel="noopener noreferrer">Open source</a>` : '<p>The supplied lecture is private and is not uploaded with this module.</p>'}</section>`; }).join('')}<p><a href="https://github.com/ArvinZaker/flex_ai_education_module#references-and-claim-support" target="_blank" rel="noopener noreferrer">Design evidence and source quotations</a></p>${button('Back to learning', 'go', resume())}`;
+  return `<h1>Sources & about</h1><p>The recorded replies are actual outputs from fresh Luna agents at low reasoning, with no inherited conversation. They are displayed without shortening or rewriting. The complete requests, supplied follow-up context and response hashes are retained in the <a href="data/luna-transcripts.json" target="_blank" rel="noopener">transcript file</a>.</p><p>No memory-file reads occurred in the selected generation traces. Normal platform instructions still applied; these are not instruction-free model calls. Some requests include an operational instruction to answer in chat without using files or stored memory. This is preserved in the full request. These recordings illustrate individual outcomes, not a controlled comparison or a guarantee of how another model will reply.</p><p>Module feedback is written separately. Case continuations use fixed source findings and are labelled separately from Luna recordings. The module has not had faculty review.</p><p>The course PDF supplies kidney physiology only. AACOM, IES and the cited technical guidance support how to approach a study conversation. The clinical exercise condenses an official USMLE sample item.</p><p>Only completed step IDs are saved in your browser. Exercise choices stay in this tab and clear on reload. There are no AI requests, accounts, analytics or microphone features. The recorded HTML quiz runs locally in a sandboxed frame. Use fictional cases and permitted course excerpts in study tools; keep identifiable patient information out.</p>${Object.keys(sources).map(key => { const s = sources[key]; return `<section class="reference"><h2>${esc(s.title)}</h2><p>${esc(s.section)}</p>${s.url ? `<a href="${s.url}" target="_blank" rel="noopener noreferrer">Open source</a>` : '<p>The supplied lecture is private and is not uploaded with this module.</p>'}</section>`; }).join('')}<p><a href="https://github.com/ArvinZaker/flex_ai_education_module#references-and-claim-support" target="_blank" rel="noopener noreferrer">Design evidence and source quotations</a></p>${button('Back to learning', 'go', resume())}`;
 }
 function render(focusFeedback = false) {
   current = null;
@@ -89,7 +101,7 @@ function render(focusFeedback = false) {
   else if (route === 'about') html = about();
   else html = overview();
   main.innerHTML = html;
-  document.querySelector('#progress-text').textContent = `${parts.filter(p => p.units.every(u => completed.has(u.id))).length} / 4 parts completed`;
+  document.querySelector('#progress-text').textContent = `${parts.filter(p => p.units.every(u => completed.has(u.id))).length} / ${parts.length} parts completed`;
   document.querySelector('#navigation').innerHTML = `<a href="#overview">Start</a>${parts.map((p,i) => `<a href="#${p.id}/0" ${i === partIndex ? 'aria-current="step"' : ''}>${i+1}. ${esc(p.title)}</a>`).join('')}<a href="#finish">Your learning</a>`;
   document.querySelector('.contents').open = false;
   document.title = `${main.querySelector('h1').textContent} | Learning with AI`;
@@ -108,7 +120,8 @@ document.addEventListener('click', event => {
     (mode ? state[mode] : state.answers)[unit.id] = index;
     if (mode && state.first[mode][unit.id] === undefined) state.first[mode][unit.id] = index;
     render(true);
-  } else if (action === 'retry' && current) { delete (current.mode ? state[current.mode] : state.answers)[current.unit.id]; render(); }
+  } else if (action === 'compare' && current) { delete state.answers[current.unit.id]; render(); }
+  else if (action === 'retry' && current) { delete (current.mode ? state[current.mode] : state.answers)[current.unit.id]; render(); }
   else if (action === 'continue' && current) {
     const { unit, mode, partIndex, unitIndex } = current;
     if (!unit.choices[(mode ? state[mode] : state.answers)[unit.id]]?.correct) return;
@@ -121,7 +134,7 @@ document.addEventListener('click', event => {
     }
   } else if (action === 'reveal') { state.revealed = true; go('debrief'); }
   else if (action === 'flip') { state.flipped = true; render(); }
-  else if (action === 'resource-answer') { state.resourceAnswer = value === 'yes'; render(); const result = document.querySelector('.resource .result'); result.focus(); result.scrollIntoView({block:'center'}); }
+  else if (action === 'resource-answer') { state.resourceAnswer = value; render(); const result = document.querySelector('.resource .result'); result.focus(); result.scrollIntoView({block:'center'}); }
   else if (action === 'resource-retry') { state.resourceAnswer = null; render(); }
 });
 document.addEventListener('change', event => {

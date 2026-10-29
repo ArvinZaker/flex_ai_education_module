@@ -368,3 +368,23 @@ th,td {
   * {
   scroll-behavior:auto!important}
 }
+
+.verbatim {
+  font: inherit;
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+  margin: 14px 0 0;
+  line-height: 1.65;
+}
+.verbatim.code {
+  font-family: ui-monospace, monospace;
+  font-size: .78rem;
+}
+.hash { overflow-wrap: anywhere; }
+.provenance { font-size: .8rem; }
+.provenance .verbatim { font-size: .84rem; }
+.source-check { margin-top: 22px; padding: 16px; background: #f1eee0; font-size: .9rem; }
+.interactive-example { margin: 24px 0; }
+.interactive-example iframe { width: 100%; height: 760px; border: 1px solid var(--line); border-radius: 8px; background: #f3f6fb; }
+.choices { min-width: 0; }
+.choices button { min-width: 0; overflow-wrap: anywhere; }

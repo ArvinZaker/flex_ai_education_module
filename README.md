@@ -1,15 +1,16 @@
 # Learning With AI
 
-A rebuilt static module for first-year medical students learning to use chatbots. All conversations are prepared scripts. Students choose messages, see the reply and receive explicit Correct or Incorrect feedback with a reason. Incorrect answers lead to Try again; correct answers lead to Continue. There is no live model or editable prompt.
+A rebuilt static module for first-year medical students learning to use chatbots. Recorded chatbot replies are genuine, unshortened Luna outputs; source-based case continuations and module feedback are authored separately. Students choose messages, see the reply and receive explicit Correct or Incorrect feedback with a reason. Incorrect answers lead to Try again; correct answers lead to Continue. There is no live model or editable prompt.
 
 ## Learning path
 
 1. **Ask.** Define a prompt and reply. State a learning gap, request an output format and specify supplied-source boundaries.
 2. **Steer.** Use a follow-up to resolve a term or missing mechanism. Request one question at a time and attempt it before feedback.
 3. **Verify.** Separate following instructions from factual support. Check an overstated claim, transform a source note and correct an unsupported addition.
-4. **Apply.** Set case rules, request evidence, revise a differential and state uncertainty. The source answer stays concealed until Finish case or explicit reveal.
+4. **Build.** Specify a working interactive quiz, try the generated HTML, check its behaviour and content, and request a concrete refinement.
+5. **Apply.** Set case rules, request evidence, revise a differential and state uncertainty. The source answer stays concealed until Finish case or explicit reveal.
 
-Each screen contains one decision, with a goal stated before its choices. Renal mechanisms supply concrete learning examples. The separate official USMLE case has three optional hint modes. Notes can be viewed as a flashcard, study guide, concept map or practice question. Starting and closing exercises compare first attempts across five skill domains in the current tab. These are practice decisions, not a validated assessment. Completion time has not been measured.
+Each screen contains one decision with three or four choices and an explicit goal. Correctness refers to that goal, not to whether a broad request could be useful for a different purpose. Renal mechanisms supply concrete learning examples. The separate official USMLE case has three optional hint modes. Notes can be viewed as a flashcard, study guide, concept map or practice question. Starting and closing exercises compare first attempts across five skill domains in the current tab. These are practice decisions, not a validated assessment. Completion time has not been measured.
 
 ## GitHub Pages
 
@@ -17,13 +18,13 @@ Publish main → /(root) in Settings → Pages. Live site: https://arvinzaker.gi
 
 ## Implementation and privacy
 
-`index.html` loads `styles.css`, `scenarios.js` and `app.js`. Only completed step IDs persist under `learning-with-ai-v2`. Exercise answers remain in memory and clear on reload. Reset clears this module's completion flags and current answers. There are no live AI calls, analytics, microphone controls or uploaded course documents. GitHub handles normal static hosting requests.
+`index.html` loads `styles.css`, `luna-responses.js`, `scenarios.js` and `app.js`. The generated quiz runs in a sandboxed frame from `examples/potassium-quiz.html`. Only completed step IDs persist under `learning-with-ai-v3`. Exercise answers remain in memory and clear on reload. Reset clears this module's completion flags and current answers. There are no live AI calls, analytics, microphone controls or uploaded course documents. GitHub handles normal static hosting requests.
 
-The retired implementation is preserved under `archive/2026-10-28_171746/` with SHA256SUMS. The earlier voice archive remains untouched. Neither archive is loaded by the application. Local REQUIREMENTS.md tracks cumulative requests and is ignored by Git.
+The retired implementation is preserved under `archive/2026-10-28_171746/` with SHA256SUMS. The earlier voice archive remains untouched. The accepted four-part version is additionally preserved under `archive/2026-10-28_234523/`, with five source/copy hashes verified before editing. None of the archives is loaded by the application. Local REQUIREMENTS.md tracks cumulative requests and is ignored by Git.
 
 ## References and claim support
 
-Named references and relevant sections are displayed in the module. Education sources support interaction guidance. Medical sources support renal and case facts. The example conversations are authored illustrations, not recorded model runs or empirical A/B results. No claim of improved learning, model compliance, or faculty approval is made.
+Named references and relevant sections are displayed in the module. Education sources support interaction guidance. Medical sources support renal and case facts. Recorded replies are actual individual model runs, not a controlled A/B experiment. Teaching decisions and case continuations are authored illustrations. No claim of improved learning, model compliance, or faculty approval is made.
 
 ### Guidance on using chatbots for learning
 
@@ -62,9 +63,9 @@ The following full papers, their tables, figures and captions were read before t
 The practical synthesis is to explain the study workflow before testing it, retain worked messages and useful feedback, and simplify the surrounding interface. The renal source material continues to support physiology only. AACOM and IES support the learner-facing AI/study guidance. No learning efficacy or faculty-review claim is introduced.
 
 
-Additional verified source: [Google AI for Developers, Prompt design strategies](https://ai.google.dev/gemini-api/docs/prompting-strategies), “Clear and specific instructions”: “provide it with clear and specific instructions”; “Response format”: “specify the format of the response.” These passages support teaching explicit tasks, constraints and output structure. “Prompt iteration strategies”: “Prompt design can sometimes require a few iterations” supports reviewing and revising instructions after seeing the result. This is developer guidance for Gemini, used alongside the existing AACOM medical-education guidance; it does not establish universal compliance, clinical accuracy or a validated prompting formula. Its temperature settings, agent templates and recommendations about hidden reasoning are not adopted. The annotated renal prompt and follow-up examples are authored teaching illustrations, as requested.
+Additional verified source: [Google AI for Developers, Prompt design strategies](https://ai.google.dev/gemini-api/docs/prompting-strategies), “Clear and specific instructions”: “provide it with clear and specific instructions”; “Response format”: “specify the format of the response.” These passages support teaching explicit tasks, constraints and output structure. “Prompt iteration strategies”: “Prompt design can sometimes require a few iterations” supports reviewing and revising instructions after seeing the result. This is developer guidance for Gemini, used alongside the existing AACOM medical-education guidance; it does not establish universal compliance, clinical accuracy or a validated prompting formula. Its temperature settings, agent templates and recommendations about hidden reasoning are not adopted. The teaching choices illustrate these principles; the new recorded replies retain their actual wording.
 
-## Rebuild verification
+## Verification of the archived four-part version
 
 Three main-session walkthroughs used the perspective of a first-year student. These are developer checks, not observations from enrolled students.
 
@@ -75,3 +76,33 @@ Three main-session walkthroughs used the perspective of a first-year student. Th
 The source review separates requested format from factual accuracy, retains possible effects as possible, and distinguishes the official examination answer from clinical confirmation. The case values match the source-based table in the archived implementation. CDC supports the screening limitations and missing diagnostic tests; renal physiology is supported by the specific NIH/OpenStax/course sources above. The prepared conversations illustrate choices and do not establish real-model behavior or learning efficacy. The previously requested review-agent skill was unavailable; source review used the available review-scientific-manuscript guidance directly in the main session.
 
 Syntax checks (`node --check app.js`, `node --check scenarios.js`), whitespace checks (`git diff --check`) and all five archived-file SHA-256 checks passed.
+
+## Recorded conversations and interactive tools
+
+The active path is Ask → Steer → Verify → Build → Apply. Its 18 steps have 55 lesson choices. The five starting and closing questions each have three choices. Nineteen displayed model replies were generated by fresh `gpt-6-luna` agents with low reasoning and `fork_turns=none`. No parent conversation was passed. No memory-file reads occurred in the selected generation traces. Standard platform instructions, including coding-agent and memory guidance, still applied; these are not instruction-free or guaranteed representative ChatGPT outputs. Some requests explicitly instruct the agent to reply in chat without files or stored memory. Those instructions remain in the full request records and do not impose response length.
+
+`data/luna-transcripts.json` retains the submitted requests, supplied follow-up context, exact final responses, model/reasoning labels and SHA-256 values. `luna-responses.js` supplies the same records to the static module. Responses were extracted from final agent messages and are not edited, shortened or extended. A code response is displayed under Read the complete HTML reply; the runnable HTML is byte-identical to that response. Notes supplied beside a message are repeated in its full request record. Response-specific teaching feedback is outside the recording.
+
+The broad “Teach me everything…” request returned 712 whitespace-separated words; the focused mechanism request returned 44. These counts are reproducible with `len(record["reply"].split())` from the transcript JSON. Other broad requests produced shorter responses or clarification, so the teaching does not assert that vagueness always causes verbosity. The longer reply contains medical topics beyond the stated study task; students compare fit to their goal and check sources separately. The follow-up activity supplies its own earlier exchange explicitly, rather than implying continuity with whichever opening was selected in Ask.
+
+The intentionally incorrect universal claims in Verify are labelled authored examples. The real quiz-with-answers recording also contains overbroad wording about acidosis in diabetic ketoacidosis and about bicarbonate. Its text remains unchanged; an adjacent source check points to Merck's distinction between acid types and insulin deficiency, and to the limitations and possible excretory effects described for bicarbonate. Model-supplied NCBI links could not be inspected because Bookshelf presented CAPTCHA. Those links are retained as part of the raw reply and are not treated as verified module references. The independent accessible sources below support the medical checks.
+
+### Evidence for the new section
+
+- [OpenAI, Building a shareable site](https://developers.openai.com/training/walkthroughs/building-a-shareable-site), Turn an idea into a website: “tell it what people should be able to do there.” Supports describing learner actions and resulting behaviour when requesting an interactive tool. Make changes in the browser supports asking for a specific revision to an existing tool. The surrounding text identifies Sites as public beta and makes availability conditional. No account-wide availability is claimed.
+- [OpenAI, Use ChatGPT](https://learn.chatgpt.com/docs/use-chatgpt), What ChatGPT Work can do: “make interactive visualizations” supports the stated interactive capability. The adjacent passage identifies Sites for websites/apps and states that features depend on plan, platform, region, rollout and workspace settings. This supports a tool-capability lesson, not a claim that every text-only model response can run code.
+- [Healthdirect, ACE inhibitors and ARBs](https://www.healthdirect.gov.au/medicines/angiotensin-converting-enzyme-inhibitors-ace-and-angiotensin-receptor-blockers-arbs), How they work, types, side effects and monitoring. Inspected the relevant sections and surrounding cautions. Short quotation: “Possible side effects include dizziness, cough, abnormal kidney function and high levels of potassium in your blood.” Supports checking the broader drug-overview recordings, together with the explicit pregnancy and monitoring sections.
+- [DailyMed, Lisinopril prescribing information](https://dailymed.nlm.nih.gov/dailymed/drugInfo.cfm?setid=34bb4602-ccff-4939-91b9-26a63bfd40f7), label updated August 4, 2026; sections 5.1–5.5, 7.3 and 12.1. Verified short quotation, section 12.1: “decreased aldosterone secretion.” Supports the core mechanism in context of ACE inhibition and decreased angiotensin II. Sections 5.3/5.5 support renal-function risk, potassium monitoring and additional risk factors; 7.3 covers NSAID interaction. The label does not establish a universal potassium rise.
+- [Merck Manual, Hyperkalemia](https://www.merckmanuals.com/professional/nephrology/electrolyte-disorders/hyperkalemia), Etiology, Diagnosis/ECG and Treatment of Hyperkalemia. Inspected the contributing-factor table and relevant treatment paragraphs. Short quotation, bicarbonate paragraph: “evidence supporting its use is limited.” Supports qualifying the raw bicarbonate answer. The same paragraph describes both alkalinization and possible urinary potassium excretion. The treatment text distinguishes transient shifting from removal, describes dialysis, diuretics and binders, and notes delayed/unpredictable binder effects. No doses or clinical thresholds from those sections are taught or adopted.
+
+The existing IES/AACOM guidance and the previously read ten-paper evidence ledger support retrieval attempts, source checking and feedback after an attempt. The three-choice/four-choice layout, number of examples and quiz implementation are user-requested design choices, not literature-established optimal settings.
+
+### Verification of the expanded module
+
+The browser walkthrough checked all 55 lesson choices and all 30 starting/closing choices. Each module decision has three or four choices, exactly one match to its stated goal, visible Correct/Incorrect feedback, a choice-specific explanation and a next action. All 19 recorded reply bodies were checked against the original final messages and their SHA-256 values. The static runtime records match the retained JSON. Preliminary calls that read memory files or edited the workspace were excluded; no response was rewritten or regenerated to force a particular length.
+
+The complete five-part journey, 18 completion flags, three case hint modes, diagnosis concealment/reveal, four study-resource formats and first-attempt before/after comparison passed. Focused checks covered all six successful-recording comparison controls, all three note-resource outcomes and both answers to all three generated quiz questions. The raw generated quiz uses “Not quite” for an error and two choices per question; the refinement exercise explicitly asks learners to request “Incorrect” and a third choice. Its HTML is preserved unchanged.
+
+Responsive checks covered 27 representative views at 375, 768 and 1440 pixels, plus the long recorded reply and the generated quiz at phone width. No horizontal page overflow, JavaScript errors or off-site requests occurred. Keyboard skip navigation, feedback focus, direct-debrief gating, unknown routes, answer clearing on reload and completion-only storage passed. Desktop, mobile incorrect-answer, long-reply and interactive-quiz screenshots were inspected. The initial mobile check exposed malformed choice text; the original submitted prompts were restored before the passing checks. All stored replies remained unchanged.
+
+`node --check` passed for app.js, scenarios.js and luna-responses.js; `git diff --check` passed. The accepted version's five archived files passed their retained SHA-256 manifest.
