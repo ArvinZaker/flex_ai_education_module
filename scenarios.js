@@ -26,16 +26,16 @@ window.COURSE = {
               "question": "What would be the most useful next prompt?",
               "choices": [
                 {
-                  "text": "\"Can you explain secondary hypertension in more detail?\"",
-                  "feedback": "Reasonable, but less effective. Asking for more detail may produce a longer explanation without addressing the underlying problem: organizing the information."
+                  "text": "Explain each cause in turn, with its mechanism, key clues and initial tests. Start with the most common causes.",
+                  "feedback": "Useful facts, but another sequential explanation leaves Alex to assemble the cross-cause comparison that is currently missing."
                 },
                 {
-                  "text": "\"Create a table of secondary hypertension causes organized by pathophysiology, typical clinical clues, and appropriate initial investigations. Prioritize common causes and distinguish them from rare ones.\"",
-                  "feedback": "Best choice. This prompt defines the desired structure and emphasizes relationships between physiology, clinical findings, and investigations. It also encourages prioritization rather than treating every diagnosis as equally common."
+                  "text": "Compare causes in a table: mechanism, key clues and initial tests. Separate common causes from uncommon ones.",
+                  "feedback": "This directly addresses Alex’s difficulty organizing relationships and prioritizing causes, rather than adding another narrative explanation."
                 },
                 {
-                  "text": "\"Give me a mnemonic to memorize all the causes of secondary hypertension.\"",
-                  "feedback": "Potentially useful, but limited. Mnemonics may help with recall, but they do not necessarily improve conceptual understanding or clinical application."
+                  "text": "Organize causes by organ system, then give a short mnemonic and one typical presentation for each group.",
+                  "feedback": "This helps classification and recall, but does less to connect each cause with its mechanism and initial evaluation."
                 }
               ],
               "correct": 1,
@@ -245,16 +245,16 @@ window.COURSE = {
               "question": "Which follow-up would best help Alex develop a deeper physiological understanding?",
               "choices": [
                 {
-                  "text": "\"Explain how aldosterone affects principal cells in the collecting duct, including ENaC, the Na⁺/K⁺-ATPase, and potassium secretion. Then connect these effects to blood pressure and serum potassium.\"",
-                  "feedback": "Best choice. This asks for a mechanistic explanation connecting molecular physiology to clinical findings."
+                  "text": "Trace aldosterone’s effects through principal-cell sodium transport and potassium secretion, then connect them to blood pressure and potassium.",
+                  "feedback": "This asks for the missing causal links: ENaC and Na⁺/K⁺-ATPase support sodium handling, while potassium secretion explains the possible potassium loss."
                 },
                 {
-                  "text": "\"Give me five high-yield facts about primary aldosteronism.\"",
-                  "feedback": "Useful for review. High-yield facts may help with memorization, but Alex's current difficulty is understanding the mechanism."
+                  "text": "Compare aldosterone excess with other hypertension causes, emphasizing differences in renin, potassium and the usual screening results.",
+                  "feedback": "A comparison may help recognition, but Alex’s present gap is the mechanism linking sodium retention and potassium secretion."
                 },
                 {
-                  "text": "\"Explain primary aldosteronism using a simple analogy.\"",
-                  "feedback": "Also reasonable. Analogies can clarify difficult concepts, but they can oversimplify physiology. They are best used alongside a mechanistic explanation."
+                  "text": "Use a kidney analogy for aldosterone excess, then summarize the expected blood pressure and potassium findings for exams.",
+                  "feedback": "An analogy can introduce a concept, but this request does not require the cellular links Alex is struggling to explain."
                 }
               ],
               "correct": 0,
@@ -427,20 +427,20 @@ window.COURSE = {
               "question": "What should Alex do next?",
               "choices": [
                 {
-                  "text": "Accept the AI response because its physiological explanation makes sense.",
-                  "feedback": "Incorrect. A physiologically plausible explanation does not establish that a finding is universally present."
+                  "text": "Keep the explanation provisionally, and check it against another chatbot’s answer before changing the study notes.",
+                  "feedback": "Agreement between models does not independently verify the claim. Check the clinical reference itself."
                 },
                 {
-                  "text": "Ask the AI whether it is sure, and accept the answer if it confirms its original statement.",
-                  "feedback": "Insufficient. Asking AI to confirm its own answer is not independent verification. It may repeat or reinforce the same error."
+                  "text": "Ask the chatbot for a guideline citation, and use the revised answer once it supplies a plausible reference.",
+                  "feedback": "A plausible reference can be fabricated or fail to support the claim. Open it and check the relevant recommendation."
                 },
                 {
-                  "text": "Consult a reliable clinical reference, check the claim, and then ask the AI to revise its explanation.",
-                  "feedback": "Best choice. Alex should verify the statement against an authoritative source, such as a current clinical practice guideline."
+                  "text": "Check the potassium claim in a reliable clinical reference, then ask the chatbot to explain the correction.",
+                  "feedback": "This verifies the specific disputed claim before using the model to work through the corrected reasoning."
                 },
                 {
-                  "text": "Stop using AI for medical education entirely.",
-                  "feedback": "Unnecessary. AI can remain useful for learning, provided its limitations are understood and important claims are independently verified."
+                  "text": "Set this reply aside, and use a different chatbot’s explanation to rebuild the notes from the beginning.",
+                  "feedback": "Switching tools does not resolve the disputed claim; the replacement still needs source verification."
                 }
               ],
               "correct": 2,
@@ -623,16 +623,16 @@ window.COURSE = {
               "question": "Which prompt would be most useful for exam preparation?",
               "choices": [
                 {
-                  "text": "\"Summarize everything I need to know about secondary hypertension.\"",
-                  "feedback": "Useful for review, but passive. Another summary may reinforce familiarity without testing independent recall."
+                  "text": "Give me a concise case-based review, with a worked explanation after each vignette and a final summary of patterns.",
+                  "feedback": "Worked examples can help learning, but this reveals explanations before Alex attempts retrieval."
                 },
                 {
-                  "text": "\"Generate 10 multiple-choice questions about secondary hypertension and show the correct answers immediately.\"",
-                  "feedback": "Better, but not optimal. Practice questions can be valuable, but immediately displaying the answers reduces the opportunity for retrieval practice."
+                  "text": "Give me ten clinical vignettes with a separate answer key, so I can attempt the set before reviewing explanations.",
+                  "feedback": "This supports recall, but does not provide feedback between attempts or adjust the next question to Alex’s reasoning."
                 },
                 {
-                  "text": "\"Act as a medical school tutor. Give me one clinical vignette at a time involving secondary hypertension. Don't reveal the diagnosis or answer until I respond. Ask me to explain my reasoning, then provide feedback and increase the difficulty based on my performance.\"",
-                  "feedback": "Best choice. This creates an interactive learning experience that encourages retrieval, explanation, feedback, and adaptive difficulty."
+                  "text": "Give me one vignette at a time; wait for my reasoning, give feedback, then adjust the next question’s difficulty.",
+                  "feedback": "This builds in an attempt, targeted feedback and an opportunity to use that feedback in the next case."
                 }
               ],
               "correct": 2,
@@ -676,20 +676,20 @@ window.COURSE = {
               "question": "Choose the best answer for this case.",
               "choices": [
                 {
-                  "text": "Pheochromocytoma; plasma free metanephrines",
-                  "feedback": "The combination of hypertension and unexplained hypokalemia raises suspicion for primary aldosteronism. Screening involves measuring plasma or serum aldosterone and renin and interpreting the aldosterone-to-renin ratio. Medication effects, potassium concentration, sampling conditions, and the clinical context can affect interpretation. A positive screening test does not automatically establish the diagnosis or determine treatment. Further evaluation depends on the biochemical findings and clinical circumstances. Why the other options are less appropriate: A: Pheochromocytoma can cause hypertension, but the case lacks characteristic catecholamine-related symptoms, and hypokalemia is not its typical distinguishing feature. C: Renovascular hypertension remains a possible secondary cause, but immediate invasive angiography is not the appropriate initial step based on the information provided. D: Cushing syndrome can cause hypertension and sometimes hypokalemia, but a random serum cortisol is not an appropriate screening test."
+                  "text": "Pheochromocytoma; measure plasma free metanephrines",
+                  "feedback": "A reasonable secondary cause to consider, but the supplied pattern is better matched by aldosterone excess."
                 },
                 {
-                  "text": "Primary aldosteronism; aldosterone and renin with calculation of the aldosterone-to-renin ratio",
-                  "feedback": "The combination of hypertension and unexplained hypokalemia raises suspicion for primary aldosteronism. Screening involves measuring plasma or serum aldosterone and renin and interpreting the aldosterone-to-renin ratio. Medication effects, potassium concentration, sampling conditions, and the clinical context can affect interpretation. A positive screening test does not automatically establish the diagnosis or determine treatment. Further evaluation depends on the biochemical findings and clinical circumstances. Why the other options are less appropriate: A: Pheochromocytoma can cause hypertension, but the case lacks characteristic catecholamine-related symptoms, and hypokalemia is not its typical distinguishing feature. C: Renovascular hypertension remains a possible secondary cause, but immediate invasive angiography is not the appropriate initial step based on the information provided. D: Cushing syndrome can cause hypertension and sometimes hypokalemia, but a random serum cortisol is not an appropriate screening test."
+                  "text": "Primary aldosteronism; measure aldosterone and renin",
+                  "feedback": "The case supports investigating primary aldosteronism with aldosterone and renin and interpreting their ratio in the appropriate testing context."
                 },
                 {
-                  "text": "Renal artery stenosis; immediate renal angiography",
-                  "feedback": "The combination of hypertension and unexplained hypokalemia raises suspicion for primary aldosteronism. Screening involves measuring plasma or serum aldosterone and renin and interpreting the aldosterone-to-renin ratio. Medication effects, potassium concentration, sampling conditions, and the clinical context can affect interpretation. A positive screening test does not automatically establish the diagnosis or determine treatment. Further evaluation depends on the biochemical findings and clinical circumstances. Why the other options are less appropriate: A: Pheochromocytoma can cause hypertension, but the case lacks characteristic catecholamine-related symptoms, and hypokalemia is not its typical distinguishing feature. C: Renovascular hypertension remains a possible secondary cause, but immediate invasive angiography is not the appropriate initial step based on the information provided. D: Cushing syndrome can cause hypertension and sometimes hypokalemia, but a random serum cortisol is not an appropriate screening test."
+                  "text": "Renovascular hypertension; arrange renal artery imaging",
+                  "feedback": "This is another secondary cause, but the supplied findings favor an initial biochemical evaluation for aldosterone excess."
                 },
                 {
-                  "text": "Cushing syndrome; random serum cortisol",
-                  "feedback": "The combination of hypertension and unexplained hypokalemia raises suspicion for primary aldosteronism. Screening involves measuring plasma or serum aldosterone and renin and interpreting the aldosterone-to-renin ratio. Medication effects, potassium concentration, sampling conditions, and the clinical context can affect interpretation. A positive screening test does not automatically establish the diagnosis or determine treatment. Further evaluation depends on the biochemical findings and clinical circumstances. Why the other options are less appropriate: A: Pheochromocytoma can cause hypertension, but the case lacks characteristic catecholamine-related symptoms, and hypokalemia is not its typical distinguishing feature. C: Renovascular hypertension remains a possible secondary cause, but immediate invasive angiography is not the appropriate initial step based on the information provided. D: Cushing syndrome can cause hypertension and sometimes hypokalemia, but a random serum cortisol is not an appropriate screening test."
+                  "text": "Cushing syndrome; assess cortisol with a screening test",
+                  "feedback": "Cortisol excess belongs in the wider differential, but it is less supported by the findings supplied in this vignette."
                 }
               ],
               "correct": 1,
@@ -797,20 +797,20 @@ window.COURSE = {
               "question": "What is the most appropriate way for Alex to use AI at this stage?",
               "choices": [
                 {
-                  "text": "Follow the AI's suggested workup because it has identified a plausible diagnosis.",
-                  "feedback": "Incorrect. A plausible diagnosis does not justify proceeding directly to imaging. The patient's history, clinical context, and appropriate diagnostic sequence matter."
+                  "text": "Ask AI to explain the adrenal-imaging pathway and check the proposed steps against a clinical reference.",
+                  "feedback": "Checking a pathway is useful, but this accepts the premature focus on an adrenal diagnosis before addressing the differential and missing information."
                 },
                 {
-                  "text": "Ask AI to generate a prioritized differential diagnosis, identify missing information, explain how additional findings would change the differential, and distinguish screening from confirmatory testing.",
-                  "feedback": "Best choice. AI can support clinical reasoning by helping identify missing information, compare hypotheses, and explain why certain investigations are useful."
+                  "text": "Ask AI to rank alternatives, identify missing findings and explain what would justify each next investigation.",
+                  "feedback": "This keeps the discussion tied to evidence and distinguishes a plausible diagnosis from an established one."
                 },
                 {
-                  "text": "Ask AI to select the single most likely diagnosis and provide a definitive treatment plan.",
-                  "feedback": "Incorrect. The available information is insufficient to establish a definitive diagnosis or treatment plan."
+                  "text": "Ask AI to select the leading diagnosis and outline confirmatory tests for discussion with the preceptor.",
+                  "feedback": "Preceptor discussion matters, but this still narrows the task around a selected diagnosis before examining alternatives and missing evidence."
                 },
                 {
-                  "text": "Avoid considering secondary hypertension because the potassium level is normal.",
-                  "feedback": "Incorrect. Normal potassium does not exclude primary aldosteronism or other causes of secondary hypertension."
+                  "text": "Ask AI to prioritize common hypertension causes and defer endocrine testing until repeat potassium is low.",
+                  "feedback": "Normal potassium does not rule out primary aldosteronism; that proposed condition for considering testing is unsupported."
                 }
               ],
               "correct": 1,
@@ -1165,20 +1165,20 @@ window.COURSE = {
               "question": "Under UBC's current MD Undergraduate Program guidelines, which statement is most accurate?",
               "choices": [
                 {
-                  "text": "AI scribes are permitted for all medical students as long as the supervising physician agrees.",
-                  "feedback": "Incorrect. Preceptor agreement alone does not satisfy UBC's requirements."
+                  "text": "Year 4 elective use needs preceptor agreement, patient consent and a compliant platform; separate educational approval is unnecessary.",
+                  "feedback": "The stated exception also requires the relevant educational approval. Preceptor agreement and consent do not replace it."
                 },
                 {
-                  "text": "AI scribes are prohibited for medical students in every year, without exception.",
-                  "feedback": "Incorrect. UBC provides a narrowly defined exception for Year 4 electives."
+                  "text": "Year 4 elective use needs educational approval and preceptor supervision; consent can be covered by the clinic’s routine recording notice.",
+                  "feedback": "The stated pathway requires informed patient consent, not an assumption based on a general notice."
                 },
                 {
-                  "text": "Independent ambient AI scribing is not permitted in Years 1–3. In Year 4 electives, it may be used only in exceptional circumstances with the required educational approval, preceptor agreement, informed patient consent, and regulatory compliance.",
-                  "feedback": "Correct. The MDUP Use of Generative AI Guideline, approved January 19, 2026, specifies these restrictions."
+                  "text": "Years 1–3 cannot independently use ambient scribes; Year 4 elective exceptions need educational approval, preceptor agreement, consent and compliance.",
+                  "feedback": "This retains each condition of the stated exception and its restriction by training stage."
                 },
                 {
-                  "text": "Fourth-year students can use any AI scribe if they remove the patient's name and medical record number.",
-                  "feedback": "Incorrect. Removing direct identifiers does not make an AI platform approved for clinical use. Re-identification risks, privacy requirements, institutional approval, and educational restrictions remain relevant."
+                  "text": "Years 1–3 may use an approved ambient scribe independently if their preceptor reviews and authenticates every resulting note.",
+                  "feedback": "Reviewing the output does not remove the stated restriction on independent ambient scribing in Years 1–3."
                 }
               ],
               "correct": 2,
@@ -1326,20 +1326,20 @@ window.COURSE = {
               "question": "What is the most appropriate response?",
               "choices": [
                 {
-                  "text": "\"It's completely secure, so there's nothing to worry about.\"",
-                  "feedback": "Incorrect. No technology should be described as completely secure. Specific privacy and security claims must be supported by the actual platform and institutional arrangements."
+                  "text": "The clinic approved the system. I can explain its purpose now, and we can check storage details after the visit.",
+                  "feedback": "Approval does not answer the patient’s present questions about recording and access before use."
                 },
                 {
-                  "text": "\"It's just for documentation, and your doctor has already decided to use it.\"",
-                  "feedback": "Incorrect. A physician's decision to adopt a tool does not eliminate the requirement for informed patient consent."
+                  "text": "It drafts the note for your doctor to check. We can start if you agree, then discuss how long recordings are kept.",
+                  "feedback": "This postpones an issue the patient has explicitly raised until after recording begins."
                 },
                 {
-                  "text": "\"We should explain how this particular system processes and stores information, who may access it, whether audio is retained, and your options. We can proceed without it if you prefer.\"",
-                  "feedback": "Correct. Patients need an understandable explanation of the tool, its relevant privacy implications, and their choices. Details must reflect the specific approved platform and applicable consent requirements."
+                  "text": "Let’s explain this system’s recording, access and storage arrangements first; you can choose to continue without it.",
+                  "feedback": "This addresses the patient’s specific questions before seeking a decision and makes declining a real option."
                 },
                 {
-                  "text": "\"We can start recording now and explain the details afterward.\"",
-                  "feedback": "Incorrect. Consent must be obtained before activating the scribe."
+                  "text": "We can omit your name from the draft and ask the doctor to review it, which should address the recording concerns.",
+                  "feedback": "Name removal and note review do not explain how the conversation itself is processed, accessed or retained."
                 }
               ],
               "correct": 2,
@@ -1810,20 +1810,20 @@ window.COURSE = {
               "question": "Which statement best reflects professional responsibility?",
               "choices": [
                 {
-                  "text": "The AI vendor is solely responsible because its software generated the note.",
-                  "feedback": "The clinician using and authenticating an AI-generated clinical note must ensure that it accurately reflects the encounter and their clinical judgment. An AI system does not independently assume professional responsibility for patient care. Students also remain accountable for their own clinical work and must follow UBC's requirements for independently generated documentation. An AI-generated note should not be treated as automatically accurate or complete."
+                  "text": "The physician checks clinical decisions; the vendor remains responsible for whether the transcript accurately reflects the conversation.",
+                  "feedback": "Responsibility for the authenticated note includes accuracy of its recorded content, not only its clinical decisions."
                 },
                 {
-                  "text": "The physician remains responsible for reviewing and ensuring the accuracy of the documentation they authenticate, and students remain responsible for their own permitted clinical work.",
-                  "feedback": "The clinician using and authenticating an AI-generated clinical note must ensure that it accurately reflects the encounter and their clinical judgment. An AI system does not independently assume professional responsibility for patient care. Students also remain accountable for their own clinical work and must follow UBC's requirements for independently generated documentation. An AI-generated note should not be treated as automatically accurate or complete."
+                  "text": "The physician checks the note they authenticate; students remain accountable for their own permitted clinical work.",
+                  "feedback": "The tool produces a draft; it does not replace the responsibilities of the people using and authenticating it."
                 },
                 {
-                  "text": "The student is responsible because they were present during the encounter.",
-                  "feedback": "The clinician using and authenticating an AI-generated clinical note must ensure that it accurately reflects the encounter and their clinical judgment. An AI system does not independently assume professional responsibility for patient care. Students also remain accountable for their own clinical work and must follow UBC's requirements for independently generated documentation. An AI-generated note should not be treated as automatically accurate or complete."
+                  "text": "The student checks encounter details; the physician can authenticate after reviewing only the final assessment and plan.",
+                  "feedback": "The physician cannot limit responsibility for the authenticated documentation to those sections."
                 },
                 {
-                  "text": "Responsibility is shared equally between the AI system and the physician.",
-                  "feedback": "The clinician using and authenticating an AI-generated clinical note must ensure that it accurately reflects the encounter and their clinical judgment. An AI system does not independently assume professional responsibility for patient care. Students also remain accountable for their own clinical work and must follow UBC's requirements for independently generated documentation. An AI-generated note should not be treated as automatically accurate or complete."
+                  "text": "The clinic’s approval establishes the draft’s reliability; the physician corrects errors only when someone flags them.",
+                  "feedback": "Approval does not replace active review of the note before authentication."
                 }
               ],
               "correct": 1,
@@ -1882,20 +1882,20 @@ window.COURSE = {
               "question": "Later that afternoon, Alex writes an independent student note. The note is clinically accurate but awkwardly worded. Can Alex paste it into ChatGPT and ask for grammar and structure improvements?",
               "choices": [
                 {
-                  "text": "Yes, as long as patient identifiers are removed.",
-                  "feedback": "UBC's January 2026 Use of LLMs in Clinical Documentation Guideline explicitly prohibits students from using general-purpose LLMs to draft, edit, summarize, or rewrite their clinical notes. This includes asking an LLM to improve the grammar, structure, or clarity of a patient note. Removing identifying information or obtaining a preceptor's signature does not independently make this activity permissible. Alex should instead request feedback from Dr. Chen and improve the note through independent revision. Key takeaway: AI scribing and general-purpose LLM-assisted note writing are not interchangeable. UBC places specific restrictions on both."
+                  "text": "Yes, if Alex removes identifiers and submits only the passage that needs language editing.",
+                  "feedback": "The guideline in this scenario prohibits LLM editing of student clinical notes; limiting or de-identifying the passage does not provide an exception."
                 },
                 {
-                  "text": "Yes, because the AI would only be editing language, not making clinical decisions.",
-                  "feedback": "UBC's January 2026 Use of LLMs in Clinical Documentation Guideline explicitly prohibits students from using general-purpose LLMs to draft, edit, summarize, or rewrite their clinical notes. This includes asking an LLM to improve the grammar, structure, or clarity of a patient note. Removing identifying information or obtaining a preceptor's signature does not independently make this activity permissible. Alex should instead request feedback from Dr. Chen and improve the note through independent revision. Key takeaway: AI scribing and general-purpose LLM-assisted note writing are not interchangeable. UBC places specific restrictions on both."
+                  "text": "Yes, if the chatbot changes grammar without altering the assessment or management plan.",
+                  "feedback": "The restriction covers editing and rewriting, including language-only changes."
                 },
                 {
-                  "text": "No. UBC's clinical documentation guideline prohibits students from using LLMs to edit or rewrite their clinical notes.",
-                  "feedback": "UBC's January 2026 Use of LLMs in Clinical Documentation Guideline explicitly prohibits students from using general-purpose LLMs to draft, edit, summarize, or rewrite their clinical notes. This includes asking an LLM to improve the grammar, structure, or clarity of a patient note. Removing identifying information or obtaining a preceptor's signature does not independently make this activity permissible. Alex should instead request feedback from Dr. Chen and improve the note through independent revision. Key takeaway: AI scribing and general-purpose LLM-assisted note writing are not interchangeable. UBC places specific restrictions on both."
+                  "text": "No; the stated guideline prohibits LLM editing or rewriting of student clinical notes.",
+                  "feedback": "The policy distinction is between the exceptional ambient-scribe pathway and students’ independently written clinical documentation."
                 },
                 {
-                  "text": "Yes, if the supervising physician signs the final version.",
-                  "feedback": "UBC's January 2026 Use of LLMs in Clinical Documentation Guideline explicitly prohibits students from using general-purpose LLMs to draft, edit, summarize, or rewrite their clinical notes. This includes asking an LLM to improve the grammar, structure, or clarity of a patient note. Removing identifying information or obtaining a preceptor's signature does not independently make this activity permissible. Alex should instead request feedback from Dr. Chen and improve the note through independent revision. Key takeaway: AI scribing and general-purpose LLM-assisted note writing are not interchangeable. UBC places specific restrictions on both."
+                  "text": "Yes, if the preceptor compares both versions and authenticates the corrected student note.",
+                  "feedback": "Preceptor review does not create permission for an otherwise prohibited use."
                 }
               ],
               "correct": 2,
@@ -1962,20 +1962,20 @@ window.COURSE = {
               "question": "What should happen next?",
               "choices": [
                 {
-                  "text": "Use the AI scribe but remove the patient's name afterward.",
-                  "feedback": "The patient has declined the use of the AI scribe. The encounter should proceed without activating it. Removing a name afterward does not address the lack of consent, and a busy clinical schedule does not justify overriding the patient's decision."
+                  "text": "Pause the tool and ask the preceptor to obtain agreement before continuing the planned scribe workflow.",
+                  "feedback": "The patient has declined. The next step is to proceed without it, rather than make documentation depend on securing agreement."
                 },
                 {
-                  "text": "Respect the patient's decision and proceed without the AI scribe.",
-                  "feedback": "The patient has declined the use of the AI scribe. The encounter should proceed without activating it. Removing a name afterward does not address the lack of consent, and a busy clinical schedule does not justify overriding the patient's decision."
+                  "text": "Leave the tool off and document the consultation through the usual non-AI workflow.",
+                  "feedback": "This respects the refusal while allowing the consultation and documentation to continue."
                 },
                 {
-                  "text": "Explain that the clinic uses AI routinely and the patient must agree.",
-                  "feedback": "The patient has declined the use of the AI scribe. The encounter should proceed without activating it. Removing a name afterward does not address the lack of consent, and a busy clinical schedule does not justify overriding the patient's decision."
+                  "text": "Offer recording without identifiers and proceed if the patient does not repeat the objection.",
+                  "feedback": "Silence after an alternative proposal is not a replacement for the patient’s decision to decline."
                 },
                 {
-                  "text": "Activate the scribe briefly to capture only the relevant medical history.",
-                  "feedback": "The patient has declined the use of the AI scribe. The encounter should proceed without activating it. Removing a name afterward does not address the lack of consent, and a busy clinical schedule does not justify overriding the patient's decision."
+                  "text": "Continue without ambient recording, but upload a recording afterward to prepare the draft.",
+                  "feedback": "Processing the encounter afterward still uses the refused scribe workflow; it does not respect the decision."
                 }
               ],
               "correct": 1,
@@ -2220,16 +2220,16 @@ window.COURSE = {
               "question": "What should Alex do next?",
               "choices": [
                 {
-                  "text": "Ask AI to identify the 10 most important papers and use those as the entire literature review.",
-                  "feedback": "Insufficient. AI-generated reading lists can miss relevant studies, include inappropriate studies, or contain inaccurate citations."
+                  "text": "Verify the suggested papers, follow their citations and use that verified set as the review’s search record.",
+                  "feedback": "Verifying papers is important, but a citation-led set alone does not supply the planned reproducible database search."
                 },
                 {
-                  "text": "Use the AI-generated overview to identify search terms and major studies, then develop a reproducible search strategy using appropriate databases and librarian support.",
-                  "feedback": "Best choice. AI can help identify terminology and generate preliminary search ideas, but a systematic review requires a reproducible search strategy."
+                  "text": "Use the overview to draft search concepts, then build a reproducible database strategy with librarian support.",
+                  "feedback": "This uses AI for orientation while developing a documented search that can be checked and repeated."
                 },
                 {
-                  "text": "Ask AI to write the literature review using its existing knowledge.",
-                  "feedback": "Inappropriate as a substitute for literature searching. AI-generated prose cannot establish that the relevant evidence has been identified, critically appraised, or accurately represented."
+                  "text": "Ask AI for a database-style search string, then use its suggested paper list to check whether coverage is adequate.",
+                  "feedback": "A generated string still needs development and testing; the same model’s list is not an independent coverage check."
                 }
               ],
               "correct": 1,
@@ -2442,16 +2442,16 @@ window.COURSE = {
               "question": "What is the most appropriate next step?",
               "choices": [
                 {
-                  "text": "Accept the AI's proposed design because including more patients will increase statistical power.",
-                  "feedback": "Incorrect. A larger sample does not automatically mean a more appropriate analysis. Population definitions and outcome comparability matter."
+                  "text": "Keep the broader EF range and separate outcomes during analysis, documenting the choice after extraction.",
+                  "feedback": "This changes the intended population and postpones design decisions that should be resolved in the research question and protocol."
                 },
                 {
-                  "text": "Define the population and outcomes using a structured research question, discuss the design with the supervisor, and prepare a protocol before conducting the review.",
-                  "feedback": "Correct. The research question, eligibility criteria, outcomes, and analysis plan should be defined before results are examined."
+                  "text": "Define the population and outcomes with the supervisor, then record the planned methods in a review protocol.",
+                  "feedback": "This resolves the design before the results influence which population or outcomes the review emphasizes."
                 },
                 {
-                  "text": "Include every available study and decide which outcomes to analyze after seeing the results.",
-                  "feedback": "Incorrect. Selecting outcomes or analytical methods after seeing results can introduce selective reporting and other biases."
+                  "text": "Extract all candidate outcomes first, then define the main review question around the most consistently reported one.",
+                  "feedback": "Feasibility can inform planning, but choosing the primary question after inspecting results risks allowing the available findings to drive it."
                 }
               ],
               "correct": 1,
@@ -2656,16 +2656,16 @@ window.COURSE = {
               "question": "How should Alex approach AI-assisted screening and extraction?",
               "choices": [
                 {
-                  "text": "Let AI screen and extract all studies, then proceed directly to analysis.",
-                  "feedback": "Incorrect. Unverified AI screening and extraction may introduce errors that affect the review's conclusions."
+                  "text": "Have AI extract every study and verify only entries it flags as uncertain, keeping a log of corrections.",
+                  "feedback": "Model-reported confidence does not establish which entries are correct. The verification process must not depend only on its flags."
                 },
                 {
-                  "text": "Use AI as an optional assistant for organizing information, while following a prespecified, human-verified screening and extraction process with independent reviewers where required.",
-                  "feedback": "Correct. AI may assist with preliminary organization or extraction, if permitted by the research team and applicable terms and policies. Final eligibility and extracted values require appropriate human verification."
+                  "text": "Use AI to organize records within a prespecified, human-verified process, retaining independent checks where required.",
+                  "feedback": "This keeps eligibility and extraction tied to the protocol and to verified source information."
                 },
                 {
-                  "text": "Ask AI to estimate missing numerical results based on the study conclusions.",
-                  "feedback": "Incorrect. Missing results must not be fabricated or guessed. Prespecified approaches to missing data should be followed."
+                  "text": "Have AI extract each study twice and refer disagreements to a human reviewer before starting the analysis.",
+                  "feedback": "Repeated model agreement can reproduce the same error. It does not substitute for the required independent source checks."
                 }
               ],
               "correct": 1,
@@ -2734,16 +2734,16 @@ window.COURSE = {
               "question": "What is the most important problem with the AI's statement?",
               "choices": [
                 {
-                  "text": "It reports a composite endpoint as though it were an individual outcome.",
-                  "feedback": "Composite endpoints and their individual components must be distinguished. A treatment may significantly reduce a composite outcome without demonstrating a statistically significant reduction in every component. Incorrectly extracting the composite result as cardiovascular mortality could materially distort a systematic review."
+                  "text": "It assigns the composite-endpoint effect to cardiovascular mortality alone.",
+                  "feedback": "A reduction in the composite cannot be assigned to one component without that component’s actual result."
                 },
                 {
-                  "text": "It uses a percentage rather than a hazard ratio.",
-                  "feedback": "Composite endpoints and their individual components must be distinguished. A treatment may significantly reduce a composite outcome without demonstrating a statistically significant reduction in every component. Incorrectly extracting the composite result as cardiovascular mortality could materially distort a systematic review."
+                  "text": "It converts the relative effect into a percentage without reporting precision.",
+                  "feedback": "Precision is useful, but the main error here is changing which outcome the estimate describes."
                 },
                 {
-                  "text": "It mentions a randomized controlled trial rather than a meta-analysis.",
-                  "feedback": "Composite endpoints and their individual components must be distinguished. A treatment may significantly reduce a composite outcome without demonstrating a statistically significant reduction in every component. Incorrectly extracting the composite result as cardiovascular mortality could materially distort a systematic review."
+                  "text": "It interprets a trial-level effect before presenting the pooled review result.",
+                  "feedback": "A study-level result can be reported; the problem is that this statement misidentifies its endpoint."
                 }
               ],
               "correct": 0,
@@ -2826,16 +2826,16 @@ window.COURSE = {
               "question": "What should Alex do next?",
               "choices": [
                 {
-                  "text": "Use odds ratios for everything because they are commonly used in meta-analyses.",
-                  "feedback": "Incorrect. Effect measures should reflect the nature of the data and the estimand of interest. Hazard ratios, risk ratios, odds ratios, and mean differences are not interchangeable."
+                  "text": "Pool each outcome separately using the same effect measure, then explain any differences in the discussion.",
+                  "feedback": "Separate pooling does not solve mismatched effect measures or incompatible definitions."
                 },
                 {
-                  "text": "Ask AI to explain appropriate effect measures and pooling methods for each outcome, then review the proposed analysis with someone experienced in meta-analysis.",
-                  "feedback": "Correct. AI can help explain statistical concepts and propose an analysis plan, but methodological decisions require informed review."
+                  "text": "Check suitable effect measures and pooling for each outcome with an experienced meta-analysis researcher.",
+                  "feedback": "The analysis needs to match the type, scale and definition of each outcome before pooling."
                 },
                 {
-                  "text": "Choose whichever statistical method produces the narrowest confidence interval.",
-                  "feedback": "Incorrect. Statistical methods should not be selected based on which produces the most favourable result."
+                  "text": "Use the most frequently reported endpoint as the common outcome and convert the other results to match it.",
+                  "feedback": "Frequency of reporting does not make distinct outcomes interchangeable or establish that a conversion is valid."
                 }
               ],
               "correct": 1,
@@ -3063,16 +3063,16 @@ window.COURSE = {
               "question": "What should Alex do before using the results in a manuscript?",
               "choices": [
                 {
-                  "text": "Trust the code because it runs without errors and produces a forest plot.",
-                  "feedback": "Incorrect. Code can run successfully while implementing the wrong analysis, using incorrect data, or producing misleading results."
+                  "text": "Check the pooled estimate against the chatbot’s worked example and confirm the plot uses the intended labels.",
+                  "feedback": "That checks consistency with another model output, not independently whether the data and methods are correct."
                 },
                 {
-                  "text": "Ask AI to explain each line, verify the input values and statistical assumptions, check the results independently, and review the analysis with an experienced researcher.",
-                  "feedback": "Correct. AI-generated code should be treated like code from any other unverified source. Researchers need to understand it, test it, and confirm that it implements the intended analysis."
+                  "text": "Verify inputs and assumptions, inspect the calculations independently and review the analysis with an experienced researcher.",
+                  "feedback": "This checks the scientific calculations as well as successful execution and presentation."
                 },
                 {
-                  "text": "Change the model settings until the pooled result becomes statistically significant.",
-                  "feedback": "Incorrect. Changing analytical decisions to obtain a desired result is inappropriate and can undermine research integrity."
+                  "text": "Reproduce the plot using a second AI-written script and accept the result if both scripts give the same estimate.",
+                  "feedback": "Two scripts can share the same mistaken assumptions or inputs. Agreement alone does not validate the analysis."
                 }
               ],
               "correct": 1,
@@ -3453,16 +3453,16 @@ window.COURSE = {
               "question": "How should Alex use AI to improve the manuscript?",
               "choices": [
                 {
-                  "text": "Use the AI-generated discussion because the writing sounds professional.",
-                  "feedback": "Incorrect. Professional-sounding language can conceal inaccurate or unsupported claims."
+                  "text": "Provide the extracted data, ask AI to draft the interpretation and check whether its citations support the paragraph.",
+                  "feedback": "Citation checking alone does not establish that the interpretation matches the actual analyses and their limitations."
                 },
                 {
-                  "text": "Ask AI to generate a complete discussion with citations and submit it after checking the grammar.",
-                  "feedback": "Insufficient. AI-generated citations may be fabricated or misrepresented, and checking grammar does not establish scientific accuracy."
+                  "text": "Ask AI to revise the paragraph from the abstract, then check that the edited version retains the reported estimates.",
+                  "feedback": "Preserving estimates alone may miss changes to uncertainty, outcome definitions or scientific interpretation."
                 },
                 {
-                  "text": "Write the scientific interpretation independently, then use AI to suggest improvements to clarity, organization, transitions, and grammar without adding new scientific claims.",
-                  "feedback": "Best choice. AI can be useful as an editing assistant, but the researcher must remain responsible for the interpretation, originality, and accuracy of the manuscript."
+                  "text": "Write the interpretation from verified results, then request language edits and check that the scientific meaning is preserved.",
+                  "feedback": "This defines the editing task and retains responsibility for the findings and their interpretation."
                 }
               ],
               "correct": 2,
@@ -3630,16 +3630,16 @@ window.COURSE = {
               "question": "Which approach is most appropriate?",
               "choices": [
                 {
-                  "text": "Do not disclose AI use because AI was only an assistant.",
-                  "feedback": "Incorrect. The need for disclosure depends on applicable policies and how AI was used. Significant AI assistance should not be concealed."
+                  "text": "Describe AI use in the project log, but omit it from submission materials if all outputs were checked manually.",
+                  "feedback": "Internal records and manual checks do not replace any applicable submission disclosure requirements."
                 },
                 {
-                  "text": "List ChatGPT as a co-author because it contributed to the analysis and writing.",
-                  "feedback": "Incorrect. AI systems cannot satisfy authorship responsibilities and should not be listed as authors."
+                  "text": "Name the AI tool in acknowledgements and let that statement cover its search, analysis and writing contributions.",
+                  "feedback": "A generic acknowledgement may not describe the actual uses or satisfy the relevant requirements."
                 },
                 {
-                  "text": "Follow the applicable UBC, supervisor, and journal requirements; transparently disclose relevant AI assistance; and ensure the human authors take responsibility for the work.",
-                  "feedback": "Correct. Researchers should follow the applicable disclosure requirements and remain responsible for the accuracy, integrity, and originality of their work."
+                  "text": "Check applicable requirements, disclose the actual AI assistance and retain human responsibility for the submitted work.",
+                  "feedback": "This ties disclosure to what happened and to the rules governing this submission."
                 }
               ],
               "correct": 2,
@@ -3924,20 +3924,20 @@ window.COURSE = {
               "question": "What is the most important potential benefit of introducing this technology in a rural community?",
               "choices": [
                 {
-                  "text": "It eliminates the need for ophthalmologists.",
-                  "feedback": "Incorrect. Patients with concerning findings may still require specialist assessment, imaging, and treatment."
+                  "text": "It brings screening and the subsequent specialist examination into the same local visit.",
+                  "feedback": "The story establishes local screening, not local specialist assessment at the same visit."
                 },
                 {
-                  "text": "It allows patients to receive retinal screening closer to home and may identify disease earlier.",
-                  "feedback": "Correct. Community-based screening can reduce the need to travel for routine screening and help identify patients who require additional care."
+                  "text": "It brings retinal screening closer to home and may identify people needing assessment earlier.",
+                  "feedback": "This is the potential access benefit described; subsequent assessment still needs a functioning pathway."
                 },
                 {
-                  "text": "It guarantees that patients with diabetic retinopathy will receive treatment.",
-                  "feedback": "Incorrect. Detection does not guarantee that patients can access follow-up or treatment."
+                  "text": "It reduces travel for screening and therefore resolves the main barriers to specialist follow-up.",
+                  "feedback": "Screening access can improve while travel and other referral barriers remain."
                 },
                 {
-                  "text": "It makes the AI system responsible for all future eye care.",
-                  "feedback": "Incorrect. Screening programs require clinical oversight, referral pathways, and accountability."
+                  "text": "It reduces specialist demand by reserving referrals for patients with a confirmed eye diagnosis.",
+                  "feedback": "The screening result recommends further assessment; it does not establish a confirmed diagnosis for every referred patient."
                 }
               ],
               "correct": 1,
@@ -4055,20 +4055,20 @@ window.COURSE = {
               "question": "Which interpretation is most appropriate?",
               "choices": [
                 {
-                  "text": "The AI has confirmed the diagnosis, so further assessment is unnecessary.",
-                  "feedback": "Incorrect. A positive screening result is not necessarily equivalent to a complete ophthalmic diagnosis."
+                  "text": "It establishes retinopathy, while the specialist visit determines its severity and treatment.",
+                  "feedback": "The result is a screening recommendation, not a definitive diagnosis that leaves only staging to be resolved."
                 },
                 {
-                  "text": "The positive screening result indicates that further evaluation is recommended, but it does not establish every aspect of the diagnosis.",
-                  "feedback": "Correct. Screening identifies patients who may require further assessment. The next steps depend on the device's intended use, clinical findings, and referral protocol."
+                  "text": "It supports further assessment, while the diagnosis and management still require evaluation.",
+                  "feedback": "This interprets the referral recommendation without treating it as a complete diagnostic or treatment assessment."
                 },
                 {
-                  "text": "The result should be ignored because AI systems sometimes produce false positives.",
-                  "feedback": "Incorrect. The possibility of false positives does not justify ignoring a positive screening result."
+                  "text": "It should be confirmed by another AI screen before the clinic initiates a specialist referral.",
+                  "feedback": "The stated pathway recommends referral; adding a model confirmation step could defer the indicated assessment."
                 },
                 {
-                  "text": "The AI can determine whether the patient needs laser treatment or injections based on this screening result alone.",
-                  "feedback": "Incorrect. Treatment decisions require appropriate clinical assessment and are outside the scope of a basic screening result."
+                  "text": "It establishes a high chance of sight-threatening disease, although the exact stage remains uncertain.",
+                  "feedback": "The supplied result alone does not establish that specific probability or severity."
                 }
               ],
               "correct": 1,
@@ -4142,20 +4142,20 @@ window.COURSE = {
               "question": "If an AI screening system has 90% sensitivity, what does that mean?",
               "choices": [
                 {
-                  "text": "It correctly identifies approximately 90% of patients who truly have the target condition.",
-                  "feedback": "Sensitivity describes the proportion of people with the target condition who receive a positive test result. It does not directly tell us the probability that a patient with a positive result has the condition. That probability also depends on specificity and disease prevalence."
+                  "text": "About 90% of people with the target condition receive a positive screening result.",
+                  "feedback": "Sensitivity uses people who truly have the target condition as its denominator."
                 },
                 {
-                  "text": "A positive result means there is a 90% probability that the patient has the condition.",
-                  "feedback": "Sensitivity describes the proportion of people with the target condition who receive a positive test result. It does not directly tell us the probability that a patient with a positive result has the condition. That probability also depends on specificity and disease prevalence."
+                  "text": "About 90% of people with a positive screening result truly have the target condition.",
+                  "feedback": "This reverses the conditioning: it describes positive predictive value, not sensitivity."
                 },
                 {
-                  "text": "It correctly identifies 90% of patients who do not have the condition.",
-                  "feedback": "Sensitivity describes the proportion of people with the target condition who receive a positive test result. It does not directly tell us the probability that a patient with a positive result has the condition. That probability also depends on specificity and disease prevalence."
+                  "text": "About 90% of people without the target condition receive a negative screening result.",
+                  "feedback": "This describes specificity, which uses people without the condition as its denominator."
                 },
                 {
-                  "text": "It misses only 10% of all patients screened.",
-                  "feedback": "Sensitivity describes the proportion of people with the target condition who receive a positive test result. It does not directly tell us the probability that a patient with a positive result has the condition. That probability also depends on specificity and disease prevalence."
+                  "text": "About 90% of all people screened receive a result that matches their disease status.",
+                  "feedback": "This describes overall accuracy rather than sensitivity among people with the condition."
                 }
               ],
               "correct": 0,
@@ -4223,20 +4223,20 @@ window.COURSE = {
               "question": "What is the most appropriate response?",
               "choices": [
                 {
-                  "text": "Reassure the patient that the screening is negative.",
-                  "feedback": "Incorrect. An ungradable result is not a negative screening result."
+                  "text": "Explain the technical limitation and arrange routine rescreening at the next scheduled interval.",
+                  "feedback": "Ungradable is not a reassuring negative result; default routine rescreening can miss the required assessment pathway."
                 },
                 {
-                  "text": "Repeat image acquisition if appropriate and follow the program's established pathway for ungradable images, including further assessment when indicated.",
-                  "feedback": "Correct. Poor image quality may require repeat imaging or another method of assessment, according to the program's protocol."
+                  "text": "Explain the uncertainty and follow the ungradable-image pathway, including further assessment when indicated.",
+                  "feedback": "Repeated ungradable images require the established pathway, rather than reassurance or treating absent detection as absence of disease."
                 },
                 {
-                  "text": "Ask a general-purpose chatbot to interpret the photographs instead.",
-                  "feedback": "Incorrect. A general-purpose chatbot is not a validated substitute for an authorized retinal screening system."
+                  "text": "Repeat photographs until the system returns a grade, then use that result as the assessment endpoint.",
+                  "feedback": "Repeated attempts alone do not replace escalation when images remain ungradable."
                 },
                 {
-                  "text": "Document the result as normal because the AI did not identify retinopathy.",
-                  "feedback": "Incorrect. Inability to assess the images does not establish the absence of disease."
+                  "text": "Use the absence of an AI disease flag to choose a lower-priority follow-up appointment.",
+                  "feedback": "No reliable interpretation was produced; absent flags cannot establish lower disease risk or urgency."
                 }
               ],
               "correct": 1,
@@ -4344,20 +4344,20 @@ window.COURSE = {
               "question": "What would be the most appropriate way to evaluate whether the screening program is equitable?",
               "choices": [
                 {
-                  "text": "Examine only the overall accuracy of the AI system.",
-                  "feedback": "Insufficient. Strong average performance can conceal important differences between groups."
+                  "text": "Compare diagnostic accuracy by group, using only patients whose images the AI could grade.",
+                  "feedback": "Excluding ungradable images can hide an important source of unequal screening performance and access."
                 },
                 {
-                  "text": "Compare performance, ungradable image rates, screening access, and follow-up outcomes across relevant patient groups, while respecting privacy and using sufficiently reliable data.",
-                  "feedback": "Correct. Equity evaluation should consider both technical performance and whether different populations can access and benefit from the program."
+                  "text": "Compare performance, ungradable rates, screening access and follow-up across relevant patient groups.",
+                  "feedback": "This examines multiple points where unequal benefit may arise, using appropriate reliable data and privacy safeguards."
                 },
                 {
-                  "text": "Assume the algorithm is unbiased because it does not directly ask about ethnicity or income.",
-                  "feedback": "Incorrect. Algorithms may learn patterns associated with demographic or socioeconomic characteristics even when those variables are not explicitly entered."
+                  "text": "Compare referral rates by group and use similar rates as evidence that the program is equitable.",
+                  "feedback": "Similar referral rates need not imply similar disease burden, access, diagnostic performance or completed follow-up."
                 },
                 {
-                  "text": "Stop collecting all demographic information so that differences between groups cannot influence the analysis.",
-                  "feedback": "Incorrect. Appropriate, privacy-protective collection of relevant information may help identify disparities. Avoiding all such data can make inequities harder to detect."
+                  "text": "Compare screening participation by group and assess diagnostic quality using the overall validated accuracy.",
+                  "feedback": "Local subgroup performance and follow-up can differ even when participation is similar and overall validation looks good."
                 }
               ],
               "correct": 1,
@@ -4495,20 +4495,20 @@ window.COURSE = {
               "question": "What is the most appropriate response?",
               "choices": [
                 {
-                  "text": "\"The images don't contain your name, so there are no privacy concerns.\"",
-                  "feedback": "Incorrect. Removing a name does not automatically make health information anonymous or eliminate privacy obligations."
+                  "text": "The clinic approved the platform; I can explain access now and confirm any company reuse after screening.",
+                  "feedback": "The patient has asked about reuse before deciding. Approval does not justify postponing that answer."
                 },
                 {
-                  "text": "\"AI screening is approved technology, so you don't need to know how your information is used.\"",
-                  "feedback": "Incorrect. Regulatory authorization or institutional approval does not remove the need for appropriate transparency and consent processes."
+                  "text": "Your name is separated from the images, so we can describe storage without discussing possible secondary use.",
+                  "feedback": "Removing a name does not resolve the questions about access, retention or reuse."
                 },
                 {
-                  "text": "\"We should explain how this system handles your images, who can access them, whether they are stored or reused, and what choices you have. If we're unsure, we should check the clinic's approved information rather than guess.\"",
-                  "feedback": "Correct. Patients deserve accurate information about how their health data are collected, processed, stored, shared, and potentially reused."
+                  "text": "Let’s check the approved information about access, storage, reuse and your choices before you decide.",
+                  "feedback": "This addresses the actual questions without inventing assurances about arrangements the team has not checked."
                 },
                 {
-                  "text": "\"We can upload the images to a free online AI tool to show you how the technology works.\"",
-                  "feedback": "Incorrect. Uploading identifiable or potentially identifiable patient information to an unapproved platform may violate privacy requirements."
+                  "text": "You can decline company reuse later; for today, we can proceed under the clinic’s general screening consent.",
+                  "feedback": "The story does not establish that later opt-out or general consent covers the proposed uses."
                 }
               ],
               "correct": 2,
@@ -4666,20 +4666,20 @@ window.COURSE = {
               "question": "What is the most appropriate next step?",
               "choices": [
                 {
-                  "text": "Record the patient as non-compliant and close the referral.",
-                  "feedback": "Incorrect. Labeling the patient as non-compliant ignores the structural barriers affecting access to care."
+                  "text": "Keep the referral open and send reminders, allowing the patient to book once transport becomes available.",
+                  "feedback": "Reminders do not address the identified transport and work barriers or assess clinical urgency."
                 },
                 {
-                  "text": "Explain again that diabetic retinopathy can cause blindness and tell him he must attend.",
-                  "feedback": "Incomplete. Patient education is important, but additional information alone may not resolve transportation, financial, or geographic barriers."
+                  "text": "Explain the risks again and ask the patient to prioritize attendance before discussing practical arrangements.",
+                  "feedback": "He already wants to attend. Repeating risk information does not resolve the barriers or identify a feasible pathway."
                 },
                 {
-                  "text": "Explore the barriers with the patient, assess the urgency of follow-up with the clinical team, and coordinate feasible options such as transportation assistance, referral navigation, or available outreach services.",
-                  "feedback": "Correct. A patient-centred approach recognizes that identifying disease is only one step in delivering care. The clinical team should address barriers and coordinate appropriate follow-up."
+                  "text": "Discuss barriers and clinical urgency, then coordinate feasible transport, navigation or outreach support.",
+                  "feedback": "This responds to the reason the referral is not reachable and links support to the needed timing of care."
                 },
                 {
-                  "text": "Repeat the AI screening every month instead of arranging specialist assessment.",
-                  "feedback": "Incorrect. Repeating screening is not a substitute for indicated assessment or treatment."
+                  "text": "Offer repeat local screening while he arranges travel, deferring referral coordination until symptoms develop.",
+                  "feedback": "Repeat screening does not replace indicated assessment, and symptom onset is not established as a safe trigger for follow-up."
                 }
               ],
               "correct": 2,
@@ -4842,20 +4842,20 @@ window.COURSE = {
               "question": "How should the clinic evaluate the program's success?",
               "choices": [
                 {
-                  "text": "Focus on the number of patients screened, because the AI successfully increased screening capacity.",
-                  "feedback": "Incomplete. Screening volume is an important process measure but does not establish whether patients received needed care."
+                  "text": "Compare screening volume and referral numbers with the prior service to estimate the program’s clinical benefit.",
+                  "feedback": "Those counts describe activity and recommendations, not whether patients received timely assessment or benefited."
                 },
                 {
-                  "text": "Focus on diagnostic accuracy alone, because downstream healthcare access is unrelated to the technology.",
-                  "feedback": "Incorrect. Real-world value depends on how the technology functions within the healthcare system."
+                  "text": "Compare accuracy and completed referrals overall, using the combined results to judge benefit across groups.",
+                  "feedback": "Overall figures can conceal differences in access and outcomes between groups and omit follow-up timing."
                 },
                 {
-                  "text": "Evaluate screening reach and diagnostic performance alongside referral completion, time to assessment, patient barriers, equity across groups, and longer-term clinical outcomes.",
-                  "feedback": "Correct. A comprehensive evaluation should consider the entire care pathway and whether the program reduces or reinforces existing disparities."
+                  "text": "Assess reach, performance, timely follow-up, patient barriers, group differences and subsequent clinical outcomes.",
+                  "feedback": "This evaluates the pathway beyond screening throughput and recognizes both access and downstream outcomes."
                 },
                 {
-                  "text": "Stop the program immediately because not every patient completed follow-up.",
-                  "feedback": "Premature. The findings suggest an important implementation problem, but the appropriate response is to investigate and improve the care pathway rather than automatically abandon the technology."
+                  "text": "Compare completion among patients who accepted appointments, excluding those unable to arrange travel.",
+                  "feedback": "Excluding people who cannot travel hides the access failure the program needs to evaluate."
                 }
               ],
               "correct": 2,

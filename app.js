@@ -13,18 +13,35 @@ const go = route => { if (location.hash === '#'+route) render(); else location.h
 const button = (text, action, value='', secondary=false) => `<button class="${secondary?'secondary':'primary'}" data-action="${action}" data-value="${esc(value)}">${esc(text)}</button>`;
 function save(){try{localStorage.setItem(key,JSON.stringify({completed:[...completed]}));}catch{/* The course also works without browser storage. */}}
 function resume(m){const n=m.scenes.findIndex(s=>!completed.has(s.id));return n<0?m.id+'/finish':m.id+'/'+n;}
+function referenceText(text){
+ const refs=modules.flatMap(m=>m.references);
+ const aliases=[
+ ['MDUP Use of Generative Artificial Intelligence (Gen AI) Guideline', 'MDUP Use of Generative'],
+ ['Use of Large Language Models (LLMs) in Clinical Documentation Guideline','Use of Large Language Models'],
+ ['Expectations of Medical Students in Supervised Clinical Settings Policy','Expectations of Medical Students'],
+ ['Jones et al., 2025','Jones DW'],['Endocrine Society Primary Aldosteronism Guideline, 2025','Endocrine Society:'],['Endocrine Society, 2025','Endocrine Society:'],['Carey et al., 2018','Carey et al.'],
+ ['UBC Library FLEX Research Guide','UBC Library.'],['PRISMA 2020','Page MJ'],['PRISMA-P','Shamseer L'],['Cochrane RoB 2','Sterne JAC'],['Cochrane Handbook','Higgins JPT'],['Anker et al., EMPEROR-Preserved, 2021','Anker SD'],['ICMJE Recommendations on AI Use in Publishing','International Committee'],
+ ['Michael Smith Health Research BC, National Tele-ophthalmology Research Program','Michael Smith'],['Michael Smith Health Research BC','Michael Smith'],['Abràmoff et al., 2018','Abràmoff MD'],['World Health Organization, Ethics and Governance of AI for Health','World Health Organization'],['WHO','World Health Organization'],['Office of the Privacy Commissioner of Canada','Office of the Privacy'],['Health Canada, National Strategy for Eye Care','Health Canada.']
+ ];
+ let result='',rest=text;
+ while(rest){let best=null;for(const [label,prefix] of aliases){const at=rest.indexOf(label);if(at>=0&&(!best||at<best.at||(at===best.at&&label.length>best.label.length)))best={at,label,prefix};}
+ if(!best){result+=esc(rest);break;}
+ const ref=refs.find(r=>r.title.includes(best.prefix));result+=esc(rest.slice(0,best.at));result+=ref?`<a href="${esc(ref.url)}" target="_blank" rel="noopener noreferrer">${esc(best.label)}</a>`:esc(best.label);rest=rest.slice(best.at+best.label.length);
+ }
+ return result;
+}
 function textBlocks(blocks){
  let code=false,codeLines=[],html='';
  const flush=()=>{if(codeLines.length){html+=`<pre class="code-view"><code>${esc(codeLines.join('\n'))}</code></pre>`;codeLines=[];}code=false;};
  for(const b of blocks){
   if(b.type==='table'){flush();const [head,...rows]=b.rows;html+=`<div class="table-wrap" tabindex="0" role="region" aria-label="Study reference table"><table><thead><tr>${head.map(v=>`<th scope="col">${esc(v)}</th>`).join('')}</tr></thead><tbody>${rows.map(row=>`<tr>${row.map((v,i)=>i?`<td>${esc(v)}</td>`:`<th scope="row">${esc(v)}</th>`).join('')}</tr>`).join('')}</tbody></table></div>`;continue;}
   const t=b.text;
-  if(/^(Reference[s]?:|Estimated duration:)/.test(t)||['Story','Story continues'].includes(t))continue;
+  if(/^Estimated duration:/.test(t)||['Story','Story continues'].includes(t)||t==='This policy panel must be prominently displayed in the module.')continue;
   if(t==='library(meta)'||t.startsWith('library(meta)'))code=true;
   if(code){codeLines.push(t);if(t==='forest(result)')flush();continue;}
   if(t==='Story continues'||t==='Story continues')continue;
   if(/^(SE <-|=LN\(|=\(LN\(|log_HR <-)/.test(t)){html+=`<pre class="code-view"><code>${esc(t)}</code></pre>`;continue;}
-  html+=b.heading?`<h3>${esc(t.replace(/^AI response$/,'Scripted AI response').replace(/^Key takeaway displayed$/,'Takeaway'))}</h3>`:`<p>${esc(t)}</p>`;
+  html+=b.heading?`<h3>${esc(t.replace(/^AI response$/,'Scripted AI response').replace(/^Key takeaway displayed$/,'Takeaway'))}</h3>`:`<p>${referenceText(t)}</p>`;
  }
  flush();return html;
 }
@@ -106,7 +123,8 @@ function fullScene(blocks){
  const flush=()=>{if(!pending.length)return;const body=speaker?.startsWith('AI')?chatBody(pending):textBlocks(pending);html+=speaker?`<article class="conversation-turn ${speaker==='Alex'?'from-student':speaker.startsWith('AI')?'from-ai':'from-person'}"><p class="speaker">${esc(speaker)}</p>${body}</article>`:`<div class="scene-narration">${body}</div>`;pending=[];speaker=null;};
  for(let i=0;i<blocks.length;i++){
   const b=blocks[i],t=b.text||'';
-  if(/^(Estimated duration:|Reference[s]?:)/.test(t))continue;
+  if(/^Estimated duration:/.test(t))continue;
+  if(/^Reference[s]?:/.test(t)){flush();html+=`<p class="scene-reference">${referenceText(t)}</p>`;continue;}
   const named=t.match(/^(Alex|Dr\. Chen|Dr\. Lee|Mr\. Patel|Mr\. Singh|Ms\. Williams):\s*["“](.*)/);
   if(named){flush();speaker=named[1];pending=[{type:'text',text:named[2].replace(/["”]$/,'')}];flush();continue;}
   if(/^(Alex types:|Alex then asks:|Alex asks the chatbot:)$/.test(t)){
