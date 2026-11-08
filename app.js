@@ -24,7 +24,7 @@ function textBlocks(blocks){
   if(code){codeLines.push(t);if(t==='forest(result)')flush();continue;}
   if(t==='Story continues'||t==='Story continues')continue;
   if(/^(SE <-|=LN\(|=\(LN\(|log_HR <-)/.test(t)){html+=`<pre class="code-view"><code>${esc(t)}</code></pre>`;continue;}
-  html+=b.heading?`<h3>${esc(t.replace(/^AI response$/,'Scripted AI response'))}</h3>`:`<p>${esc(t)}</p>`;
+  html+=b.heading?`<h3>${esc(t.replace(/^AI response$/,'Scripted AI response').replace(/^Key takeaway displayed$/,'Takeaway'))}</h3>`:`<p>${esc(t)}</p>`;
  }
  flush();return html;
 }
@@ -76,17 +76,34 @@ function featuredContinuation(q){
  if(q.id==='research-6-1'){const a=b.findIndex(x=>x.text==="Alex's original paragraph:"),z=b.findIndex(x=>x.text==='AI-edited version:');return `<section class="featured-continuation"><h2>Compare the wording</h2><p class="quiet">Scripted writing examples</p><div class="writing-comparison"><article><h3>Alex’s draft</h3><p>${esc(b[a+1].text)}</p></article><article><h3>AI-edited draft</h3><p>${esc(b[z+1].text)}</p></article></div><p>Check that the edited version preserves the verified findings and uncertainty. These examples are not results from an actual review.</p></section>`;}
  return '';
 }
+function continuation(q){
+ if(!q.after.length)return '';
+ let blocks=q.after;
+ if(q.id==='research-6-1'){
+  const a=blocks.findIndex(b=>b.text==="Alex's original paragraph:");
+  const z=blocks.findIndex(b=>b.text==='AI-edited version:');
+  if(a>=0&&z>=0)blocks=blocks.filter((b,i)=>![a,a+1,z,z+1].includes(i));
+ }
+ return `<section class="continuation"><h2>See how the conversation continues</h2>${fullScene(blocks)}${['research-5-1','research-6-1'].includes(q.id)?featuredContinuation(q):''}</section>`;
+}
 function questionView(q){
  const answer=answers[q.id];
- if(answer===undefined){if(q.multi)return `<form id="note-form"><fieldset><legend>${esc(q.question)}</legend>${q.choices.map((c,i)=>`<label class="check-choice"><input type="checkbox" name="note-error" value="${i}" ${selections[q.id]?.includes(i)?'checked':''}><span>${esc(c.text)}</span></label>`).join('')}</fieldset><div class="actions"><button class="primary" type="submit">Check my review</button></div></form>`;
- return `<section class="decision"><h2>${esc(q.question)}</h2><div class="choices">${q.choices.map((c,i)=>button(c.text,'choose',i,true)).join('')}</div></section>`;}
+ if(answer===undefined){if(q.multi)return `<form id="note-form" class="decision" tabindex="-1"><fieldset><legend>${esc(q.question)}</legend>${q.choices.map((c,i)=>`<label class="check-choice"><input type="checkbox" name="note-error" value="${i}" ${selections[q.id]?.includes(i)?'checked':''}><span>${esc(c.text)}</span></label>`).join('')}</fieldset><div class="actions"><button class="primary" type="submit">Check my review</button></div></form>`;
+ return `<section class="decision" tabindex="-1"><p class="eyebrow">Your turn · Choose one response</p><h2>${esc(q.question)}</h2><div class="choices">${q.choices.map((c,i)=>button(c.text,'choose',i,true)).join('')}</div></section>`;}
  const correct=q.multi?q.correct.length===answer.length&&q.correct.every(i=>answer.includes(i)):answer===q.correct;
  const why=q.multi?'<p>Compare each selection with the encounter.</p>'+q.choices.map((c,i)=>{const matched=answer.includes(i)===q.correct.includes(i);return `<div class="review-item ${matched?'matched':'missed'}"><h3>${matched?'Correct':'Incorrect'} · ${q.correct.includes(i)?'This is a documentation error':'This was documented accurately'}</h3><p>${esc(c.feedback)}</p></div>`;}).join(''):`<p class="chosen"><b>Your choice</b><br>${esc(q.choices[answer].text)}</p><p>${esc(q.choices[answer].feedback)}</p>`;
- return `<section class="result ${correct?'correct':'incorrect'}" id="feedback" tabindex="-1" role="status"><h2>${correct?'Correct':'Incorrect'}</h2>${why}${!correct&&!q.multi?`<p><b>Best approach</b><br>${esc(q.choices[q.correct].text)}</p>`:''}</section>${featuredContinuation(q)}<div class="actions">${button('Continue','next')}${button('Try again','retry','',true)}</div>${q.after.length?`<details class="continuation" open><summary>How Alex continues</summary>${fullScene(q.after)}</details>`:''}`;
+ return `<section class="result ${correct?'correct':'incorrect'}" id="feedback" tabindex="-1" role="status"><h2>${correct?'Correct':'Incorrect'}</h2>${why}${!correct&&!q.multi?`<p><b>Best approach</b><br>${esc(q.choices[q.correct].text)}</p>`:''}</section>${continuation(q)}<div class="actions">${button('Continue','next')}${button('Try again','retry','',true)}</div>`;
+}
+function chatBody(blocks){
+ if(blocks.some(b=>(b.text||'').startsWith('library(meta)')))return textBlocks(blocks);
+ let html='',run=[];
+ const flush=()=>{html+=run.length>=3?`<ul class="chat-list">${run.map(b=>`<li>${esc(b.text)}</li>`).join('')}</ul>`:textBlocks(run);run=[];};
+ for(const b of blocks){if(b.type==='text'&&!b.heading&&b.text.length<90&&!/[.!?:]$/.test(b.text)&&!/[<>=#()]/.test(b.text))run.push(b);else{flush();html+=textBlocks([b]);}}
+ flush();return html;
 }
 function fullScene(blocks){
  let html='',pending=[],speaker=null;
- const flush=()=>{if(!pending.length)return;const body=textBlocks(pending);html+=speaker?`<article class="conversation-turn ${speaker==='Alex'?'from-student':speaker.startsWith('AI')?'from-ai':'from-person'}"><p class="speaker">${esc(speaker)}</p>${body}</article>`:`<div class="scene-narration">${body}</div>`;pending=[];speaker=null;};
+ const flush=()=>{if(!pending.length)return;const body=speaker?.startsWith('AI')?chatBody(pending):textBlocks(pending);html+=speaker?`<article class="conversation-turn ${speaker==='Alex'?'from-student':speaker.startsWith('AI')?'from-ai':'from-person'}"><p class="speaker">${esc(speaker)}</p>${body}</article>`:`<div class="scene-narration">${body}</div>`;pending=[];speaker=null;};
  for(let i=0;i<blocks.length;i++){
   const b=blocks[i],t=b.text||'';
   if(/^(Estimated duration:|Reference[s]?:)/.test(t))continue;
@@ -111,7 +128,7 @@ function lesson(m,sceneIndex,qIndex){
  const note=m.id==='scribes'&&[2,3].includes(sceneIndex);
  const visual=m.id==='ethics'&&[0,3,5,6].includes(sceneIndex)?evidence(m,s,sceneIndex,q):'';
  const story=note?`${q?fullScene(q.before):textBlocks(s.reading.slice(0,s.reading.findIndex(b=>b.text==='Simulated consultation'))) }${noteReview()}`:fullScene(q?q.before:s.reading);
- return `<p class="eyebrow">Scene ${sceneIndex+1} of ${m.scenes.length}${count}</p><h1>${esc(s.title)}</h1>${!answered?`${teaching}<section class="scenario" aria-label="Apply in the scenario"><h2>Apply it: Alex’s story</h2>${m.id==='scribes'&&[0,4].includes(sceneIndex)?policy():''}${story}${visual}</section>`:''}${answered&&q.multi?`<details open><summary>Compare the encounter and draft again</summary>${noteReview()}</details>`:''}${q?questionView(q):`<div class="actions">${button('Continue','next')}</div>`}${sourceLinks(m)}<div class="back">${button('Back','go',qIndex?`${m.id}/${sceneIndex}/${qIndex-1}`:sceneIndex?`${m.id}/${sceneIndex-1}/${Math.max(0,m.scenes[sceneIndex-1].questions.length-1)}`:m.id,true)}</div>`;
+ return `<p class="eyebrow">Scene ${sceneIndex+1} of ${m.scenes.length}${count}</p><h1>${esc(s.title)}</h1>${!answered?`${teaching}<section class="scenario" aria-label="Apply in the scenario"><div class="scenario-heading"><h2>Apply it: Alex’s story</h2>${q?'<button type="button" class="text-button" data-action="decision">Go to your decision ↓</button>':''}</div>${m.id==='scribes'&&[0,4].includes(sceneIndex)?policy():''}${story}${visual}</section>`:''}${answered&&q.multi?`<details open><summary>Compare the encounter and draft again</summary>${noteReview()}</details>`:''}${q?questionView(q):`<div class="actions">${button('Continue','next')}</div>`}${sourceLinks(m)}<div class="back">${button('Back','go',qIndex?`${m.id}/${sceneIndex}/${qIndex-1}`:sceneIndex?`${m.id}/${sceneIndex-1}/${Math.max(0,m.scenes[sceneIndex-1].questions.length-1)}`:m.id,true)}</div>`;
 }
 function finish(m){return `<p class="eyebrow">${esc(m.label)}</p><h1>What Alex learned</h1><div class="closing">${textBlocks(m.summary)}</div><div class="actions">${button('Review this module','go',m.id)}${modules.indexOf(m)<modules.length-1?button('Next module','go',modules[modules.indexOf(m)+1].id,true):''}</div>${sourceLinks(m)}`;}
 function sources(m){return `<h1>Sources & about</h1><p>Adapted from the supplied four-part <a href="https://docs.google.com/document/d/1RiM3ESKn9kHTSzPT4lZvKlXfSxUhvb2NR19EZBhnr5o/edit" target="_blank" rel="noopener noreferrer">AI Modules outline</a>. These are scripted educational examples, not recorded model runs or clinical advice. The earlier module and its unchanged Luna recordings are preserved in the project archive.</p><p>The course is an educational draft. Faculty review and student usability testing have not been completed. Estimated times come from the outline and have not been measured.</p><p>Only completed scene IDs are saved in your browser. Choices clear on reload. There are no live model calls, uploads, analytics, patient-data entry or microphone features.</p><h2>${esc(m.label)} references</h2>${m.references.map(r=>`<section class="reference"><a href="${esc(r.url)}" target="_blank" rel="noopener noreferrer">${esc(r.title)}</a></section>`).join('')}${m.id==='education'?'<p><a href="https://www.endocrine.org/clinical-practice-guidelines/primary-aldosteronism-2" target="_blank" rel="noopener noreferrer">Endocrine Society official guideline recommendations</a></p>':''}<div class="actions">${button('Back to module','go',m.id)}</div>`;}
@@ -124,6 +141,7 @@ function render(focusFeedback=false){
  document.title=m.label+' | Learning with AI';const target=pendingTabFocus?document.querySelector('#tab-'+pendingTabFocus):focusFeedback?document.querySelector('#feedback'):main;pendingTabFocus=null;target.focus({preventScroll:true});if(focusFeedback)target.scrollIntoView({block:'center'});else window.scrollTo(0,0);
 }
 document.addEventListener('click',e=>{const b=e.target.closest('[data-action]');if(!b)return;const {action,value}=b.dataset;
+ if(action==='decision'){const target=main.querySelector('.decision');target?.focus();target?.scrollIntoView({block:'start',behavior:'smooth'});return;}
  if(action==='tab'||action==='go'){go(value);return;}
  if(action==='choose'&&current?.q){const n=Number(value);if(!current.q.choices[n])return;answers[current.q.id]=n;render(true);}
  else if(action==='retry'&&current?.q){delete answers[current.q.id];render();}

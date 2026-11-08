@@ -455,3 +455,10 @@ legend { font-size: 1.15rem; font-weight: 600; line-height: 1.5; margin-bottom: 
 .conversation-turn pre { max-width: 100%; }.conversation-turn .table-wrap { max-width: 100%; }
 @media(max-width:600px){.conversation-turn { max-width: 96%; padding: 16px; }.conversation { gap: 16px; }}
 .scene-narration { min-width: 0; }.conversation .table-wrap { width: 100%; overflow-x: auto; }.conversation-turn { width: fit-content; overflow-wrap: anywhere; box-sizing: border-box; }
+
+.scenario-heading { display:flex; flex-wrap:wrap; align-items:baseline; justify-content:space-between; gap:8px 20px; margin-bottom:22px; }
+.scenario-heading h2 { margin:0; }.scenario-heading button { font-size:.85rem; }
+.chat-list { padding-left:22px; margin:12px 0 18px; }.chat-list li { margin:4px 0; }
+.decision { scroll-margin-top:24px; }.decision:focus { outline:none; }
+.continuation { margin:28px 0; }.continuation>h2 { font-size:1.2rem; }
+.conversation .table-wrap table { min-width: 680px; }.conversation .table-wrap th,.conversation .table-wrap td { overflow-wrap: normal; word-break: normal; }
