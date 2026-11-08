@@ -444,3 +444,14 @@ legend { font-size: 1.15rem; font-weight: 600; line-height: 1.5; margin-bottom: 
 .scenario>h2 { margin-bottom: 24px; }.scenario .dialogue { margin: 16px 0; }
 .learning-route { font-weight: 600; }
 @media(max-width:600px){.teaching { padding: 18px; }}
+
+.conversation { display: grid; gap: 18px; margin: 24px 0; min-width: 0; }
+.conversation-turn { max-width: 92%; min-width: 0; padding: 18px 22px; border: 1px solid var(--line); border-radius: 14px 14px 14px 3px; background: #fff; }
+.conversation-turn.from-student { justify-self: end; background: #e4eee8; border-radius: 14px 14px 3px 14px; }
+.conversation-turn.from-ai { background: #f0f3ee; }
+.conversation-turn .speaker { font-size: .8rem; font-weight: 700; color: #285748; margin-bottom: 10px; }
+.conversation-turn p:last-child,.scene-narration p:last-child { margin-bottom: 0; }
+.scene-narration { color: #52635c; font-size: .94rem; }
+.conversation-turn pre { max-width: 100%; }.conversation-turn .table-wrap { max-width: 100%; }
+@media(max-width:600px){.conversation-turn { max-width: 96%; padding: 16px; }.conversation { gap: 16px; }}
+.scene-narration { min-width: 0; }.conversation .table-wrap { width: 100%; overflow-x: auto; }.conversation-turn { width: fit-content; overflow-wrap: anywhere; box-sizing: border-box; }

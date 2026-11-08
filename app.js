@@ -37,7 +37,7 @@ function introduction(m){return `<p class="eyebrow">${esc(m.label)} · ${esc(m.d
 function noteReview(){
  const s=modules.find(m=>m.id==='scribes').scenes[2];
  const all=s.reading;const a=all.findIndex(b=>b.text==='Simulated consultation'),b=all.findIndex(b=>b.text==='Story continues'),n=all.findIndex(b=>b.text==='AI-generated draft note');
- return `<div class="note-review"><details class="encounter" open><summary>Fictional encounter</summary>${textBlocks(all.slice(a+1,b))}</details><section class="clinical-note"><h2>AI-generated draft note</h2><p class="quiet">Fictional teaching example</p>${textBlocks(all.slice(n+1))}</section></div>`;
+ return `<div class="note-review"><details class="encounter" open><summary>Fictional encounter</summary>${fullScene(all.slice(a+1,b))}</details><section class="clinical-note"><h2>AI-generated draft note</h2><p class="quiet">Fictional teaching example</p>${textBlocks(all.slice(n+1))}</section></div>`;
 }
 function evidence(m,s,n,q){
  if(m.id==='scribes'&&(n===2||n===3))return noteReview();
@@ -68,9 +68,9 @@ function dialogue(blocks){
 function excerpt(blocks,title){const a=blocks.findIndex(b=>b.text===title);if(a<0)return [];let end=a+1;while(end<blocks.length&&!blocks[end].heading)end++;return blocks.slice(a+1,end);}
 function featuredContinuation(q){
  const b=q.after;
- if(q.id==='education-1-1')return `<section class="featured-continuation"><h2>Alex organizes the explanation</h2><p class="chat-label">Scripted AI output after the suggested prompt</p>${textBlocks(excerpt(b,'AI response after choosing B'))}</section>`;
- if(q.id==='education-2-1')return `<section class="featured-continuation"><h2>Alex follows the mechanism</h2><p class="chat-label">Scripted AI output after the suggested prompt</p>${textBlocks(excerpt(b,'AI response after choosing A'))}</section>`;
- if(q.id==='education-3-1')return `<section class="featured-continuation"><h2>Alex checks and revises the reply</h2>${dialogue(b)}<p class="chat-label">Corrected scripted AI output</p>${textBlocks(excerpt(b,'Corrected AI response'))}</section>`;
+ if(q.id==='education-1-1')return `<section class="featured-continuation"><h2>Alex organizes the explanation</h2><p class="chat-label">Scripted AI output after the suggested prompt</p>${fullScene([{type:'text',text:'AI response',heading:true},...excerpt(b,'AI response after choosing B')])}</section>`;
+ if(q.id==='education-2-1')return `<section class="featured-continuation"><h2>Alex follows the mechanism</h2><p class="chat-label">Scripted AI output after the suggested prompt</p>${fullScene([{type:'text',text:'AI response',heading:true},...excerpt(b,'AI response after choosing A')])}</section>`;
+ if(q.id==='education-3-1')return `<section class="featured-continuation"><h2>Alex checks and revises the reply</h2>${dialogue(b)}<p class="chat-label">Corrected scripted AI output</p>${fullScene([{type:'text',text:'AI response',heading:true},...excerpt(b,'Corrected AI response')])}</section>`;
  if(q.id==='research-2-1'){const table=b.find(x=>x.type==='table');return `<section class="featured-continuation"><h2>A framework to discuss with Dr. Lee</h2>${table?textBlocks([table]):''}<p><b>Discuss before proceeding:</b> the EF threshold, mixed populations, outcome definitions and whether existing reviews already answer the question.</p></section>`;}
  if(q.id==='research-5-1')return `<section class="formula-check"><h2>Check the scale of the calculation</h2><p>For the illustrated normal-approximation 95% confidence interval:</p><p><b>Incorrect for a log hazard ratio</b></p><pre class="code-view incorrect-code">SE &lt;- (upper_CI - lower_CI) / (2 * 1.96)</pre><p><b>Use the logarithmic limits</b></p><pre class="code-view correct-code">SE &lt;- (log(upper_CI) - log(lower_CI)) / (2 * 1.96)</pre></section>`;
  if(q.id==='research-6-1'){const a=b.findIndex(x=>x.text==="Alex's original paragraph:"),z=b.findIndex(x=>x.text==='AI-edited version:');return `<section class="featured-continuation"><h2>Compare the wording</h2><p class="quiet">Scripted writing examples</p><div class="writing-comparison"><article><h3>Alex’s draft</h3><p>${esc(b[a+1].text)}</p></article><article><h3>AI-edited draft</h3><p>${esc(b[z+1].text)}</p></article></div><p>Check that the edited version preserves the verified findings and uncertainty. These examples are not results from an actual review.</p></section>`;}
@@ -82,16 +82,25 @@ function questionView(q){
  return `<section class="decision"><h2>${esc(q.question)}</h2><div class="choices">${q.choices.map((c,i)=>button(c.text,'choose',i,true)).join('')}</div></section>`;}
  const correct=q.multi?q.correct.length===answer.length&&q.correct.every(i=>answer.includes(i)):answer===q.correct;
  const why=q.multi?'<p>Compare each selection with the encounter.</p>'+q.choices.map((c,i)=>{const matched=answer.includes(i)===q.correct.includes(i);return `<div class="review-item ${matched?'matched':'missed'}"><h3>${matched?'Correct':'Incorrect'} · ${q.correct.includes(i)?'This is a documentation error':'This was documented accurately'}</h3><p>${esc(c.feedback)}</p></div>`;}).join(''):`<p class="chosen"><b>Your choice</b><br>${esc(q.choices[answer].text)}</p><p>${esc(q.choices[answer].feedback)}</p>`;
- return `<section class="result ${correct?'correct':'incorrect'}" id="feedback" tabindex="-1" role="status"><h2>${correct?'Correct':'Incorrect'}</h2>${why}${!correct&&!q.multi?`<p><b>Best approach</b><br>${esc(q.choices[q.correct].text)}</p>`:''}</section>${featuredContinuation(q)}<div class="actions">${button('Continue','next')}${button('Try again','retry','',true)}</div>${q.after.length?`<details class="continuation" open><summary>How Alex continues</summary>${textBlocks(q.after)}</details>`:''}`;
+ return `<section class="result ${correct?'correct':'incorrect'}" id="feedback" tabindex="-1" role="status"><h2>${correct?'Correct':'Incorrect'}</h2>${why}${!correct&&!q.multi?`<p><b>Best approach</b><br>${esc(q.choices[q.correct].text)}</p>`:''}</section>${featuredContinuation(q)}<div class="actions">${button('Continue','next')}${button('Try again','retry','',true)}</div>${q.after.length?`<details class="continuation" open><summary>How Alex continues</summary>${fullScene(q.after)}</details>`:''}`;
 }
 function fullScene(blocks){
- let html='',pending=[];
- const flush=()=>{html+=textBlocks(pending);pending=[];};
- for(const b of blocks){
-  if(b.type==='text'&&/^(Alex|Dr\. Chen|Dr\. Lee|Mr\. Patel|Mr\. Singh|Ms\. Williams):\s*["“]/.test(b.text)){flush();html+=dialogue([b]);}
-  else pending.push(b);
+ let html='',pending=[],speaker=null;
+ const flush=()=>{if(!pending.length)return;const body=textBlocks(pending);html+=speaker?`<article class="conversation-turn ${speaker==='Alex'?'from-student':speaker.startsWith('AI')?'from-ai':'from-person'}"><p class="speaker">${esc(speaker)}</p>${body}</article>`:`<div class="scene-narration">${body}</div>`;pending=[];speaker=null;};
+ for(let i=0;i<blocks.length;i++){
+  const b=blocks[i],t=b.text||'';
+  if(/^(Estimated duration:|Reference[s]?:)/.test(t))continue;
+  const named=t.match(/^(Alex|Dr\. Chen|Dr\. Lee|Mr\. Patel|Mr\. Singh|Ms\. Williams):\s*["“](.*)/);
+  if(named){flush();speaker=named[1];pending=[{type:'text',text:named[2].replace(/["”]$/,'')}];flush();continue;}
+  if(/^(Alex types:|Alex then asks:|Alex asks the chatbot:)$/.test(t)){
+   if(/^["“]/.test(blocks[i+1]?.text||'')){flush();speaker='Alex';pending=[{type:'text',text:blocks[++i].text.replace(/^["“]|["”]$/g,'')}];flush();}continue;
+  }
+  if(/^(AI response(?: after choosing .)?|Simulated AI response|Corrected AI response|AI-generated practice question|AI SCREENING RESULT)$/.test(t)){flush();speaker=t==='AI SCREENING RESULT'?'AI screening system':'AI chatbot';continue;}
+  if(b.heading&&['Story','Story continues'].includes(t)){flush();continue;}
+  if(b.heading&&t!=='Example R code'){flush();pending.push(b);continue;}
+  pending.push(b);
  }
- flush();return html;
+ flush();return `<div class="conversation" aria-label="Scripted scenario conversation">${html}</div>`;
 }
 function lesson(m,sceneIndex,qIndex){
  const s=m.scenes[sceneIndex],q=s.questions[qIndex];current={m,scene:s,sceneIndex,qIndex,q};
