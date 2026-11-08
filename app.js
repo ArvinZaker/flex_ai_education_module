@@ -1,148 +1,92 @@
 'use strict';
-const { parts, sources, assessment } = window.MODULE;
-const recordings = window.LUNA;
+const modules = window.COURSE.modules;
 const main = document.querySelector('#main');
-const storageKey = 'learning-with-ai-v3';
-let completed;
-try { completed = new Set(JSON.parse(localStorage.getItem(storageKey) || '[]').filter(id => parts.some(p => p.units.some(u => u.id === id)))); }
-catch { completed = new Set(); }
-const state = { answers: {}, before: {}, after: {}, first: { before: {}, after: {} }, hint: 'none', revealed: false, format: 'Flashcard', flipped: false, resourceAnswer: null };
+const tabs = document.querySelector('#module-tabs');
+const key = 'learning-with-ai-four-modules-v1';
 const esc = value => String(value).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
-const go = route => { if (location.hash === `#${route}`) render(); else location.hash = route; };
-function references(keys) {
-  return `<details class="sources"><summary>Sources for this step</summary>${keys.map(key => {
-    const s = sources[key];
-    return `<p>${s.url ? `<a href="${s.url}" target="_blank" rel="noopener noreferrer">${esc(s.title)}</a>` : esc(s.title)}<small>${esc(s.section)}</small></p>`;
-  }).join('')}</details>`;
+let saved;
+try { saved = JSON.parse(localStorage.getItem(key)) || {}; } catch { saved = {}; }
+const completed = new Set(Array.isArray(saved.completed) ? saved.completed.filter(id => modules.some(m => m.scenes.some(s => s.id === id))) : []);
+const answers = {}, selections = {};
+let current = null, activeModule = modules[0], pendingTabFocus = null;
+const go = route => { if (location.hash === '#'+route) render(); else location.hash = route; };
+const button = (text, action, value='', secondary=false) => `<button class="${secondary?'secondary':'primary'}" data-action="${action}" data-value="${esc(value)}">${esc(text)}</button>`;
+function save(){try{localStorage.setItem(key,JSON.stringify({completed:[...completed]}));}catch{/* The course also works without browser storage. */}}
+function resume(m){const n=m.scenes.findIndex(s=>!completed.has(s.id));return n<0?m.id+'/finish':m.id+'/'+n;}
+function textBlocks(blocks){
+ let code=false,codeLines=[],html='';
+ const flush=()=>{if(codeLines.length){html+=`<pre class="code-view"><code>${esc(codeLines.join('\n'))}</code></pre>`;codeLines=[];}code=false;};
+ for(const b of blocks){
+  if(b.type==='table'){flush();const [head,...rows]=b.rows;html+=`<div class="table-wrap" tabindex="0" role="region" aria-label="Study reference table"><table><thead><tr>${head.map(v=>`<th scope="col">${esc(v)}</th>`).join('')}</tr></thead><tbody>${rows.map(row=>`<tr>${row.map((v,i)=>i?`<td>${esc(v)}</td>`:`<th scope="row">${esc(v)}</th>`).join('')}</tr>`).join('')}</tbody></table></div>`;continue;}
+  const t=b.text;
+  if(/^(Reference[s]?:|Estimated duration:)/.test(t)||['Story','Story continues'].includes(t))continue;
+  if(t==='library(meta)'||t.startsWith('library(meta)'))code=true;
+  if(code){codeLines.push(t);if(t==='forest(result)')flush();continue;}
+  if(t==='Story continues'||t==='Story continues')continue;
+  if(/^(SE <-|=LN\(|=\(LN\(|log_HR <-)/.test(t)){html+=`<pre class="code-view"><code>${esc(t)}</code></pre>`;continue;}
+  html+=b.heading?`<h3>${esc(t.replace(/^AI response$/,'Scripted AI response'))}</h3>`:`<p>${esc(t)}</p>`;
+ }
+ flush();return html;
 }
-function button(label, action, value = '', secondary = false) {
-  return `<button class="${secondary ? 'secondary' : 'primary'}" data-action="${action}" data-value="${esc(value)}">${label}</button>`;
+function policy(){return `<aside class="policy"><h2>UBC scribe rules in this scenario</h2><p><b>Years 1–3:</b> no independent ambient AI scribing. <b>Year 4 electives:</b> exceptional use requires educational-lead approval, preceptor agreement and informed patient consent.</p><p>Students must write their own clinical documentation. The Year 4 scribe exception does not authorize general-purpose LLM editing of student notes.</p><a href="https://med-fom-mednet.sites.olt.ubc.ca/files/2026/04/MDUP-Use-of-Generative-Artificial-Intelligence-Gen-AI-Guideline-1.pdf" target="_blank" rel="noopener noreferrer">Ambient scribing guideline</a> · <a href="https://med-fom-mednet.sites.olt.ubc.ca/files/2026/04/MDUP-Use-of-Large-Language-Models-LLMs-in-Clinical-Documentation-Guideline-1.pdf" target="_blank" rel="noopener noreferrer">Clinical documentation guideline</a></aside>`;}
+function sourceLinks(m){
+ const links=m.id==='education'?[{title:'Endocrine Society: primary aldosteronism, recommendations 1–3',url:'https://www.endocrine.org/clinical-practice-guidelines/primary-aldosteronism-2'},m.references[0]]:m.id==='scribes'?m.references.slice(0,3):m.id==='research'?[{title:'Cochrane Handbook: effect measures and standard errors, §§6.3.2 and 6.8',url:'https://www.cochrane.org/authors/handbooks-and-manuals/handbook/current/chapter-06'},m.references.at(-1)]:[{title:'Privacy regulators: responsible AI in health',url:'https://www.priv.gc.ca/en/about-the-opc/what-we-do/provincial-and-territorial-collaboration/joint-resolutions-with-provinces-and-territories/res_20260915_aihealth'},m.references[4]];
+ return `<details class="sources"><summary>References for this module</summary>${links.filter(Boolean).map(r=>`<p><a href="${esc(r.url)}" target="_blank" rel="noopener noreferrer">${esc(r.title)}</a></p>`).join('')}<a href="#${m.id}/sources">All references & about</a></details>`;
 }
-function save() { try { localStorage.setItem(storageKey, JSON.stringify([...completed])); } catch { /* Learning remains usable without storage. */ } }
-function resume() {
-  for (const part of parts) { const n = part.units.findIndex(u => !completed.has(u.id)); if (n >= 0) return `${part.id}/${n}`; }
-  return 'finish';
+function introduction(m){return `<p class="eyebrow">${esc(m.label)} · ${esc(m.duration)}</p><h1>${esc(m.title)}</h1><p class="lead">${esc(m.description)}</p><p class="simulation">Scripted learning story. Patients, conversations and program data are fictional unless a published study is explicitly identified.</p>${m.id==='scribes'?policy():''}<div class="actions">${button(completed.size&&m.scenes.some(s=>completed.has(s.id))?'Resume this module':'Start this module','go',resume(m))}</div><details><summary>What you will practise</summary><ul>${m.objectives.map(v=>`<li>${esc(v)}</li>`).join('')}</ul></details><ol class="scene-list">${m.scenes.map((s,i)=>`<li><a href="#${m.id}/${i}"><span>${esc(s.title)}</span>${completed.has(s.id)?'<small>Completed</small>':''}</a></li>`).join('')}</ol>${sourceLinks(m)}`;}
+function noteReview(){
+ const s=modules.find(m=>m.id==='scribes').scenes[2];
+ const all=s.reading;const a=all.findIndex(b=>b.text==='Simulated consultation'),b=all.findIndex(b=>b.text==='Story continues'),n=all.findIndex(b=>b.text==='AI-generated draft note');
+ return `<div class="note-review"><details class="encounter" open><summary>Fictional encounter</summary>${textBlocks(all.slice(a+1,b))}</details><section class="clinical-note"><h2>AI-generated draft note</h2><p class="quiet">Fictional teaching example</p>${textBlocks(all.slice(n+1))}</section></div>`;
 }
-function overview() {
-  return `<p class="eyebrow">An introduction for medical students</p><h1>Learn with AI.<br>Keep doing the thinking.</h1><p class="lead">Learn how to ask for an explanation, improve a reply, test yourself and check the evidence. Build a small study tool, then use those skills in a clinical case.</p><p>Choose a message and compare real, recorded AI replies. Each decision explains what worked or what to change. You do not need an AI account.</p><ol class="path">${parts.map((p,i) => `<li><b>${esc(p.label)}</b><span>${esc(p.purpose)}</span></li>`).join('')}</ol><div class="actions">${button(completed.size ? 'Resume learning' : 'Begin learning', 'go', resume())}${button('Try the starting exercise', 'go', 'before/0', true)}</div><p class="quiet">The starting and closing exercises let you compare your choices across five skills.</p>`;
+function evidence(m,s,n,q){
+ if(m.id==='scribes'&&(n===2||n===3))return noteReview();
+ if(m.id==='ethics'&&n===5)return `<ol class="journey"><li><b>Screen locally</b><span>Retinal photographs near home</span></li><li><b>Referral recommended</b><span>Further assessment is needed</span></li><li class="barrier"><b>Almost four hours away</b><span>Travel, lost wages and transport still prevent attendance</span></li></ol>`;
+ if(m.id==='ethics'&&n===6)return `<section class="dashboard" aria-label="Fictional program results"><p class="quiet">Fictional results · six months</p><div><p><strong>400</strong>screened</p><p><strong>60</strong>referral recommended</p><p><strong>24 / 60</strong>completed follow-up</p></div><p>36 had not completed follow-up by the reporting date. Completion was 40%; timing and urgency also matter.</p></section>`;
+ if(!q)return '';
+ const blocks=q.before;
+ const ai=blocks.findIndex(b=>/^(AI response|Simulated AI response|AI-generated practice question)$/.test(b.text||''));
+ if(m.id==='research'&&n===4){const a=blocks.findIndex(b=>b.text==='Example R code');return a>=0?`<details class="example-code"><summary>Read the illustrative R code · fictional inputs</summary>${textBlocks(blocks.slice(a+1).filter(b=>b.text!=='Story continues'))}</details>`:'';}
+ if(ai>=0){let end=ai+1;while(end<blocks.length&&!blocks[end].heading)end++;return `<section class="chat-example"><p class="chat-label">Scripted AI output${m.id==='education'&&n===2||m.id==='education'&&n===4||m.id==='research'&&[1,3,5].includes(n)?' · evaluate this reply':''}</p>${textBlocks(blocks.slice(ai+1,end))}</section>`;}
+ if(m.id==='education'&&n===3&&current.qIndex===1){const at=blocks.findIndex(b=>b.text==='AI-generated practice question');return `<section class="case-card">${textBlocks(at>=0?blocks.slice(at+1):blocks)}</section>`;}
+ if(m.id==='research'&&n===2&&current.qIndex===1)return `<blockquote>“Empagliflozin reduced cardiovascular mortality by 21%.”</blockquote><p>Compare this simulated extraction with the trial’s primary composite endpoint: cardiovascular death or hospitalization for heart failure.</p>`;
+ return '';
 }
-function hint(unit) {
-  const hints = {
-    'case-rules': ['Who should make the first attempt?', 'Ask the chatbot to withhold the diagnosis and wait for your reasoning.'],
-    'case-history': ['Would bleeding elsewhere change your possibilities?', 'Request bleeding history outside menstruation and explain why it matters.'],
-    'case-tests': ['What is the difference between missing and normal?', 'Request only source-provided examination and test results. Leave unreported results unknown.'],
-    'case-update': ['Do these tests exclude every possible disorder?', 'Keep the bleeding pattern in the differential and state the limits of the screening results.'],
-    'case-uncertainty': ['What do you know, and what remains a suspicion?', 'Separate a possible explanation from confirmation. Ask which specific evidence is missing.']
-  };
-  return `<details class="case-tools"><summary>Case help</summary><label for="hint-mode">Hint level</label><select id="hint-mode"><option value="none" ${state.hint === 'none' ? 'selected' : ''}>No hints</option><option value="socratic" ${state.hint === 'socratic' ? 'selected' : ''}>Socratic questions</option><option value="guided" ${state.hint === 'guided' ? 'selected' : ''}>Guided hints</option></select>${state.hint === 'none' ? '' : `<p class="hint">${hints[unit.id][state.hint === 'socratic' ? 0 : 1]}</p>`}${button('Reveal answer now', 'reveal', '', true)}</details>`;
+function questionView(q){
+ const answer=answers[q.id];
+ if(answer===undefined){if(q.multi)return `<form id="note-form"><fieldset><legend>${esc(q.question)}</legend>${q.choices.map((c,i)=>`<label class="check-choice"><input type="checkbox" name="note-error" value="${i}" ${selections[q.id]?.includes(i)?'checked':''}><span>${esc(c.text)}</span></label>`).join('')}</fieldset><div class="actions"><button class="primary" type="submit">Check my review</button></div></form>`;
+ return `<section class="decision"><h2>${esc(q.question)}</h2><div class="choices">${q.choices.map((c,i)=>button(c.text,'choose',i,true)).join('')}</div></section>`;}
+ const correct=q.multi?q.correct.length===answer.length&&q.correct.every(i=>answer.includes(i)):answer===q.correct;
+ const why=q.multi?'<p>Compare each selection with the encounter.</p>'+q.choices.map((c,i)=>{const matched=answer.includes(i)===q.correct.includes(i);return `<div class="review-item ${matched?'matched':'missed'}"><h3>${matched?'Correct':'Incorrect'} · ${q.correct.includes(i)?'This is a documentation error':'This was documented accurately'}</h3><p>${esc(c.feedback)}</p></div>`;}).join(''):`<p class="chosen"><b>Your choice</b><br>${esc(q.choices[answer].text)}</p><p>${esc(q.choices[answer].feedback)}</p>`;
+ return `<section class="result ${correct?'correct':'incorrect'}" id="feedback" tabindex="-1" role="status"><h2>${correct?'Correct':'Incorrect'}</h2>${why}${!correct&&!q.multi?`<p><b>Best approach</b><br>${esc(q.choices[q.correct].text)}</p>`:''}</section><div class="actions">${button('Continue','next')}${button('Try again','retry','',true)}</div>${q.after.length?`<details class="continuation"><summary>How Alex continues</summary>${textBlocks(q.after)}</details>`:''}`;
 }
-function resource() {
-  let body;
-  if (state.format === 'Flashcard') body = `<p><b>Question</b><br>How can ACE inhibitors and ARBs affect urinary potassium excretion?</p>${state.flipped ? '<p><b>Answer</b><br>They can reduce urinary potassium excretion and lead to hyperkalemia.</p><p class="quiet">Check the answer against the first sentence of the supplied note. It preserves “can”.</p>' : button('Show answer', 'flip', '', true)}`;
-  if (state.format === 'Study guide') body = '<ul><li>ACE inhibitors and ARBs can reduce urinary potassium excretion.</li><li>This can lead to hyperkalemia.</li><li>Impaired kidney function is an additional risk factor.</li></ul><p class="quiet">Each point comes from the supplied note. No treatment advice has been added.</p>';
-  if (state.format === 'Concept map') body = '<p class="chain">ACE inhibitors / ARBs<br>↓ can reduce<br>Urinary potassium excretion<br>↓ can lead to<br>Hyperkalemia</p><p>Additional risk factor in the note: impaired kidney function.</p>';
-  if (state.format === 'Practice question') body = `<p>Which conclusion does the note support?</p>${state.resourceAnswer === null ? `<div class="choices">${button('These medicines can reduce potassium excretion.', 'resource-answer', 'yes', true)}${button('Every patient will develop hyperkalemia.', 'resource-answer', 'no', true)}${button('The note establishes a complete treatment protocol.', 'resource-answer', 'protocol', true)}</div>` : `<div class="result ${state.resourceAnswer === 'yes' ? 'correct' : 'incorrect'}" tabindex="-1"><h3>${state.resourceAnswer === 'yes' ? 'Correct' : 'Incorrect'}</h3><p>${state.resourceAnswer === 'yes' ? 'The answer preserves the possible effect described in the note.' : state.resourceAnswer === 'protocol' ? 'The note gives a possible effect and risk factor. It does not supply a treatment protocol.' : '“Every patient” is not supported. The note describes a possible effect.'}</p>${state.resourceAnswer === 'yes' ? '<p>Compare the answer with the note, then continue.</p>' : button('Try again', 'resource-retry', '', true)}</div>`}`;
-  return `<section class="resource"><h3>The same note, different formats</h3><label for="resource-format">View a study format</label><select id="resource-format">${['Flashcard','Study guide','Concept map','Practice question'].map(f => `<option ${state.format === f ? 'selected' : ''}>${f}</option>`).join('')}</select>${body}</section>`;
+function lesson(m,sceneIndex,qIndex){
+ const s=m.scenes[sceneIndex],q=s.questions[qIndex];current={m,scene:s,sceneIndex,qIndex,q};
+ const count=s.questions.length>1?` · Decision ${qIndex+1} of ${s.questions.length}`:'';
+ const answered=q&&answers[q.id]!==undefined;
+ const formula=answered&&m.id==='research'&&sceneIndex===4?'<section class="formula-check"><h2>Check the scale of the calculation</h2><p>For the illustrated normal-approximation 95% confidence interval:</p><p><b>Incorrect for a log hazard ratio</b></p><pre class="code-view incorrect-code">SE &lt;- (upper_CI - lower_CI) / (2 * 1.96)</pre><p><b>Use the logarithmic limits</b></p><pre class="code-view correct-code">SE &lt;- (log(upper_CI) - log(lower_CI)) / (2 * 1.96)</pre></section>':'';
+ return `<p class="eyebrow">Scene ${sceneIndex+1} of ${m.scenes.length}${count}</p><h1>${esc(s.title)}</h1>${m.id==='scribes'&&[0,4].includes(sceneIndex)?policy():''}${!answered?`<p class="lead scene-intro">${esc(s.intro)}</p>${evidence(m,s,sceneIndex,q)}`:''}${answered&&q.multi?`<details><summary>Compare the encounter and draft again</summary>${noteReview()}</details>`:''}${formula}${q?questionView(q):`<div class="actions">${button('Continue','next')}</div>`}${!answered&&q&&q.before.length?`<details class="full-scene"><summary>Read the full scene</summary>${textBlocks(q.before)}</details>`:''}${sourceLinks(m)}<div class="back">${button('Back','go',qIndex?`${m.id}/${sceneIndex}/${qIndex-1}`:sceneIndex?`${m.id}/${sceneIndex-1}/${Math.max(0,m.scenes[sceneIndex-1].questions.length-1)}`:m.id,true)}</div>`;
 }
-let current = null;
-function recordedReply(key) {
-  const record = recordings[key];
-  const code = record.reply.startsWith('<!doctype html>');
-  const content = `<pre class="verbatim${code ? ' code' : ''}" data-record="${key}">${esc(record.reply)}</pre>`;
-  const sourceCheck = key === 'luna_quiz_answers_isolated' ? `<p class="source-check"><b>Check this detail.</b> The DKA answer groups insulin deficiency and acidosis together. Merck’s <a href="${sources.merck.url}" target="_blank" rel="noopener noreferrer">Potassium shifts</a> section attributes the potassium rise in DKA mainly to insulin deficiency and distinguishes acid types. The bicarbonate answer also needs qualification: Merck’s <a href="${sources.hyperkalemia.url}" target="_blank" rel="noopener noreferrer">Hyperkalemia treatment</a> section describes limited evidence and possible potassium excretion as well as redistribution. Check those statements before studying from this reply.</p>` : '';
-  return `<section class="reply"><h3>Recorded chatbot reply · unedited</h3>${code ? `<p>The model returned a working webpage file. Continue to try it.</p><details><summary>Read the complete HTML reply</summary>${content}</details>` : content}${sourceCheck}<details class="provenance"><summary>Exact request and recording details</summary><p>${esc(record.model)} · ${esc(record.reasoning)} reasoning · fresh conversation</p><pre class="verbatim">${esc(record.prompt)}</pre><p>Stored response SHA-256: <code class="hash">${record.replySha256}</code></p></details></section>`;
+function finish(m){return `<p class="eyebrow">${esc(m.label)}</p><h1>What Alex learned</h1><div class="closing">${textBlocks(m.summary)}</div><div class="actions">${button('Review this module','go',m.id)}${modules.indexOf(m)<modules.length-1?button('Next module','go',modules[modules.indexOf(m)+1].id,true):''}</div>${sourceLinks(m)}`;}
+function sources(m){return `<h1>Sources & about</h1><p>Adapted from the supplied four-part <a href="https://docs.google.com/document/d/1RiM3ESKn9kHTSzPT4lZvKlXfSxUhvb2NR19EZBhnr5o/edit" target="_blank" rel="noopener noreferrer">AI Modules outline</a>. These are scripted educational examples, not recorded model runs or clinical advice. The earlier module and its unchanged Luna recordings are preserved in the project archive.</p><p>The course is an educational draft. Faculty review and student usability testing have not been completed. Estimated times come from the outline and have not been measured.</p><p>Only completed scene IDs are saved in your browser. Choices clear on reload. There are no live model calls, uploads, analytics, patient-data entry or microphone features.</p><h2>${esc(m.label)} references</h2>${m.references.map(r=>`<section class="reference"><a href="${esc(r.url)}" target="_blank" rel="noopener noreferrer">${esc(r.title)}</a></section>`).join('')}${m.id==='education'?'<p><a href="https://www.endocrine.org/clinical-practice-guidelines/primary-aldosteronism-2" target="_blank" rel="noopener noreferrer">Endocrine Society official guideline recommendations</a></p>':''}<div class="actions">${button('Back to module','go',m.id)}</div>`;}
+function render(focusFeedback=false){
+ current=null;const [id,step,qraw='0']=location.hash.slice(1).split('/');const m=modules.find(m=>m.id===id)||modules[0];activeModule=m;let html;
+ if(step==='sources')html=sources(m);else if(step==='finish')html=finish(m);else if(step!==undefined&&/^\d+$/.test(step)&&Number(step)<m.scenes.length){const n=Number(step);const qi=/^\d+$/.test(qraw)&&Number(qraw)<Math.max(1,m.scenes[n].questions.length)?Number(qraw):0;html=lesson(m,n,qi);}else html=introduction(m);
+ tabs.innerHTML=modules.map((mod,i)=>`<button type="button" role="tab" id="tab-${mod.id}" aria-controls="main" aria-selected="${mod.id===m.id}" tabindex="${mod.id===m.id?0:-1}" data-action="tab" data-value="${mod.id}"><span class="tab-number" aria-hidden="true">${i+1}</span><span>${esc(mod.label)}</span></button>`).join('');
+ main.setAttribute('aria-labelledby','tab-'+m.id);main.innerHTML=html;
+ document.querySelector('#progress-text').textContent=`${m.scenes.filter(s=>completed.has(s.id)).length} / ${m.scenes.length} scenes completed`;
+ document.title=m.label+' | Learning with AI';const target=pendingTabFocus?document.querySelector('#tab-'+pendingTabFocus):focusFeedback?document.querySelector('#feedback'):main;pendingTabFocus=null;target.focus({preventScroll:true});if(focusFeedback)target.scrollIntoView({block:'center'});else window.scrollTo(0,0);
 }
-function exercise(unit, selected, assessmentMode) {
-  const chosen = selected === undefined ? null : unit.choices[selected];
-  const previous = assessmentMode === 'after' && state.first.before[unit.id] !== undefined ? `<p class="comparison">Your starting choice: “${esc(unit.choices[state.first.before[unit.id]].text)}”</p>` : '';
-  if (!chosen) return `<section class="decision"><p class="goal"><b>Your goal</b><br>${esc(unit.goal)}</p><h2>${esc(unit.question)}</h2><div class="choices">${unit.choices.map((c,i) => button(esc(c.text), 'choose', i, true)).join('')}</div></section>`;
-  const reply = chosen.record ? recordedReply(chosen.record) : chosen.reply ? `<div class="reply"><h3>Source-based case continuation</h3><p>${esc(chosen.reply)}</p></div>` : '';
-  return `<section class="decision answered"><p class="chosen"><b>You chose</b><br>${esc(chosen.text)}</p><div class="result ${chosen.correct ? 'correct' : 'incorrect'}" id="feedback" tabindex="-1" role="status"><h2>${chosen.correct ? 'Correct' : 'Incorrect'}</h2><p>${esc(chosen.why)}</p>${previous}</div>${reply}${unit.resources && chosen.correct ? resource() : ''}<div class="actions">${chosen.correct ? button(unit.id === 'case-uncertainty' ? 'Finish case' : 'Continue', 'continue') : button('Try again', 'retry')}${chosen.correct && chosen.record ? button('Try another message', 'compare', '', true) : ''}</div></section>`;
-}
-function interactiveExample() {
-  return `<section class="interactive-example"><h2>Try the generated quiz</h2><iframe title="Recorded potassium study quiz" src="examples/potassium-quiz.html" sandbox="allow-scripts" loading="eager"></iframe><p class="quiet">The quiz is the recorded HTML reply. Test its answers, feedback and Retry before choosing below.</p></section>`;
-}
-function lesson(partIndex, unitIndex) {
-  const part = parts[partIndex];
-  const unit = part.units[unitIndex];
-  current = { unit, partIndex, unitIndex };
-  const answered = state.answers[unit.id] !== undefined;
-  const teaching = `<div class="teaching">${unit.teach}</div>${unit.context ? `<p class="context">${esc(unit.context)}</p>` : ''}${unit.sourceText ? `<blockquote><b>Supplied source note</b><p>${esc(unit.sourceText)}</p></blockquote>` : ''}`;
-  return `<p class="eyebrow">Part ${partIndex + 1} of ${parts.length} · Step ${unitIndex + 1} of ${part.units.length}</p><h1>${esc(unit.title)}</h1>${answered ? `<details><summary>Review the explanation and task</summary>${teaching}</details>` : teaching}${!answered && unit.seed ? `<details class="earlier-reply"><summary>Read the supplied earlier exchange</summary><p><b>Student</b><br>${esc(unit.seed.prompt)}</p><pre class="verbatim">${esc(unit.seed.reply)}</pre></details>` : ''}${unit.interactive && !answered ? interactiveExample() : ''}${exercise(unit, state.answers[unit.id])}${unit.case ? hint(unit) : ''}${references(unit.sources)}<div class="back">${button('Back', 'go', unitIndex ? `${part.id}/${unitIndex - 1}` : partIndex ? `${parts[partIndex-1].id}/${parts[partIndex-1].units.length-1}` : 'overview', true)}</div>`;
-}
-function check(mode, index) {
-  const unit = assessment[index];
-  current = { unit, mode, unitIndex: index };
-  return `<p class="eyebrow">${mode === 'before' ? 'Starting' : 'Closing'} exercise · ${index+1} of 5</p><h1>${esc(unit.title)}</h1>${index === 0 && state[mode][unit.id] === undefined ? `<p>${mode === 'before' ? 'Choose what you would do now. Your first choices stay in this tab for comparison at the end.' : 'Revisit the same five skills. After each attempt, compare it with your starting choice.'}</p>` : ''}${exercise(unit, state[mode][unit.id], mode)}${references(unit.sources)}`;
-}
-function debrief() {
-  return `<p class="eyebrow">Case debrief</p><h1>Compare your reasoning with the source.</h1><p class="lead">The official USMLE answer is <b>von Willebrand disease</b>.</p><p>The bleeding history includes heavy menstruation and prolonged bleeding from a cut. The item’s answer key selects von Willebrand disease; it does not supply confirmatory test results.</p><h2>What your reasoning should preserve</h2><ul><li><b>Use the bleeding pattern.</b> Bleeding outside menstruation keeps a broader bleeding problem in consideration.</li><li><b>Respect screening limits.</b> CDC explains that screening tests are often normal in this disorder. Normal screening results alone do not exclude it.</li><li><b>Identify missing evidence.</b> CDC describes specific tests including von Willebrand factor antigen, factor activity and factor VIII activity. Their results were not provided here.</li></ul><h2>Use this in your next study chat</h2><p>Request a case, withhold the answer, make an attempt, ask for relevant evidence and update your explanation. At the end, compare the debrief with the source and identify what remains uncertain.</p>${references(['usmle','cdc','prompting'])}<div class="actions">${button('Continue to closing exercise', 'go', 'after/0')}${button('Return to case', 'go', 'apply/0', true)}</div>`;
-}
-function finish() {
-  const rows = assessment.map(u => {
-    const before = state.first.before[u.id]; const after = state.first.after[u.id];
-    return `<tr><th scope="row">${esc(u.title)}</th><td>${before === undefined ? 'Not attempted' : u.choices[before].correct ? 'Correct' : 'Incorrect'}</td><td>${after === undefined ? 'Not attempted' : u.choices[after].correct ? 'Correct' : 'Incorrect'}</td></tr>`;
-  }).join('');
-  return `<p class="eyebrow">Take it into your own study session</p><h1>You choose the task.<br>You check the result.</h1><p>Begin with your learning gap. Specify the output and whether the model should explain, ask or wait. Revise the part that missed your goal. Check factual claims against the source before using them.</p><h2>A request you can adapt</h2><blockquote>I am a first-year medical student. I understand [starting point], but I cannot explain [specific gap]. Use the supplied excerpt to [task] in [format]. If you quiz me, ask one question and wait for my attempt. Identify anything the excerpt does not support.</blockquote><h2>Your first choices</h2><p class="quiet">This compares the first attempt at each exercise in this tab, before retries. It is practice feedback, not a validated learning score.</p><table><thead><tr><th>Skill</th><th>Starting</th><th>Closing</th></tr></thead><tbody>${rows}</tbody></table><div class="actions">${button('Try the closing exercise', 'go', 'after/0')}${button('Review the module', 'go', 'overview', true)}</div>${references(['prompting','design','evaluation'])}`;
-}
-function about() {
-  return `<h1>Sources & about</h1><p>The recorded replies are actual outputs from fresh Luna agents at low reasoning, with no inherited conversation. They are displayed without shortening or rewriting. The complete requests, supplied follow-up context and response hashes are retained in the <a href="data/luna-transcripts.json" target="_blank" rel="noopener">transcript file</a>.</p><p>No memory-file reads occurred in the selected generation traces. Normal platform instructions still applied; these are not instruction-free model calls. Some requests include an operational instruction to answer in chat without using files or stored memory. This is preserved in the full request. These recordings illustrate individual outcomes, not a controlled comparison or a guarantee of how another model will reply.</p><p>Module feedback is written separately. Case continuations use fixed source findings and are labelled separately from Luna recordings. The module has not had faculty review.</p><p>The course PDF supplies kidney physiology only. AACOM, IES and the cited technical guidance support how to approach a study conversation. The clinical exercise condenses an official USMLE sample item.</p><p>Only completed step IDs are saved in your browser. Exercise choices stay in this tab and clear on reload. There are no AI requests, accounts, analytics or microphone features. The recorded HTML quiz runs locally in a sandboxed frame. Use fictional cases and permitted course excerpts in study tools; keep identifiable patient information out.</p>${Object.keys(sources).map(key => { const s = sources[key]; return `<section class="reference"><h2>${esc(s.title)}</h2><p>${esc(s.section)}</p>${s.url ? `<a href="${s.url}" target="_blank" rel="noopener noreferrer">Open source</a>` : '<p>The supplied lecture is private and is not uploaded with this module.</p>'}</section>`; }).join('')}<p><a href="https://github.com/ArvinZaker/flex_ai_education_module#references-and-claim-support" target="_blank" rel="noopener noreferrer">Design evidence and source quotations</a></p>${button('Back to learning', 'go', resume())}`;
-}
-function render(focusFeedback = false) {
-  current = null;
-  const [route = 'overview', raw = '0'] = location.hash.slice(1).split('/');
-  const index = Number(raw);
-  const partIndex = parts.findIndex(p => p.id === route);
-  let html;
-  if (partIndex >= 0 && Number.isInteger(index) && index >= 0 && index < parts[partIndex].units.length) html = lesson(partIndex,index);
-  else if (['before','after'].includes(route) && Number.isInteger(index) && index >= 0 && index < assessment.length) html = check(route,index);
-  else if (route === 'debrief') { if (!state.revealed) { go('apply/0'); return; } html = debrief(); }
-  else if (route === 'finish') html = finish();
-  else if (route === 'about') html = about();
-  else html = overview();
-  main.innerHTML = html;
-  document.querySelector('#progress-text').textContent = `${parts.filter(p => p.units.every(u => completed.has(u.id))).length} / ${parts.length} parts completed`;
-  document.querySelector('#navigation').innerHTML = `<a href="#overview">Start</a>${parts.map((p,i) => `<a href="#${p.id}/0" ${i === partIndex ? 'aria-current="step"' : ''}>${i+1}. ${esc(p.title)}</a>`).join('')}<a href="#finish">Your learning</a>`;
-  document.querySelector('.contents').open = false;
-  document.title = `${main.querySelector('h1').textContent} | Learning with AI`;
-  const target = focusFeedback ? document.querySelector('#feedback') : main;
-  target.focus({preventScroll:true});
-  if (focusFeedback) target.scrollIntoView({block:'center'}); else window.scrollTo(0,0);
-}
-document.addEventListener('click', event => {
-  const target = event.target.closest('[data-action]');
-  if (!target) return;
-  const { action, value } = target.dataset;
-  if (action === 'go') go(value);
-  else if (action === 'choose' && current) {
-    const index = Number(value); const {unit,mode} = current;
-    if (!unit.choices[index]) return;
-    (mode ? state[mode] : state.answers)[unit.id] = index;
-    if (mode && state.first[mode][unit.id] === undefined) state.first[mode][unit.id] = index;
-    render(true);
-  } else if (action === 'compare' && current) { delete state.answers[current.unit.id]; render(); }
-  else if (action === 'retry' && current) { delete (current.mode ? state[current.mode] : state.answers)[current.unit.id]; render(); }
-  else if (action === 'continue' && current) {
-    const { unit, mode, partIndex, unitIndex } = current;
-    if (!unit.choices[(mode ? state[mode] : state.answers)[unit.id]]?.correct) return;
-    if (mode) go(unitIndex < assessment.length-1 ? `${mode}/${unitIndex+1}` : mode === 'before' ? 'ask/0' : 'finish');
-    else {
-      completed.add(unit.id); save();
-      if (unit.id === 'case-uncertainty') { state.revealed = true; go('debrief'); }
-      else if (unitIndex < parts[partIndex].units.length-1) go(`${parts[partIndex].id}/${unitIndex+1}`);
-      else go(`${parts[partIndex+1].id}/0`);
-    }
-  } else if (action === 'reveal') { state.revealed = true; go('debrief'); }
-  else if (action === 'flip') { state.flipped = true; render(); }
-  else if (action === 'resource-answer') { state.resourceAnswer = value; render(); const result = document.querySelector('.resource .result'); result.focus(); result.scrollIntoView({block:'center'}); }
-  else if (action === 'resource-retry') { state.resourceAnswer = null; render(); }
+document.addEventListener('click',e=>{const b=e.target.closest('[data-action]');if(!b)return;const {action,value}=b.dataset;
+ if(action==='tab'||action==='go'){go(value);return;}
+ if(action==='choose'&&current?.q){const n=Number(value);if(!current.q.choices[n])return;answers[current.q.id]=n;render(true);}
+ else if(action==='retry'&&current?.q){delete answers[current.q.id];render();}
+ else if(action==='next'&&current){const {m,scene,sceneIndex,qIndex,q}=current;if(q&&answers[q.id]===undefined)return;if(qIndex<scene.questions.length-1)go(`${m.id}/${sceneIndex}/${qIndex+1}`);else{completed.add(scene.id);save();go(sceneIndex<m.scenes.length-1?`${m.id}/${sceneIndex+1}`:m.id+'/finish');}}
 });
-document.addEventListener('change', event => {
-  if (event.target.id === 'hint-mode') { state.hint = event.target.value; render(); document.querySelector('.case-tools').open = true; document.querySelector('#hint-mode').focus(); }
-  if (event.target.id === 'resource-format') { state.format = event.target.value; render(); document.querySelector('#resource-format').focus(); }
-});
-document.querySelector('#reset').addEventListener('click', () => { completed.clear(); save(); state.answers = {}; state.before = {}; state.after = {}; state.first = {before:{},after:{}}; state.revealed = false; state.hint = 'none'; state.flipped = false; state.resourceAnswer = null; go('overview'); });
-document.querySelector('[data-go="about"]').addEventListener('click', () => go('about'));
-document.querySelector('.skip').addEventListener('click', e => { e.preventDefault(); main.focus(); });
-window.addEventListener('hashchange', () => render());
-render();
+document.addEventListener('submit',e=>{if(e.target.id!=='note-form'||!current?.q)return;e.preventDefault();answers[current.q.id]=[...new FormData(e.target).getAll('note-error')].map(Number);render(true);});
+document.addEventListener('change',e=>{if(e.target.name==='note-error'&&current?.q)selections[current.q.id]=[...document.querySelectorAll('[name="note-error"]:checked')].map(x=>Number(x.value));});
+tabs.addEventListener('keydown',e=>{const list=[...tabs.querySelectorAll('[role="tab"]')];const i=list.indexOf(document.activeElement);if(i<0)return;let n;if(e.key==='ArrowRight')n=(i+1)%list.length;else if(e.key==='ArrowLeft')n=(i+list.length-1)%list.length;else if(e.key==='Home')n=0;else if(e.key==='End')n=list.length-1;else return;e.preventDefault();pendingTabFocus=modules[n].id;go(modules[n].id);});
+document.querySelector('#reset').addEventListener('click',()=>{for(const s of activeModule.scenes){completed.delete(s.id);for(const q of s.questions){delete answers[q.id];delete selections[q.id];}}save();go(activeModule.id);});
+document.querySelector('#about').addEventListener('click',()=>go(activeModule.id+'/sources'));
+document.querySelector('.skip').addEventListener('click',e=>{e.preventDefault();main.focus();});
+window.addEventListener('hashchange',()=>render());render();
