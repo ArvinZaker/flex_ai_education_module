@@ -436,3 +436,11 @@ legend { font-size: 1.15rem; font-weight: 600; line-height: 1.5; margin-bottom: 
 .equity-comparison { background: #edf2eb; padding: 20px; border-radius: 7px; margin: 24px 0; }
 .equity-comparison p { font-size: .9rem; }.equity-comparison td,.equity-comparison th { overflow-wrap: anywhere; }
 @media(max-width:600px){.writing-comparison { grid-template-columns: 1fr; }.dialogue-turn.student-turn { margin-left: 12px; }.dialogue-turn { padding: 16px; }}
+
+.teaching { margin: 28px 0 34px; padding: 22px 24px; background: #edf2eb; border-radius: 8px; }
+.teaching h2 { font-size: 1.3rem; }.teaching .eyebrow { margin: 0 0 8px; }
+.teaching p:last-child { margin-bottom: 0; }.application { color: var(--muted); }
+.scenario { border-top: 1px solid var(--line); padding-top: 24px; margin-bottom: 30px; }
+.scenario>h2 { margin-bottom: 24px; }.scenario .dialogue { margin: 16px 0; }
+.learning-route { font-weight: 600; }
+@media(max-width:600px){.teaching { padding: 18px; }}

@@ -228,7 +228,12 @@ window.COURSE = {
               ]
             }
           ],
-          "reading": []
+          "reading": [],
+          "teaching": {
+            "title": "Give the model a useful task",
+            "explanation": "Start with the learning problem: do you need to organize facts, understand a mechanism or practise applying it? Specify the topic, your level and the output you need. For a comparison, name the columns that would help you connect ideas.",
+            "application": "In the next scene, decide which follow-up would help Alex turn a list of causes into an organized explanation."
+          }
         },
         {
           "id": "education-scene-2",
@@ -405,7 +410,12 @@ window.COURSE = {
               ]
             }
           ],
-          "reading": []
+          "reading": [],
+          "teaching": {
+            "title": "Ask about the missing link",
+            "explanation": "When an explanation skips a step, name the step you cannot explain. Ask the model to connect cause, mechanism and effect at your level, rather than simply requesting more detail.",
+            "application": "Here, aldosterone is the hormone and the kidney is the site of action. Alex needs the connection between sodium handling, potassium loss and blood pressure."
+          }
         },
         {
           "id": "education-scene-3",
@@ -596,7 +606,12 @@ window.COURSE = {
               ]
             }
           ],
-          "reading": []
+          "reading": [],
+          "teaching": {
+            "title": "Check a claim that sounds certain",
+            "explanation": "A fluent answer can contain an incorrect conclusion. Identify the exact claim, compare it with a reliable source and ask for a correction that explains what changed. Asking the model to reconsider is useful, but the revised answer still needs verification.",
+            "application": "Watch how the chatbot uses a normal laboratory result to make a strong claim. Decide whether that conclusion is supported."
+          }
         },
         {
           "id": "education-scene-4",
@@ -765,7 +780,12 @@ window.COURSE = {
               ]
             }
           ],
-          "reading": []
+          "reading": [],
+          "teaching": {
+            "title": "Ask for retrieval before explanation",
+            "explanation": "Reading an answer can feel familiar without showing that you can produce it yourself. To practise recall, ask for one question at a time, answer before seeing the explanation and request feedback on your attempt.",
+            "application": "The next decisions move from choosing a quiz prompt to answering a case. Keep the answer hidden until you have tried."
+          }
         },
         {
           "id": "education-scene-5",
@@ -1091,7 +1111,12 @@ window.COURSE = {
               ]
             }
           ],
-          "reading": []
+          "reading": [],
+          "teaching": {
+            "title": "Separate a possibility from a conclusion",
+            "explanation": "A reasoning conversation should identify relevant findings, missing information and alternatives. Ask what supports a possibility and what evidence would change it. A model’s confident diagnosis does not supply the missing evidence.",
+            "application": "Consider whether the reply uses the available findings carefully or jumps ahead to a diagnosis and investigation."
+          }
         }
       ],
       "summary": [],
@@ -1108,6 +1133,10 @@ window.COURSE = {
           "title": "Carey et al.: Resistant Hypertension, AHA scientific statement (2018)",
           "url": "https://doi.org/10.1161/HYP.0000000000000084"
         }
+      ],
+      "background": [
+        "A chatbot generates a response to the instructions and context you provide. A useful learning request says what you already understand, where you are stuck and what you want to do next.",
+        "Here you will practise organizing information, asking about mechanisms, checking claims and testing your own understanding. The hypertension examples give you a concrete topic to work with; the skill is deciding how to direct and evaluate the conversation."
       ]
     },
     {
@@ -1280,7 +1309,12 @@ window.COURSE = {
               ]
             }
           ],
-          "reading": []
+          "reading": [],
+          "teaching": {
+            "title": "Understand the tool before using it",
+            "explanation": "An ambient scribe listens to an encounter and produces a draft. Before use, establish whether that particular system and your role are permitted in the setting, who supervises it and how consent will be obtained.",
+            "application": "Alex is a fourth-year student on an elective. Apply the stated rules to this fictional placement."
+          }
         },
         {
           "id": "scribes-scene-2",
@@ -1426,7 +1460,12 @@ window.COURSE = {
               ]
             }
           ],
-          "reading": []
+          "reading": [],
+          "teaching": {
+            "title": "Explain consent in concrete terms",
+            "explanation": "A patient needs to understand what the tool does, how information is processed, who may access it and whether audio is retained. Describe the actual system; do not replace those answers with a general promise that it is secure.",
+            "application": "Read Mr. Patel’s questions, then choose a response that answers them and preserves his choice."
+          }
         },
         {
           "id": "scribes-scene-3",
@@ -1634,7 +1673,12 @@ window.COURSE = {
               "text": "Repeat blood pressure in four weeks.",
               "heading": false
             }
-          ]
+          ],
+          "teaching": {
+            "title": "Review against what actually happened",
+            "explanation": "Read the encounter before judging the draft. Track symptoms, medication use, examinations and the agreed plan. A statement belongs in the note only if it accurately reflects the encounter.",
+            "application": "This scene gives you both the consultation and the draft. Compare them now; the next scene asks you to identify the discrepancies."
+          }
         },
         {
           "id": "scribes-scene-4",
@@ -1749,7 +1793,12 @@ window.COURSE = {
               ]
             }
           ],
-          "reading": []
+          "reading": [],
+          "teaching": {
+            "title": "Look for additions, omissions and changed meaning",
+            "explanation": "A documentation error can be a missing symptom, a softened description of missed doses, an examination that was not performed or a plan that was not agreed. An accurate statement should remain in the note.",
+            "application": "Use the encounter as your reference and evaluate each checkbox independently."
+          }
         },
         {
           "id": "scribes-scene-5",
@@ -1896,7 +1945,12 @@ window.COURSE = {
               ]
             }
           ],
-          "reading": []
+          "reading": [],
+          "teaching": {
+            "title": "Review before authenticating",
+            "explanation": "Finding errors is only the start: they must be corrected before the note is authenticated. Using a scribe also does not automatically authorize other uses of a general-purpose chatbot.",
+            "application": "Apply the responsibilities and student-documentation rules stated in this story."
+          }
         },
         {
           "id": "scribes-scene-6",
@@ -2007,7 +2061,12 @@ window.COURSE = {
               ]
             }
           ],
-          "reading": []
+          "reading": [],
+          "teaching": {
+            "title": "Respect a patient’s decision",
+            "explanation": "Consent includes the option to decline. If the patient does not want the tool used, the team needs another way to document the encounter. A busy clinic does not answer the patient’s concern.",
+            "application": "Choose how the team should respond when a second patient says no."
+          }
         }
       ],
       "summary": [
@@ -2128,6 +2187,10 @@ window.COURSE = {
           "title": "University of British Columbia. Generative Artificial Intelligence and Academic Integrity.",
           "url": "https://academicintegrity.ubc.ca/genai/"
         }
+      ],
+      "background": [
+        "An ambient AI scribe processes a clinical conversation into a draft note. A draft can sound fluent while changing what was said, omitting important details or documenting an examination that never happened.",
+        "You will follow a fictional consultation from permission and consent to reviewing the note. Compare each statement with the encounter, then decide what needs correcting and who must review it."
       ]
     },
     {
@@ -2362,7 +2425,12 @@ window.COURSE = {
               ]
             }
           ],
-          "reading": []
+          "reading": [],
+          "teaching": {
+            "title": "Use an overview as a starting point",
+            "explanation": "A chatbot’s summary can help you learn vocabulary and draft search concepts. A reproducible search records where and how studies were sought so another researcher can repeat it. A plausible list of papers is not that search record.",
+            "application": "Decide how Alex should move from a general overview to finding the evidence systematically."
+          }
         },
         {
           "id": "research-scene-2",
@@ -2571,7 +2639,12 @@ window.COURSE = {
               ]
             }
           ],
-          "reading": []
+          "reading": [],
+          "teaching": {
+            "title": "Define what question the review answers",
+            "explanation": "PICO means population, intervention, comparator and outcomes. Define those elements before deciding which studies belong together. Similar-sounding outcomes can measure different things.",
+            "application": "Look for where the proposed plan changes Alex’s population or combines outcomes that need separate consideration."
+          }
         },
         {
           "id": "research-scene-3",
@@ -2736,7 +2809,12 @@ window.COURSE = {
               ]
             }
           ],
-          "reading": []
+          "reading": [],
+          "teaching": {
+            "title": "Trace every extracted result to its source",
+            "explanation": "Screening decides whether a study meets the review criteria; extraction records what the included study actually reports. Check the population, outcome definition, estimate and uncertainty against the original paper.",
+            "application": "A composite outcome combines more than one type of event. Check whether the chatbot has mistaken a composite result for one component."
+          }
         },
         {
           "id": "research-scene-4",
@@ -2968,7 +3046,12 @@ window.COURSE = {
               ]
             }
           ],
-          "reading": []
+          "reading": [],
+          "teaching": {
+            "title": "Match the analysis to the outcome",
+            "explanation": "Time-to-event outcomes describe when events happen; continuous outcomes describe measured quantities. Before combining estimates, check that the outcome definitions, effect measures and study populations answer a compatible question.",
+            "application": "Assess the chatbot’s reasoning about the analysis before accepting its suggested model."
+          }
         },
         {
           "id": "research-scene-5",
@@ -3353,7 +3436,12 @@ window.COURSE = {
               ]
             }
           ],
-          "reading": []
+          "reading": [],
+          "teaching": {
+            "title": "Treat generated code as a draft",
+            "explanation": "Code that runs has passed an execution check, not a scientific check. Inspect what each input represents, the units or scale used and whether the calculation matches the intended analysis. Compare a worked result with the original data.",
+            "application": "Alex’s code produces a plot. Look for the check that is still needed before trusting it."
+          }
         },
         {
           "id": "research-scene-6",
@@ -3525,7 +3613,12 @@ window.COURSE = {
               ]
             }
           ],
-          "reading": []
+          "reading": [],
+          "teaching": {
+            "title": "Give writing help verified material",
+            "explanation": "For editing, supply your own findings and specify the changes you want: clearer wording, organization or grammar. Ask the model to preserve the results and their uncertainty, then compare the revision with the original.",
+            "application": "Decide how Alex can get writing help without letting the chatbot invent the review’s findings."
+          }
         },
         {
           "id": "research-scene-7",
@@ -3662,7 +3755,12 @@ window.COURSE = {
               ]
             }
           ],
-          "reading": []
+          "reading": [],
+          "teaching": {
+            "title": "Keep a record of AI assistance",
+            "explanation": "Record which tasks used AI and what the researcher checked. Disclosure should describe the actual use and follow the relevant submission requirements. It does not replace responsibility for the work.",
+            "application": "Help Alex prepare an accurate account of the assistance used in this project."
+          }
         }
       ],
       "summary": [
@@ -3794,6 +3892,10 @@ window.COURSE = {
           "title": "International Committee of Medical Journal Editors. Recommendations: Use of Artificial Intelligence in Publishing.",
           "url": "https://www.icmje.org/recommendations/browse/artificial-intelligence/"
         }
+      ],
+      "background": [
+        "A systematic review answers a defined research question using explicit methods for finding, selecting and evaluating studies. AI can help draft search terms, organize information and suggest code, but each output needs checking against the sources and the research plan.",
+        "Alex is studying SGLT2 inhibitors, a class of medicines, in heart failure with preserved ejection fraction (HFpEF). You do not need to know these trials beforehand: focus on how Alex checks the question, evidence, calculations and wording."
       ]
     },
     {
@@ -3936,7 +4038,12 @@ window.COURSE = {
               ]
             }
           ],
-          "reading": []
+          "reading": [],
+          "teaching": {
+            "title": "Follow the whole screening pathway",
+            "explanation": "A screening service needs image capture, a result, communication with the patient and a route to further assessment. Bringing a camera closer to home addresses one part of that pathway.",
+            "application": "Meet the clinic and consider what the system is intended to do before judging its benefits."
+          }
         },
         {
           "id": "ethics-scene-2",
@@ -4099,7 +4206,12 @@ window.COURSE = {
               ]
             }
           ],
-          "reading": []
+          "reading": [],
+          "teaching": {
+            "title": "Interpret a screening result carefully",
+            "explanation": "A referral recommendation means further assessment is needed. Sensitivity describes the proportion of people with the target condition who test positive; it is not the probability that a particular positive result is correct.",
+            "application": "Apply that distinction to Mr. Singh’s result and the performance question that follows."
+          }
         },
         {
           "id": "ethics-scene-3",
@@ -4215,7 +4327,12 @@ window.COURSE = {
               ]
             }
           ],
-          "reading": []
+          "reading": [],
+          "teaching": {
+            "title": "Distinguish no result from a negative result",
+            "explanation": "An ungradable image cannot support a reliable screening interpretation. It does not establish that the eye is healthy. The patient still needs an appropriate next step in the care pathway.",
+            "application": "Consider how to explain the result when repeated photographs remain ungradable."
+          }
         },
         {
           "id": "ethics-scene-4",
@@ -4361,7 +4478,12 @@ window.COURSE = {
               ]
             }
           ],
-          "reading": []
+          "reading": [],
+          "teaching": {
+            "title": "Ask who benefits and who is missed",
+            "explanation": "An overall performance number can conceal differences between groups. Consider image quality, diagnostic performance, access to screening and completion of follow-up. The story’s observation is a reason to investigate, not enough by itself to prove bias.",
+            "application": "Compare what the clinic knows with the additional evidence needed to judge equity."
+          }
         },
         {
           "id": "ethics-scene-5",
@@ -4527,7 +4649,12 @@ window.COURSE = {
               ]
             }
           ],
-          "reading": []
+          "reading": [],
+          "teaching": {
+            "title": "Check how information will be used",
+            "explanation": "Explain where images and other information go, who can access them, how long they are kept and whether secondary use is permitted. Those answers depend on the actual platform and arrangements.",
+            "application": "Ms. Williams asks about company reuse. Choose how to respond when the team has not yet established the answer."
+          }
         },
         {
           "id": "ethics-scene-6",
@@ -4698,7 +4825,12 @@ window.COURSE = {
               ]
             }
           ],
-          "reading": []
+          "reading": [],
+          "teaching": {
+            "title": "Check whether a referral is reachable",
+            "explanation": "A referral can be clinically appropriate and still be difficult to complete. Travel time, transport and lost wages affect whether someone can attend. Ask what support connects the screening result to care.",
+            "application": "Mr. Singh wants to attend. Identify the barrier rather than assuming that non-attendance means refusal."
+          }
         },
         {
           "id": "ethics-scene-7",
@@ -4874,7 +5006,12 @@ window.COURSE = {
               ]
             }
           ],
-          "reading": []
+          "reading": [],
+          "teaching": {
+            "title": "Judge the service by what happens next",
+            "explanation": "Counts of people screened describe activity. To assess benefit, also examine whether indicated follow-up happens, how promptly it happens and who encounters barriers. A percentage needs a clear numerator, denominator and reporting period.",
+            "application": "Use the fictional program’s numbers to decide what its results establish and what remains unresolved."
+          }
         }
       ],
       "summary": [
@@ -4998,6 +5135,10 @@ window.COURSE = {
           "title": "Ontario Health. Teleophthalmology. Example of a Canadian community-based retinal screening and specialist referral pathway.",
           "url": "https://www.ontariohealth.ca/digital/programs-services/econsult/teleophthalmology"
         }
+      ],
+      "background": [
+        "Screening looks for people who may need further assessment. In this story, a clinic takes retinal photographs and uses an AI system to help identify patients who need follow-up for diabetic eye disease. A screening result is one step in a care pathway.",
+        "You will consider what results mean, what happens when images cannot be interpreted, how patient information is handled and whether people can obtain follow-up. The story connects technical performance with the patient’s actual experience."
       ]
     }
   ]

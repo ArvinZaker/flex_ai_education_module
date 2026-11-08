@@ -65,3 +65,11 @@ A later comparison with the source instructions found that the initial four-tab 
 The ethics module now shows the initial screening journey, positive and ungradable screening-result cards, and a qualitative comparison based on the source's observation about older patients with cataracts. The outline supplies no numeric subgroup performance or access rates; the display identifies those as missing instead of fabricating a comparison dataset. The later four-hour referral barrier and fictional program dashboard remain in place.
 
 The saved presentation changes passed all 129 existing answer outcomes and 27 responsive views, plus focused checks of the requested visible examples and five additional phone-width views. Writing, conversation and equity screenshots were inspected. These corrections improve alignment with the written design; actual student usability feedback and faculty review remain outstanding.
+
+## Learn, then apply
+
+Each module now explains its purpose and key terms before the activities. Each of the 25 scenes begins with a short teaching passage and a concrete instruction for applying it. These passages summarize the supplied outline; they are newly written teaching copy, not quotations or recorded AI answers. The original scene scripts, references, choices and answer keys are unchanged.
+
+The full pre-decision scene is visible in the main flow. Dialogue keeps its speaker labels, AI replies and illustrative code remain visible, and the post-answer continuation is expanded by default. References stay available separately. This is a presentation change requested by the user, not a claim that the revised course has undergone learner validation.
+
+For research teaching, the checked Cochrane Handbook chapter 5, Key Points, calls for data that “faithfully represent the source”; this supports checking extractions against the actual report. ICMJE, Use of Artificial Intelligence in Publishing, states that “humans are ultimately responsible” for reviewing AI-assisted content. These passages support source checking and researcher responsibility, not any new numerical threshold or assessment method. Existing module references and the offline outline retain the broader content provenance.
