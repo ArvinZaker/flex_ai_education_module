@@ -57,3 +57,11 @@ Twenty-seven representative views passed at 375, 768 and 1440 pixels with no pag
 Pre-publication checks found and corrected keyboard focus being overwritten during route rendering, missing empty follow-up fields in four multi-question scenes, and an early return hiding the code viewer. The first attempted text replacement for the code viewer did not apply; an exact patch was then saved and the viewer was checked directly before the passing full walkthrough. None of those drafts was published.
 
 Syntax and whitespace checks passed. Archive and offline-copy hashes were checked separately. The full planning document remains local and ignored by Git.
+
+## Presentation check against the supplied design
+
+A later comparison with the source instructions found that the initial four-tab adaptation matched the topics and decisions but hid several core story elements inside expanders. The main flow now shows Alex's and patients' source dialogue, the education module's organized table/mechanism/corrected reply, the research PICO framework with supervisor decisions, and the original-versus-edited writing comparison. The formula correction follows the answer explanation.
+
+The ethics module now shows the initial screening journey, positive and ungradable screening-result cards, and a qualitative comparison based on the source's observation about older patients with cataracts. The outline supplies no numeric subgroup performance or access rates; the display identifies those as missing instead of fabricating a comparison dataset. The later four-hour referral barrier and fictional program dashboard remain in place.
+
+The saved presentation changes passed all 129 existing answer outcomes and 27 responsive views, plus focused checks of the requested visible examples and five additional phone-width views. Writing, conversation and equity screenshots were inspected. These corrections improve alignment with the written design; actual student usability feedback and faculty review remain outstanding.

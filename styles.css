@@ -425,3 +425,14 @@ legend { font-size: 1.15rem; font-weight: 600; line-height: 1.5; margin-bottom: 
 @media(max-width:600px){.module-tabs { padding: 16px 22px 0; grid-template-columns: repeat(2,minmax(0,1fr)); }.module-tabs button { font-size: .83rem; min-height: 76px; padding: 12px; }.journey { grid-template-columns: 1fr; }.dashboard>div { grid-template-columns: 1fr; }.dashboard>div p { display: flex; align-items: center; gap: 16px; margin: 0; }.dashboard strong { font-size: 1.5rem; min-width: 90px; }.clinical-note { padding: 18px; }}
 .incorrect-code { border-left: 3px solid #a44936; background: #f9eeea; }
 .correct-code { border-left: 3px solid #2d7045; background: #e9f4e9; }
+.dialogue { display: grid; gap: 12px; margin: 24px 0; }
+.dialogue-turn { padding: 16px 20px; border-radius: 8px; background: #edf2eb; border: 1px solid var(--line); }
+.dialogue-turn.student-turn { background: white; margin-left: 24px; }
+.dialogue-turn .chat-label { margin-bottom: 6px; }
+.featured-continuation,.formula-check { margin: 26px 0; padding-top: 20px; border-top: 1px solid var(--line); }
+.writing-comparison { display: grid; grid-template-columns: repeat(2,minmax(0,1fr)); gap: 16px; }
+.writing-comparison article { border: 1px solid var(--line); border-radius: 7px; padding: 18px; background: white; }
+.writing-comparison h3 { font-size: .95rem; }.writing-comparison p { font-size: .92rem; }
+.equity-comparison { background: #edf2eb; padding: 20px; border-radius: 7px; margin: 24px 0; }
+.equity-comparison p { font-size: .9rem; }.equity-comparison td,.equity-comparison th { overflow-wrap: anywhere; }
+@media(max-width:600px){.writing-comparison { grid-template-columns: 1fr; }.dialogue-turn.student-turn { margin-left: 12px; }.dialogue-turn { padding: 16px; }}
