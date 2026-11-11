@@ -463,19 +463,53 @@ legend { font-size: 1.15rem; font-weight: 600; line-height: 1.5; margin-bottom: 
 .continuation { margin:28px 0; }.continuation>h2 { font-size:1.2rem; }
 .conversation .table-wrap table { min-width: 680px; }.conversation .table-wrap th,.conversation .table-wrap td { overflow-wrap: normal; word-break: normal; }
 
-#progress {
-  flex:1;
-  height:8px;
-  border:0;
-  border-radius:4px;
-  background:var(--line);
-  appearance:none}
-#progress::-webkit-progress-bar {
-  background:var(--line);
-  border-radius:4px}
-#progress::-webkit-progress-value {
+.scene-tabs {
+  position:relative;
+  max-width:1020px;
+  margin:0 auto;
+  padding:8px 32px 0;
+  display:flex;
+  gap:8px;
+  overflow-x:auto}
+.scene-tabs button {
+  flex:1 1 0;
+  min-width:120px;
+  min-height:48px;
+  display:flex;
+  align-items:center;
+  gap:8px;
+  text-align:left;
+  padding:8px 10px;
+  border:1px solid var(--line);
+  border-radius:6px;
+  background:transparent;
+  color:inherit;
+  font:inherit;
+  font-size:.8rem;
+  cursor:pointer}
+.scene-tabs button:first-child {
+  flex:0 0 auto;
+  min-width:0}
+.scene-tabs button[aria-current="page"] {
   background:var(--green);
-  border-radius:4px}
-#progress::-moz-progress-bar {
-  background:var(--green);
-  border-radius:4px}
+  border-color:var(--green);
+  color:white;
+  font-weight:600}
+.scene-tabs .done[aria-current="page"] .tab-number {
+  color:white}
+main {
+  padding-top:32px}
+.visually-hidden {
+  position:absolute;
+  width:1px;
+  height:1px;
+  overflow:hidden;
+  clip:rect(0 0 0 0);
+  white-space:nowrap}
+.scene-tabs .done .tab-number {
+  color:var(--green);
+  font-weight:700}
+@media(max-width:600px){.scene-tabs {
+  padding:8px 22px 0}
+.scene-tabs button {
+  flex:0 0 150px}}
