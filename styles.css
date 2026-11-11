@@ -464,32 +464,29 @@ legend { font-size: 1.15rem; font-weight: 600; line-height: 1.5; margin-bottom: 
 .conversation .table-wrap table { min-width: 680px; }.conversation .table-wrap th,.conversation .table-wrap td { overflow-wrap: normal; word-break: normal; }
 
 .scene-tabs {
-  position:relative;
   max-width:1020px;
   margin:0 auto;
   padding:8px 32px 0;
-  display:flex;
-  gap:8px;
-  overflow-x:auto}
+  display:grid;
+  grid-auto-flow:column;
+  grid-auto-columns:minmax(0,1fr);
+  gap:8px}
 .scene-tabs button {
-  flex:1 1 0;
-  min-width:120px;
-  min-height:48px;
+  min-height:44px;
   display:flex;
   align-items:center;
-  gap:8px;
-  text-align:left;
-  padding:8px 10px;
+  justify-content:center;
+  gap:6px;
+  text-align:center;
+  padding:6px 8px;
   border:1px solid var(--line);
   border-radius:6px;
   background:transparent;
   color:inherit;
   font:inherit;
-  font-size:.8rem;
+  font-size:.82rem;
+  line-height:1.2;
   cursor:pointer}
-.scene-tabs button:first-child {
-  flex:0 0 auto;
-  min-width:0}
 .scene-tabs button[aria-current="page"] {
   background:var(--green);
   border-color:var(--green);
@@ -510,6 +507,6 @@ main {
   color:var(--green);
   font-weight:700}
 @media(max-width:600px){.scene-tabs {
-  padding:8px 22px 0}
-.scene-tabs button {
-  flex:0 0 150px}}
+  padding:8px 22px 0;
+  grid-auto-flow:row;
+  grid-template-columns:repeat(4,minmax(0,1fr))}}
