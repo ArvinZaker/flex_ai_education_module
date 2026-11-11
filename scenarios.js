@@ -790,7 +790,7 @@ window.COURSE = {
         {
           "id": "education-scene-5",
           "title": "AI as a Clinical Reasoning Partner — Not a Decision-Maker",
-          "intro": "A fictional 32-year-old man has repeated clinic blood pressures around 165/100 mmHg, potassium 4.2 mmol/L and creatinine 85 µmol/L. He takes no medications and reports no significant symptoms. The chatbot jumps to primary aldosteronism and adrenal imaging.",
+          "intro": "A 32-year-old man has repeated clinic blood pressures around 165/100 mmHg, potassium 4.2 mmol/L and creatinine 85 µmol/L. He takes no medications and reports no significant symptoms. The chatbot jumps to primary aldosteronism and adrenal imaging.",
           "questions": [
             {
               "id": "education-5-1",
@@ -1020,7 +1020,7 @@ window.COURSE = {
                 },
                 {
                   "type": "text",
-                  "text": "The group is discussing a fictional patient:",
+                  "text": "The group is discussing a patient:",
                   "heading": false
                 },
                 {
@@ -1143,7 +1143,7 @@ window.COURSE = {
       "id": "scribes",
       "label": "AI Scribes",
       "title": "From patient encounter to clinical note",
-      "description": "Join Alex on a fourth-year rural elective. Check the rules, discuss consent and compare a fictional consultation with an AI-generated draft note.",
+      "description": "Join Alex on a fourth-year rural elective. Check the rules, discuss consent and compare a consultation with an AI-generated draft note.",
       "duration": "Estimated 12–15 minutes",
       "sourceTab": "t.ldpzup5a7j34",
       "objectives": [
@@ -1313,13 +1313,13 @@ window.COURSE = {
           "teaching": {
             "title": "Understand the tool before using it",
             "explanation": "An ambient scribe listens to an encounter and produces a draft. Before use, establish whether that particular system and your role are permitted in the setting, who supervises it and how consent will be obtained.",
-            "application": "Alex is a fourth-year student on an elective. Apply the stated rules to this fictional placement."
+            "application": "Alex is a fourth-year student on an elective. Apply the stated rules to this placement."
           }
         },
         {
           "id": "scribes-scene-2",
           "title": "Before the Scribe Starts Listening",
-          "intro": "Fictional patient Mr. Patel asks who can access the conversation and what happens to the recording. Consent needs an explanation of this specific system.",
+          "intro": "Mr. Patel asks who can access the conversation and what happens to the recording. Consent needs an explanation of this specific system.",
           "questions": [
             {
               "id": "scribes-2-1",
@@ -1434,7 +1434,7 @@ window.COURSE = {
                 },
                 {
                   "type": "text",
-                  "text": "The first patient is Mr. Patel, a fictional 58-year-old man attending a follow-up appointment for hypertension and type 2 diabetes.",
+                  "text": "The first patient is Mr. Patel, a 58-year-old man attending a follow-up appointment for hypertension and type 2 diabetes.",
                   "heading": false
                 },
                 {
@@ -1470,7 +1470,7 @@ window.COURSE = {
         {
           "id": "scribes-scene-3",
           "title": "The Patient Encounter",
-          "intro": "Compare the fictional encounter with the draft below. Keep track of symptoms, missed medication doses, examinations and the plan that was actually discussed.",
+          "intro": "Compare the encounter with the draft below. Keep track of symptoms, missed medication doses, examinations and the plan that was actually discussed.",
           "questions": [],
           "reading": [
             {
@@ -1486,11 +1486,6 @@ window.COURSE = {
             {
               "type": "text",
               "text": "Dr. Chen begins the appointment while Alex observes.",
-              "heading": false
-            },
-            {
-              "type": "text",
-              "text": "The following is a fictional, simulated encounter. No real patient information is used.",
               "heading": false
             },
             {
@@ -2190,7 +2185,7 @@ window.COURSE = {
       ],
       "background": [
         "An ambient AI scribe processes a clinical conversation into a draft note. A draft can sound fluent while changing what was said, omitting important details or documenting an examination that never happened.",
-        "You will follow a fictional consultation from permission and consent to reviewing the note. Compare each statement with the encounter, then decide what needs correcting and who must review it."
+        "You will follow a consultation from permission and consent to reviewing the note. Compare each statement with the encounter, then decide what needs correcting and who must review it."
       ]
     },
     {
@@ -3330,7 +3325,7 @@ window.COURSE = {
                 },
                 {
                   "type": "text",
-                  "text": "# Fictional values for teaching only",
+                  "text": "# Example values",
                   "heading": false
                 },
                 {
@@ -3902,7 +3897,7 @@ window.COURSE = {
       "id": "ethics",
       "label": "AI Ethics, Privacy, and Health Equity",
       "title": "When detection does not mean access",
-      "description": "Follow Alex through a fictional rural BC eye-screening program. Interpret results, consider privacy and discover why a referral does not guarantee access to care.",
+      "description": "Follow Alex through a rural BC eye-screening program. Interpret results, consider privacy and discover why a referral does not guarantee access to care.",
       "duration": "Estimated 15–20 minutes",
       "sourceTab": "t.j42zwwf8yssh",
       "objectives": [
@@ -3917,7 +3912,7 @@ window.COURSE = {
         {
           "id": "ethics-scene-1",
           "title": "Bringing Eye Screening Closer to Home",
-          "intro": "A fictional rural clinic can take retinal photographs locally. A hypothetical authorized AI screening system identifies people who may need further assessment.",
+          "intro": "A rural clinic can take retinal photographs locally. An authorized AI screening system identifies people who may need further assessment.",
           "questions": [
             {
               "id": "ethics-1-1",
@@ -4002,7 +3997,7 @@ window.COURSE = {
                 },
                 {
                   "type": "text",
-                  "text": "The clinic uses a hypothetical, appropriately authorized AI screening system. Its specific capabilities and limitations are documented, and staff have been trained to use it.",
+                  "text": "The clinic uses an appropriately authorized AI screening system. Its specific capabilities and limitations are documented, and staff have been trained to use it.",
                   "heading": false
                 },
                 {
@@ -4048,7 +4043,7 @@ window.COURSE = {
         {
           "id": "ethics-scene-2",
           "title": "A Positive Screening Result",
-          "intro": "Fictional patient Mr. Singh receives a “referral recommended” result. Consider what that result means, then interpret a sensitivity value.",
+          "intro": "Mr. Singh receives a “referral recommended” result. Consider what that result means, then interpret a sensitivity value.",
           "questions": [
             {
               "id": "ethics-2-1",
@@ -4086,7 +4081,7 @@ window.COURSE = {
                 },
                 {
                   "type": "text",
-                  "text": "Alex meets Mr. Singh, a fictional 63-year-old patient with type 2 diabetes who has not had retinal screening in several years.",
+                  "text": "Alex meets Mr. Singh, a 63-year-old patient with type 2 diabetes who has not had retinal screening in several years.",
                   "heading": false
                 },
                 {
@@ -4337,7 +4332,7 @@ window.COURSE = {
         {
           "id": "ethics-scene-4",
           "title": "Does the AI Work Equally Well for Everyone?",
-          "intro": "The fictional clinic observes more ungradable images among older patients with cataracts. Overall performance cannot answer whether everyone can access and benefit from the service.",
+          "intro": "The clinic observes more ungradable images among older patients with cataracts. Overall performance cannot answer whether everyone can access and benefit from the service.",
           "questions": [
             {
               "id": "ethics-4-1",
@@ -4405,7 +4400,7 @@ window.COURSE = {
                 },
                 {
                   "type": "text",
-                  "text": "These are potential mechanisms, not proof that the fictional screening system is biased.",
+                  "text": "These are potential mechanisms, not proof that the screening system is biased.",
                   "heading": false
                 },
                 {
@@ -4835,7 +4830,7 @@ window.COURSE = {
         {
           "id": "ethics-scene-7",
           "title": "Is the AI Program Actually Successful?",
-          "intro": "The fictional program screened 400 people. Of 60 referral-recommended results, 24 patients completed specialist follow-up and 36 had not by the reporting date. Consider what success should mean.",
+          "intro": "The program screened 400 people. Of 60 referral-recommended results, 24 patients completed specialist follow-up and 36 had not by the reporting date. Consider what success should mean.",
           "questions": [
             {
               "id": "ethics-7-1",
@@ -4950,7 +4945,7 @@ window.COURSE = {
                 },
                 {
                   "type": "text",
-                  "text": "Fictional program results",
+                  "text": "Program results",
                   "heading": true
                 },
                 {
@@ -4985,7 +4980,7 @@ window.COURSE = {
                 },
                 {
                   "type": "text",
-                  "text": "All figures are fictional and used only for this educational scenario. Follow-up completion depends partly on the time elapsed and the urgency of the referral.",
+                  "text": "Follow-up completion depends partly on the time elapsed and the urgency of the referral.",
                   "heading": false
                 },
                 {
@@ -5010,7 +5005,7 @@ window.COURSE = {
           "teaching": {
             "title": "Judge the service by what happens next",
             "explanation": "Counts of people screened describe activity. To assess benefit, also examine whether indicated follow-up happens, how promptly it happens and who encounters barriers. A percentage needs a clear numerator, denominator and reporting period.",
-            "application": "Use the fictional program’s numbers to decide what its results establish and what remains unresolved."
+            "application": "Use the program’s numbers to decide what its results establish and what remains unresolved."
           }
         }
       ],

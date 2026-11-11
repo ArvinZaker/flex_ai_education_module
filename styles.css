@@ -462,3 +462,20 @@ legend { font-size: 1.15rem; font-weight: 600; line-height: 1.5; margin-bottom: 
 .decision { scroll-margin-top:24px; }.decision:focus { outline:none; }
 .continuation { margin:28px 0; }.continuation>h2 { font-size:1.2rem; }
 .conversation .table-wrap table { min-width: 680px; }.conversation .table-wrap th,.conversation .table-wrap td { overflow-wrap: normal; word-break: normal; }
+
+#progress {
+  flex:1;
+  height:8px;
+  border:0;
+  border-radius:4px;
+  background:var(--line);
+  appearance:none}
+#progress::-webkit-progress-bar {
+  background:var(--line);
+  border-radius:4px}
+#progress::-webkit-progress-value {
+  background:var(--green);
+  border-radius:4px}
+#progress::-moz-progress-bar {
+  background:var(--green);
+  border-radius:4px}
