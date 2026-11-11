@@ -508,11 +508,11 @@ legend { font-size: 1.15rem; font-weight: 600; line-height: 1.5; margin-bottom: 
   margin:0 auto;
   padding:8px 32px 0;
   display:grid;
-  grid-auto-flow:column;
-  grid-auto-columns:minmax(0,1fr);
+  grid-template-columns:repeat(8,minmax(0,1fr));
   gap:8px}
 .scene-tabs button {
-  min-height:44px;
+  height:52px;
+  overflow:hidden;
   display:flex;
   align-items:center;
   justify-content:center;
@@ -548,8 +548,14 @@ main {
   font-weight:700}
 @media(max-width:600px){.scene-tabs {
   padding:8px 22px 0;
-  grid-auto-flow:row;
-  grid-template-columns:repeat(4,minmax(0,1fr))}}
+  grid-template-columns:repeat(4,minmax(0,1fr))}
+.scene-tabs button {
+  padding:4px 6px;
+  font-size:.78rem}
+.scene-tabs .tab-number {
+  display:none}
+.scene-tabs .done .tab-number {
+  display:inline}}
 
 .theme-toggle {
   display:inline-flex;
