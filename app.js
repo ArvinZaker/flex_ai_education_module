@@ -170,6 +170,9 @@ document.addEventListener('submit',e=>{if(e.target.id!=='note-form'||!current?.q
 document.addEventListener('change',e=>{if(e.target.name==='note-error'&&current?.q)selections[current.q.id]=[...document.querySelectorAll('[name="note-error"]:checked')].map(x=>Number(x.value));});
 tabs.addEventListener('keydown',e=>{const list=[...tabs.querySelectorAll('[role="tab"]')];const i=list.indexOf(document.activeElement);if(i<0)return;let n;if(e.key==='ArrowRight')n=(i+1)%list.length;else if(e.key==='ArrowLeft')n=(i+list.length-1)%list.length;else if(e.key==='Home')n=0;else if(e.key==='End')n=list.length-1;else return;e.preventDefault();pendingTabFocus=modules[n].id;go(modules[n].id);});
 document.querySelector('#reset').addEventListener('click',()=>{for(const s of activeModule.scenes){completed.delete(s.id);for(const q of s.questions){delete answers[q.id];delete selections[q.id];}}save();go(activeModule.id);});
+function syncTheme(){const dark=document.documentElement.dataset.theme==='dark',b=document.querySelector('#theme-toggle'),label=dark?'Switch to light mode':'Switch to dark mode';b.setAttribute('aria-label',label);b.title=label;document.querySelector('meta[name="theme-color"]').content=dark?'#111715':'#173e35';}
+document.querySelector('#theme-toggle').addEventListener('click',()=>{const t=document.documentElement.dataset.theme==='dark'?'light':'dark';document.documentElement.dataset.theme=t;try{localStorage.setItem('learning-with-ai-theme',t);}catch{/* Theme still switches without storage. */}syncTheme();});
+syncTheme();
 document.querySelector('#about').addEventListener('click',()=>go(activeModule.id+'/sources'));
 document.querySelector('.skip').addEventListener('click',e=>{e.preventDefault();main.focus();});
 window.addEventListener('hashchange',()=>render());render();

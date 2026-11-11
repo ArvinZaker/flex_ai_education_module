@@ -11,10 +11,13 @@
     <title>
       Learning With AI: Education, Scribes, Research and Ethics
     </title>
+    <script>
+      try { const t = localStorage.getItem('learning-with-ai-theme'); document.documentElement.dataset.theme = t || (matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light'); } catch { document.documentElement.dataset.theme = 'light'; }
+    </script>
     <link rel="icon" href="assets/favicon.svg" type="image/svg+xml" />
-    <link rel="stylesheet" href="styles.css?v=20261110-scene-row3" />
-    <script src="scenarios.js?v=20261110-scene-row3" defer></script>
-    <script src="app.js?v=20261110-scene-row3" defer></script>
+    <link rel="stylesheet" href="styles.css?v=20261110-theme" />
+    <script src="scenarios.js?v=20261110-theme" defer></script>
+    <script src="app.js?v=20261110-theme" defer></script>
   </head>
   <body>
     <noscript
@@ -26,6 +29,7 @@
     <a class="skip" href="#main">Skip to content</a>
     <header class="module-header">
       <a class="brand" href="#education">Learning with AI<span aria-hidden="true">.</span></a>
+      <button type="button" class="theme-toggle" id="theme-toggle" aria-label="Switch to dark mode" title="Switch to dark mode"><svg width="22" height="22" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="9" fill="none" stroke="currentColor" stroke-width="2"/><path d="M12 3a9 9 0 0 1 0 18z" fill="currentColor"/></svg></button>
     </header>
     <nav class="module-tabs" id="module-tabs" role="tablist" aria-label="Four learning modules"></nav>
     <nav class="scene-tabs" id="scene-tabs" aria-label="Scenes in this module"></nav>
